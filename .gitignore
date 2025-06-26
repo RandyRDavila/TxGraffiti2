@@ -1,5 +1,15 @@
-.venv
+# Byte-code caches
+__pycache__/
+*.pyc
 
-.pytest_cache
+# Virtual environments
+.venv/
+env/
+venv/
 
-__pycache__
+# Pytest cache
+.pytest_cache/
+
+# Editor files (optional)
+.vscode/
+*.swp
