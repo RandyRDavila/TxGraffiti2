@@ -11,6 +11,7 @@ setup(
     packages=find_packages(where="."),        # automatically finds your modules
     install_requires=[
         "pandas>=2.3.0",
+        "pytest"
         # list here any runtime dependencies you have
     ],
     python_requires=">=3.8",
