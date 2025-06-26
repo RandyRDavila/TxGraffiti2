@@ -1,7 +1,5 @@
 # TxGraffiti2: Automated Conjecture Generation Library
 
-![Python CI](https://github.com/RandyRDavila/txgraffiti2/actions/workflows/python-ci.yml/badge.svg)
-
 **TxGraffiti2** is a Python package for building, evaluating, and refining mathematical conjectures over tabular data (e.g., graph invariants). It provides a clean, composable API for:
 
 * **Numeric expressions** (`Property`): lift columns or constants into first‑class objects supporting `+, -, *, /, **`.
