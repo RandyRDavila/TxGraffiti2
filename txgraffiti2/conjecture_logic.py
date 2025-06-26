@@ -19,6 +19,8 @@ Example:
     pred = deg >= const
     conj = Conjecture(pred, deg < 10)
     valid = conj.is_true(df)
+
+TODO: This needs to be fleshed out with more examples and documentation.
 '''
 import pandas as pd
 from dataclasses import dataclass
