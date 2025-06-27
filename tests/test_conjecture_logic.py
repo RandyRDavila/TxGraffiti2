@@ -157,6 +157,6 @@ def test_demorgans_law(df):
     left = ~(p & q)
     right = ~p | ~q
     assert left.name == "¬((connected) ∧ (K_n))"
-    assert right.name == "¬(connected) ∨ ¬(K_n)"
+    assert right.name == "(¬(connected)) ∨ (¬(K_n))"
     assert left(df).tolist() == right(df).tolist()
     
