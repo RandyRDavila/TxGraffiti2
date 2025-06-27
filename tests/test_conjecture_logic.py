@@ -50,7 +50,6 @@ def test_polytope_property_arithmetic(polytope_df):
     assert s(polytope_df).tolist() == [0, 8, 8]
     # TODO: need division checks
 
-
 # ——————— Property tests ———————
 def test_property_basic(df):
     p = Property('alpha', lambda df: df['alpha'])
@@ -141,4 +140,11 @@ def test_conjecture_true_and_false(df):
     result = conj.evaluate(df)
     assert result.tolist() == [True, False, False]
 
-# TODO: add true conjecture test
+def test_conjecture_true(df):
+    # true conjecture on one row: hypothesis implies conclusion
+    hyp = Predicate('K_n', lambda df: df['K_n'])
+    con = Predicate('beta=3*alpha', lambda df: df['beta'] == 3*df['alpha'])
+    conj = Conjecture(hypothesis=hyp, conclusion=con)
+    # evaluate on df
+    result = conj.evaluate(df)
+    assert result.tolist() == [True, True, True]
