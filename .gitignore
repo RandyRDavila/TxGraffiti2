@@ -13,3 +13,6 @@ venv/
 # Editor files (optional)
 .vscode/
 *.swp
+
+# Experiment files
+example.py
