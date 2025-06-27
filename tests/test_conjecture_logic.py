@@ -148,3 +148,15 @@ def test_conjecture_true(df):
     # evaluate on df
     result = conj.evaluate(df)
     assert result.tolist() == [True, True, True]
+    
+# ——————— DeMorgan's Laws test ———————
+def test_demorgans_law(df):
+    # DeMorgan's Law: ~(p & q) == ~p | ~q
+    p = Predicate('connected', lambda df: df['connected'])
+    q = Predicate('K_n', lambda df: df['K_n'])
+    left = ~(p & q)
+    right = ~p | ~q
+    assert left.name == "¬((connected) ∧ (K_n))"
+    assert right.name == "¬(connected) ∨ ¬(K_n)"
+    assert left(df).tolist() == right(df).tolist()
+    
