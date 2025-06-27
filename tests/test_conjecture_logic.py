@@ -12,8 +12,43 @@ def df():
         'beta': [3, 1, 1],
         'connected': [True, True, True],
         'K_n': [True, False, False],
-        'tree': [False, False, True]
+        'tree': [False, False, True],
     })
+
+@pytest.fixture
+def polytope_df():
+    return pd.DataFrame({
+        'is_simple': [True, True, False],
+        'p3': [0, 4, 4],
+        'p4': [6, 0, 1],
+        'f0': [8, 4, 5],
+        'f1': [12, 6, 8],
+    })
+
+def test_polytope_property_basic(polytope_df):
+    # basic property on polytope DataFrame
+    p = Property('is_simple', lambda df: df['is_simple'])
+    assert p(polytope_df).tolist() == [True, True, False]
+    assert repr(p) == "<Property is_simple>"
+
+    q = Property('p3 > 0', lambda df: df['p3'] > 0)
+    assert q(polytope_df).tolist() == [False, True, True]
+    assert repr(q) == "<Property p3 > 0>"
+
+def test_polytope_property_arithmetic(polytope_df):
+    # arithmetic operations on properties
+    p = Property('p3', lambda df: df['p3'])
+    q = Property('p4', lambda df: df['p4'])
+    # addition
+    r = p + q
+    assert isinstance(r, Property)
+    assert r.name == "(p3 + p4)"
+    assert r(polytope_df).tolist() == [6, 4, 5]
+    # scalar multiplication
+    s = p * 2
+    assert s.name == "(p3 * 2)"
+    assert s(polytope_df).tolist() == [0, 8, 8]
+    # TODO: need division checks
 
 # ——————— Property tests ———————
 def test_property_basic(df):
@@ -40,24 +75,21 @@ def test_property_identities(df):
     one = Property('1', lambda df: pd.Series(1, index=df.index))
     #  p + 0 → p
     assert (p + zero) is p
+    # p - 0 → p
+    assert (p - zero) is p
     # p * 1 → p
     assert (p * one) is p
     # p * 0 → zero
     got = p * zero
     assert got.name == "0"
     assert got(df).tolist() == [0, 0, 0]
-
+    # TODO: add division by zero
 
 def test_boolean_property(df):
     # boolean property based on a column
     p = Property('connected', lambda df: df['connected'])
     assert p(df).tolist() == [True, True, True]
     assert repr(p) == "<Property connected>"
-
-    # boolean property with a constant
-    q = Property('K_n', lambda df: df['K_n'])
-    assert q(df).tolist() == [True, False, False]
-    assert repr(q) == "<Property K_n>"
 
 # ——————— Predicate tests ———————
 def test_boolean_arithmetic(df):
@@ -75,7 +107,7 @@ def test_boolean_arithmetic(df):
     t = ~p
     assert t.name == "¬(connected)"
     assert t(df).tolist() == [False, False, False]
-
+    # TODO: needs a test for demorgan's law
 
 # ——————— Inequality tests ———————
 def test_inequality_basic(df):
@@ -87,7 +119,7 @@ def test_inequality_basic(df):
     # slack: 3 - a
     slack = ineq.slack(df)
     assert slack.tolist() == [2, 1, 0]
-    # touch_count: none equal
+    # touch_count: one equals
     assert ineq.touch_count(df) == 1
 
 def test_inequality_counterexample(df):
@@ -95,16 +127,36 @@ def test_inequality_counterexample(df):
     a = Property('alpha', lambda df: df['alpha'])
     b = Property('beta', lambda df: df['beta'])
     ineq = a * 11 == b
-    # only second row (2*11 == 22) is true
     mask = ineq(df).tolist()
     assert mask == [False, False, False]
 
 # ——————— Conjecture tests ———————
 def test_conjecture_true_and_false(df):
-    # true conjecture: hypothesis implies conclusion
+    # true conjecture on one row: hypothesis implies conclusion
     hyp = Predicate('connected', lambda df: df['connected'])
     con = Predicate('beta>alpha', lambda df: df['beta'] > df['alpha'])
     conj = Conjecture(hypothesis=hyp, conclusion=con)
     # evaluate on df
     result = conj.evaluate(df)
     assert result.tolist() == [True, False, False]
+
+def test_conjecture_true(df):
+    # true conjecture on one row: hypothesis implies conclusion
+    hyp = Predicate('K_n', lambda df: df['K_n'])
+    con = Predicate('beta=3*alpha', lambda df: df['beta'] == 3*df['alpha'])
+    conj = Conjecture(hypothesis=hyp, conclusion=con)
+    # evaluate on df
+    result = conj.evaluate(df)
+    assert result.tolist() == [True, True, True]
+    
+# ——————— DeMorgan's Laws test ———————
+def test_demorgans_law(df):
+    # DeMorgan's Law: ~(p & q) == ~p | ~q
+    p = Predicate('connected', lambda df: df['connected'])
+    q = Predicate('K_n', lambda df: df['K_n'])
+    left = ~(p & q)
+    right = ~p | ~q
+    assert left.name == "¬((connected) ∧ (K_n))"
+    assert right.name == "(¬(connected)) ∨ (¬(K_n))"
+    assert left(df).tolist() == right(df).tolist()
+    
