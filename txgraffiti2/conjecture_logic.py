@@ -386,8 +386,12 @@ class Conjecture(Predicate):
         return bool(self(df).all())
 
     def accuracy(self, df: pd.DataFrame) -> float:
-        return float(self(df).mean())
-
+        hyp_true = self.hypothesis(df)
+        if not hyp_true.any():
+            return float(0.0)
+        valid = self(df)[hyp_true]
+        return float(valid.mean())
+    
     def counterexamples(self, df: pd.DataFrame) -> pd.DataFrame:
         return df[~self(df)]
 
