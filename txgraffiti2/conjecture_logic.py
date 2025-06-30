@@ -392,7 +392,7 @@ class Conjecture(Predicate):
         return df[~self(df)]
 
     def __repr__(self):
-        return f"<Conjecture {self.name}>"
+        return f"{self.name}"
 
     def __eq__(self, other):
         return (
