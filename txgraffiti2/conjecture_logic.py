@@ -270,11 +270,44 @@ class Predicate:
         object.__setattr__(neg, "_neg_operand", self)
         return neg
 
-    def implies(self, other: "Predicate") -> "Predicate":
-        def implication(df):
-            return (~self(df)) | other(df)
+    def implies(self, other: "Predicate", *, as_conjecture: bool = False) -> "Predicate":
+        """
+        Logical implication  self → other.
+
+        Parameters
+        ----------
+        other : Predicate
+            The conclusion.
+        as_conjecture : bool, default False
+            • False  → return a plain Predicate (¬self ∨ other); good for
+              further boolean algebra.
+            • True   → return a Conjecture(self, other) with .is_true(),
+              .accuracy(), etc.
+
+        Examples
+        --------
+        P.implies(Q)                  # ≡ ¬P ∨ Q  (Predicate)
+        P.implies(Q, as_conjecture=True)   # Conjecture(P, Q)
+        """
+        if as_conjecture:
+            return Conjecture(self, other)
+
         name = f"({self.name} → {other.name})"
-        return Predicate(name, implication)
+        return Predicate(name, lambda df, a=self, b=other: (~a(df)) | b(df))
+
+    # -----------------------------------------------------------------------
+    #  Syntactic sugar: P >> Q  → Conjecture(P, Q)
+    # -----------------------------------------------------------------------
+    def __rshift__(self, other: "Predicate") -> "Conjecture":
+        """
+        Use the bit-shift operator ‘>>’ as a readable implication that
+        *always* returns a Conjecture:
+
+            conj = hypothesis >> conclusion
+        """
+        if not isinstance(other, Predicate):
+            raise TypeError("Right operand of >> must be a Predicate")
+        return Conjecture(self, other)
 
     def __repr__(self):
         return f"<Predicate {self.name}>"
@@ -336,25 +369,30 @@ class Inequality(Predicate):
 
 
 # ──────── Conjecture ─────────
-@dataclass(frozen=True)
-class Conjecture:
-    hypothesis: Predicate
-    conclusion: Predicate
+class Conjecture(Predicate):
+    """
+    A Conjecture is a Predicate of the form (hypothesis → conclusion).
+    Inherits from Predicate, so it can be used in logical expressions.
+    """
 
-    def __repr__(self):
-        return f"({self.hypothesis.name}) → ({self.conclusion.name})"
-
-    def evaluate(self, df: pd.DataFrame) -> pd.Series:
-        return (~self.hypothesis(df)) | self.conclusion(df)
+    def __init__(self, hypothesis: Predicate, conclusion: Predicate):
+        name = f"({hypothesis.name}) → ({conclusion.name})"
+        func = lambda df: (~hypothesis(df)) | conclusion(df)
+        super().__init__(name, func)
+        object.__setattr__(self, "hypothesis", hypothesis)
+        object.__setattr__(self, "conclusion", conclusion)
 
     def is_true(self, df: pd.DataFrame) -> bool:
-        return bool(self.evaluate(df).all())
+        return bool(self(df).all())
 
     def accuracy(self, df: pd.DataFrame) -> float:
-        return float(self.evaluate(df).mean())
+        return float(self(df).mean())
 
     def counterexamples(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[~self.evaluate(df)]
+        return df[~self(df)]
+
+    def __repr__(self):
+        return f"<Conjecture {self.name}>"
 
     def __eq__(self, other):
         return (
@@ -365,6 +403,10 @@ class Conjecture:
 
     def __hash__(self):
         return hash((self.hypothesis, self.conclusion))
+
+    def evaluate(self, df: pd.DataFrame) -> pd.Series:
+        return self(df)
+
 
 # expose public API
 __all__ = ['Property', 'Predicate', 'Inequality', 'Conjecture',

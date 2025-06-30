@@ -133,22 +133,26 @@ def test_inequality_counterexample(df):
 # ——————— Conjecture tests ———————
 def test_conjecture_true_and_false(df):
     # true conjecture on one row: hypothesis implies conclusion
-    hyp = Predicate('connected', lambda df: df['connected'])
-    con = Predicate('beta>alpha', lambda df: df['beta'] > df['alpha'])
-    conj = Conjecture(hypothesis=hyp, conclusion=con)
+    hypothesis = Predicate('connected', lambda df: df['connected'])
+    conclusion = Predicate('beta>alpha', lambda df: df['beta'] > df['alpha'])
+    conj1 = hypothesis.implies(conclusion, as_conjecture=True)
     # evaluate on df
-    result = conj.evaluate(df)
+    result = conj1(df)
     assert result.tolist() == [True, False, False]
+
+    conj2 = hypothesis >> conclusion
+    # should be equivalent to conj1
+    assert conj1 == conj2
 
 def test_conjecture_true(df):
     # true conjecture on one row: hypothesis implies conclusion
-    hyp = Predicate('K_n', lambda df: df['K_n'])
-    con = Predicate('beta=3*alpha', lambda df: df['beta'] == 3*df['alpha'])
-    conj = Conjecture(hypothesis=hyp, conclusion=con)
+    hypothesis = Predicate('K_n', lambda df: df['K_n'])
+    conclusion = Predicate('beta=3*alpha', lambda df: df['beta'] == 3*df['alpha'])
+    conj = hypothesis.implies(conclusion, as_conjecture=True)
     # evaluate on df
-    result = conj.evaluate(df)
+    result = conj(df)
     assert result.tolist() == [True, True, True]
-    
+
 # ——————— DeMorgan's Laws test ———————
 def test_demorgans_law(df):
     # DeMorgan's Law: ~(p & q) == ~p | ~q
@@ -159,4 +163,3 @@ def test_demorgans_law(df):
     assert left.name == "¬((connected) ∧ (K_n))"
     assert right.name == "(¬(connected)) ∨ (¬(K_n))"
     assert left(df).tolist() == right(df).tolist()
-    
