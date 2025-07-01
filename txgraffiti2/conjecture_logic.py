@@ -107,6 +107,8 @@ class Property:
     def __eq__(self,  o): return Inequality(self, "==", self._lift(o))
     def __ne__(self,  o): return Inequality(self, "!=", self._lift(o))
 
+def Constant(c: Number) -> Property:
+    return Property(str(c), lambda df, v=c: pd.Series(v, index=df.index))
 
 @dataclass(frozen=True)
 class Predicate:
@@ -414,4 +416,4 @@ class Conjecture(Predicate):
 
 # expose public API
 __all__ = ['Property', 'Predicate', 'Inequality', 'Conjecture',
-           'TRUE', 'FALSE']
+           'TRUE', 'FALSE', 'Constant']
