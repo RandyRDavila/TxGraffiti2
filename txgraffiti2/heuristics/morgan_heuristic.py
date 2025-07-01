@@ -1,6 +1,6 @@
 import pandas as pd
 from typing import List
-from txgraffiti2.conjecture_logic import Conjecture, Inequality
+from txgraffiti2.logic.conjecture_logic import Conjecture, Inequality
 
 __all__ = [
     "normalize_inequality_key",

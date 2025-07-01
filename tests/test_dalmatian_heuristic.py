@@ -1,8 +1,8 @@
 import pandas as pd
 import pytest
 
-from txgraffiti2.conjecture_logic import Property, Predicate, Conjecture, Inequality, Constant
-from txgraffiti2.dalmatian_heuristic import dalmatian_accept
+from txgraffiti2.logic.conjecture_logic import Property, Predicate, Conjecture, Inequality, Constant
+from txgraffiti2.heuristics.dalmatian_heuristic import dalmatian_accept
 
 # A helper predicate that's always true
 TRUE = Predicate("True", lambda df: pd.Series(True, index=df.index))
@@ -49,7 +49,7 @@ def test_accept_if_strictly_tighter_somewhere_nonconstant():
     # new bound x <= 2*y is strictly tighter at rows where y in {1, 2}
     new = Conjecture(TRUE, make_ineq(x, "<=", Property("2*y", lambda df: 2 * df["y"])))
     assert dalmatian_accept(new, [old], df)
-    
+
 def test_reject_if_never_tighter():
     df = make_simple_df()
     x = make_prop("x")
@@ -78,7 +78,6 @@ def test_only_compare_same_hypothesis():
     # although `new` is not tighter than old_diff under H2, they have different hypotheses,
     # so new should be accepted (since no existing under H1)
     assert dalmatian_accept(new, [old_diff], df)
-    
+
     new2 = Conjecture(H1, make_ineq(x, "<=", Constant(6)))
     assert not dalmatian_accept(new2, [new], df)
- 

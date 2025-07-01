@@ -2,8 +2,8 @@ import pandas as pd
 import pytest
 import itertools
 
-from txgraffiti2.conjecture_logic import Property, Predicate, Inequality, Conjecture
-from txgraffiti2.boolean_hypotheses_generator import generate_boolean_hypotheses
+from txgraffiti2.logic.conjecture_logic import Property, Predicate, Inequality, Conjecture
+from txgraffiti2.logic.boolean_hypotheses_generator import generate_boolean_hypotheses
 
 def make_simple_df():
     # 3 boolean columns A,B,C and one numeric
@@ -63,4 +63,3 @@ def test_invalid_bounds():
     # lower > upper
     with pytest.raises(AssertionError):
         generate_boolean_hypotheses(df, lower_bound=3, upper_bound=2)
-        

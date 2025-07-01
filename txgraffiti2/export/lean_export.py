@@ -22,7 +22,7 @@ from collections.abc import Mapping
 import pandas as pd
 from typing import Any
 
-from txgraffiti2.conjecture_logic import Conjecture
+from txgraffiti2.logic.conjecture_logic import Conjecture
 
 __all__ = [
     "conjecture_to_lean",
