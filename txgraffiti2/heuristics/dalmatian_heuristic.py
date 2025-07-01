@@ -1,7 +1,7 @@
 import pandas as pd
 
 from typing import List
-from txgraffiti2.conjecture_logic import Conjecture, Inequality
+from txgraffiti2.logic.conjecture_logic import Conjecture, Inequality
 
 def dalmatian_accept(
     new_conj: Conjecture,

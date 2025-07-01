@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 import functools
 
-from txgraffiti2.conjecture_logic import Predicate, TRUE, FALSE
+from txgraffiti2.logic.conjecture_logic import Predicate, TRUE, FALSE
 
 @pytest.fixture
 def df():

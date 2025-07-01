@@ -4,7 +4,7 @@ from functools import reduce
 from typing import List, Optional
 from pandas.api.types import is_bool_dtype
 
-from txgraffiti2.conjecture_logic import Property, Predicate, Inequality, Conjecture
+from txgraffiti2.logic.conjecture_logic import Property, Predicate, Inequality, Conjecture
 
 # assumes you have your Predicate class in scope
 
@@ -18,7 +18,7 @@ def generate_boolean_hypotheses(
       P1 ∧ P2 ∧ … ∧ Pr
     where lower_bound ≤ r ≤ upper_bound, and each Pi is either the column
     or its negation ¬column.
-    
+
     Returns a list of Predicate objects.
     """
     # 1) find all boolean columns

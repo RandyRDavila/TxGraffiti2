@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from txgraffiti2.lean_export import conjecture_to_lean
+from txgraffiti2.export import conjecture_to_lean
 
 # Dummy Conjecture with .name only, to avoid full dependency in the test
 class DummyConj:

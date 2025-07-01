@@ -4,7 +4,7 @@ from scipy.spatial import ConvexHull, QhullError
 from typing import List
 from fractions import Fraction
 
-from txgraffiti2.conjecture_logic import Property, Predicate, Inequality, Conjecture
+from txgraffiti2.logic.conjecture_logic import Property, Predicate, Inequality, Conjecture
 
 def generate_hull_conjectures(
     df: pd.DataFrame,
