@@ -69,6 +69,16 @@ for idx, conj in enumerate(ai.conjectures[:10], start=1):
     print(f"Conjecture {idx}. {formula}\n")
 ```
 
+The output of the above code should look something like the following:
+```bash
+
+  Conjecture 1. ∀ G: ((connected) ∧ (bipartite)) → (independence_number == ((-1 * matching_number) + order))
+
+  Conjecture 2. ∀ G: ((connected) ∧ (max_degree == min_degree) ∧ (bipartite)) → (independence_number == matching_number)
+  …
+
+```
+
 ## Testing
 
 Run the existing pytest suite:
