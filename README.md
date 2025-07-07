@@ -31,6 +31,10 @@ pip install -e .
 
 ## Quickstart
 
+Below we give examples of the basic functionality of `txgraffiti` using included sample datasets.
+
+### Graph Theory Sample Data Example
+
 Below is a minimal example of using `txgraffiti` on a built in dataset of precomputed values on simple, connected, and nontrivial graphs.
 
 ```python
@@ -76,6 +80,8 @@ Conjecture 1. ∀ G: ((connected) ∧ (bipartite)) → (independence_number == (
 
 Conjecture 2. ∀ G: ((connected) ∧ (max_degree == min_degree) ∧ (bipartite)) → (independence_number == matching_number)
 ```
+
+### Integer Sample Data Example
 
 Next, we conjecture on the built in integer dataset.
 ```python
