@@ -8,3 +8,5 @@ def _load_csv(name: str) -> pd.DataFrame:
 
 # expose it at module level:
 graph_data = _load_csv("graph_data.csv")
+
+integer_data = _load_csv("integer_data.csv")

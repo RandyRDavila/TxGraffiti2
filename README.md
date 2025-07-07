@@ -77,6 +77,53 @@ Conjecture 1. ∀ G: ((connected) ∧ (bipartite)) → (independence_number == (
 Conjecture 2. ∀ G: ((connected) ∧ (max_degree == min_degree) ∧ (bipartite)) → (independence_number == matching_number)
 ```
 
+Next, we conjecture on the built in integer dataset.
+```python
+from txgraffiti.playground    import ConjecturePlayground
+from txgraffiti.generators    import convex_hull, linear_programming, ratios
+from txgraffiti.heuristics    import morgan, dalmatian
+from txgraffiti.processing    import remove_duplicates, sort_by_touch_count
+from txgraffiti.example_data  import integer_data   # bundled toy dataset
+
+# 2) Instantiate your playground
+#    object_symbol will be used when you pretty-print "∀ G.connected: …"
+ai = ConjecturePlayground(
+    integer_data,
+    object_symbol='n.PositiveInteger'
+)
+
+ai.discover(
+    methods         = [convex_hull, linear_programming, ratios],
+    features        = ['sum_divisors', 'divisor_count', 'totient', 'prime_factor_count'],
+    target          = 'collatz_steps',
+    hypothesis      = [ai.is_square, ai.is_fibonacci, ai.is_power_of_two],
+    heuristics      = [morgan, dalmatian],
+    post_processors = [remove_duplicates, sort_by_touch_count],
+)
+
+# 5) Print your top conjectures
+for idx, conj in enumerate(ai.conjectures[:10], start=1):
+    # wrap in ∀-notation for readability
+    formula = ai.forall(conj)
+    print(f"Conjecture {idx}. {formula}\n")
+```
+
+The output of the above code should look something like the following:
+
+```bash
+Conjecture 1. ∀ n.PositiveInteger: ((is_power_of_two) ∧ (is_fibonacci)) → (collatz_steps == prime_factor_count)
+
+Conjecture 2. ∀ n.PositiveInteger: (is_square) → (collatz_steps >= (((17/8 * divisor_count) + -17/8) + (-9/8 * prime_factor_count)))
+
+Conjecture 3. ∀ n.PositiveInteger: (is_square) → (collatz_steps <= (((((-17/10 * sum_divisors) + -391/8) + (1887/40 * divisor_count)) + (34/5 * totient)) + (-1847/40 * prime_factor_count)))
+
+Conjecture 4. ∀ n.PositiveInteger: (is_power_of_two) → (collatz_steps <= prime_factor_count)
+
+Conjecture 5. ∀ n.PositiveInteger: (is_square) → (collatz_steps >= prime_factor_count)
+
+Conjecture 6. ∀ n.PositiveInteger: (is_fibonacci) → (collatz_steps >= prime_factor_count)
+```
+
 ## Testing
 
 Run the existing pytest suite:
