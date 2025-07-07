@@ -41,6 +41,7 @@ six==1.17.0
 stack-data==0.6.3
 tornado==6.5.1
 traitlets==5.14.3
+txgraffiti @ file:///Users/randydavila/Documents/automated-conjecturing/txgraffiti2
 txgraffiti2 @ file:///Users/randydavila/Documents/automated-conjecturing/txgraffiti2
 typing_extensions==4.14.0
 tzdata==2025.2

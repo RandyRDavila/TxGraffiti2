@@ -1,0 +1,21 @@
+Metadata-Version: 2.4
+Name: txgraffiti
+Version: 0.1.0
+Summary: Automated conjecture generation library
+Home-page: https://github.com/your-org/txgraffiti2
+Author: Randy Davila
+Author-email: rrd6@rice.edu
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Requires-Dist: pandas>=2.3.0
+Requires-Dist: pytest
+Requires-Dist: scipy
+Requires-Dist: pulp
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary

@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="txgraffiti2",
+    name="txgraffiti",
     version="0.1.0",
     description="Automated conjecture generation library",
     author="Randy Davila",
