@@ -13,6 +13,7 @@ setup(
         "pandas>=2.3.0",
         "pytest",
         "scipy",
+        "pulp",
         # list here any runtime dependencies you have
     ],
     python_requires=">=3.8",
