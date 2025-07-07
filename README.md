@@ -1,6 +1,6 @@
-# TxGraffiti2: Automated Conjecture Generation Library
+# TxGraffiti: Automated Conjecture Generation Library for Python
 
-**TxGraffiti2** is a Python package for building, evaluating, and refining mathematical conjectures over tabular data (e.g., graph invariants). It provides a clean, composable API for:
+**TxGraffiti** is a Python package for building, evaluating, and refining mathematical conjectures over tabular data (e.g., graph invariants). It provides a clean, composable API for:
 
 * **Numeric expressions** (`Property`): lift columns or constants into first‑class objects supporting `+, -, *, /, **`.
 * **Boolean predicates** (`Predicate`): define row‑wise tests and combine them with `∧`, `∨`, and `¬`.
@@ -17,59 +17,57 @@ This repo will evolve into a full framework for:
 
 ---
 
-## Features
-
-* * Lift pandas columns and constants to symbolic `Property` objects
-  * Auto‑simplify identities (e.g. `p + 0 → p`, `p*1 → p`)
-* * Combine row‑wise tests with logical operators in `Predicate`
-  * Build named, composable boolean expressions
-* * Form inequalities between properties with `<=, <, >=, >, ==, !=`
-  * Compute `slack`, `touch_count`, and extract counterexamples
-* * Package hypotheses and conclusions into `Conjecture` objects
-  * Evaluate truth, accuracy, and failing rows automatically
-
 ## Installation
 
 ```bash
-pip install txgraffiti2  # coming soon
+pip install txgraffiti  # coming soon
 # or
 git clone https://github.com/RandyRDavila/txgraffiti2.git
 cd txgraffiti2
 pip install -e .
 ```
 
+---
+
 ## Quickstart
 
+Below is a minimal example of using `txgraffiti` on a built in dataset of precomputed values on simple, connected, and nontrivial graphs.
+
 ```python
-import pandas as pd
-from txgraffiti2.conjecture_logic import Property, Predicate, Conjecture
+from txgraffiti.playground    import ConjecturePlayground # the main class for finding conjectures
+from txgraffiti.generators    import convex_hull, linear_programming, ratios # methods for producing inequalities
+from txgraffiti.heuristics    import morgan, dalmatian # heuristics to reduce number of statements accepted.
+from txgraffiti.processing    import remove_duplicates, sort_by_touch_count # post processing for removal and sorting of conjectures.
+from txgraffiti.example_data  import graph_data   # bundled toy dataset
 
-# sample data of graph invariants
-G = pd.DataFrame({
-    'alpha': [1,2,3],
-    'gamma': [2,3,1],
-    'connected': [True,True,False]
-})
+# 2) Instantiate your playground
+#    object_symbol will be used when you pretty-print "∀ G.connected: …"
+ai = ConjecturePlayground(
+    graph_data,
+    object_symbol='G'
+)
 
-alpha = Property('alpha', lambda df: df['alpha'])
-gamma = Property('gamma', lambda df: df['gamma'])
-conn  = Predicate('connected', lambda df: df['connected'])
+# 3) (Optional) define any custom predicates
+regular = (ai.max_degree == ai.min_degree)
+cubic   = regular & (ai.max_degree == 3)
 
-# conjecture: if connected then alpha <= gamma + 1
-eq = Inequality(alpha, '<=', gamma + 1)
-conj = Conjecture(conn, alpha <= gamma + 1)
-print("True?", conj.is_true(G))
-print("Accuracy:", conj.accuracy(G))
-print("Counterexamples:\n", conj.counterexamples(G))
+# 4) Run discovery
+ai.discover(
+    methods         = [convex_hull, linear_programming, ratios],
+    features        = ['order', 'matching_number', 'min_degree'],
+    target          = 'independence_number',
+    hypothesis      = [ai.connected & ai.bipartite,
+                       ai.connected & regular],
+    heuristics      = [morgan, dalmatian],
+    post_processors = [remove_duplicates, sort_by_touch_count],
+)
+
+# 5) Print your top conjectures
+for idx, conj in enumerate(ai.conjectures[:10], start=1):
+    # wrap in ∀-notation for readability and conversion to Lean4
+    formula = ai.forall(conj)
+    print(f"Conjecture {idx}. {formula}\n")
 ```
-
-## Roadmap
-
-* [ ] Conjecture generation module (LP + heuristics)
-* [ ] Ranking and filtering heuristics (Dalmatian → Calloway)
-* [ ] Integrated counterexample search (Pessimist agent)
-* [ ] Curated datasets & example notebooks
-* [ ] CLI and Jupyter widgets for interactive exploration
 
 ## Testing
 
@@ -83,4 +81,4 @@ Contributions, issues, and suggestions are very welcome! See [CONTRIBUTING.md](/
 
 ---
 
-© 2025 Randy Davila and collaborators. Licensed under MIT.
+© 2025 Randy Davila and Jillian Eddy. Licensed under MIT.

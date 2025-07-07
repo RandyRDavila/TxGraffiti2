@@ -22,4 +22,8 @@ setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
+    package_data={
+        # this says “include any .csv under example_data”
+        "graffitiai.example_data": ["*.csv"],
+    },
 )
