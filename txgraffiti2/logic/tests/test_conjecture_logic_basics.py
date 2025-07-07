@@ -46,7 +46,7 @@ def test_polytope_property_arithmetic(polytope_df):
     assert r(polytope_df).tolist() == [6, 4, 5]
     # scalar multiplication
     s = p * 2
-    assert s.name == "(p3 * 2)"
+    assert s.name == "(2 * p3)"
     assert s(polytope_df).tolist() == [0, 8, 8]
     # TODO: need division checks
 
@@ -66,7 +66,7 @@ def test_property_arithmetic(df):
     assert r(df).tolist() == [4, 3, 4]
     # scalar lift & mul
     s = p * 3
-    assert s.name == "(alpha * 3)"
+    assert s.name == "(3 * alpha)"
     assert s(df).tolist() == [3, 6, 9]
 
 def test_property_identities(df):
@@ -115,7 +115,7 @@ def test_inequality_basic(df):
     three = Property('3', lambda df: pd.Series(3, index=df.index))
     ineq = a <= three
     # name and repr
-    assert repr(ineq) == "<Ineq alpha <= 3>"
+    assert repr(ineq) == "<Predicate alpha <= 3>"
     # slack: 3 - a
     slack = ineq.slack(df)
     assert slack.tolist() == [2, 1, 0]
