@@ -1,9 +1,12 @@
 import pandas as pd
+import numpy as np
 from typing import Union, Iterator, List, Callable, Sequence
 
 from txgraffiti.logic import *
 from txgraffiti.playground.registry import list_playgrounds
 from txgraffiti.processing.registry import get_post
+from txgraffiti.export.lean_export import conjecture_to_lean4
+from txgraffiti.generators import list_gens
 
 
 __all__ = [
@@ -85,10 +88,24 @@ class Exists:
         return self.name
 
 class ConjecturePlayground:
-    def __init__(self, df: pd.DataFrame, object_symbol="G"):
+    def __init__(self, df: pd.DataFrame, object_symbol="G", base: Optional[Union[str, Predicate]] = None):
         self.df = df
         self.conjectures: list[Conjecture] = []   # cache slot
         self.object_symbol = object_symbol
+        # Set up the base predicate
+        if base is None:
+            # default to “always true”
+            self.base: Predicate = TRUE
+        elif isinstance(base, Predicate):
+            self.base = base
+        elif isinstance(base, str):
+            # lift via getattr; assumes you have a boolean column or existing predicate
+            self.base = getattr(self, base)
+        else:
+            raise TypeError("`base` must be None, a column-name (str), or a Predicate")
+
+        self.conjectures: List[Conjecture] = []
+        self.custom_hypotheses: dict[str, Predicate] = {}
 
     def prop(self, name: str) -> Property:
         return Property(name, lambda df, c=name: df[c])
@@ -113,51 +130,43 @@ class ConjecturePlayground:
         self,
         *,
         methods:      List[Callable[..., Iterator[Conjecture]]] = None,
-        features:        List[Union[str, Property]],
-        target:          Union[str, Property],
-        hypothesis:      Union[
-                              str,
-                              Predicate,
-                              Sequence[Union[str, Predicate]]
-                          ],
-        heuristics:      List[Callable[[Conjecture, List[Conjecture], pd.DataFrame], bool]] = None,
-        post_processors: List[Union[str, Callable[[List[Conjecture], pd.DataFrame], List[Conjecture]]]] = None,
+        features:     Optional[List[Union[str, Property]]]       = None,
+        target:       Optional[Union[str, Property]]              = None,
+        hypothesis:   Optional[
+                          Union[str, Predicate, Sequence[Union[str, Predicate]]]
+                      ] = None,
+        heuristics:      Optional[List[Callable[[Conjecture, List[Conjecture], pd.DataFrame], bool]]] = None,
+        post_processors: Optional[List[Union[str, Callable[[List[Conjecture], pd.DataFrame], List[Conjecture]]]]] = None,
         **kwargs
     ) -> Iterator[Conjecture]:
-        """
-        Single‐call harness:
-
-        1) raw = all gens × all hyps
-        2) filtered = apply each heuristic in order (one global kept list)
-        3) if post_processors:
-             collect filtered into a list, run each post on it, yield that
-           else:
-             yield from filtered directly
-        """
-
-        # ———————————————————————————————
-        # 1) lift gens, hyps, features, target
-        # ———————————————————————————————
-
         gens = methods or list_playgrounds()
 
-        if isinstance(hypothesis, (list, tuple)):
-            hyp_list = [
+        # Build hyp_list by conjoining each user hypothesis with self.base
+        if hypothesis is None:
+            hyp_list = [self.base]
+        elif isinstance(hypothesis, (list, tuple)):
+            lifted = [
                 (getattr(self, h) if isinstance(h, str) else h)
                 for h in hypothesis
             ]
+            hyp_list = [self.base & h for h in lifted]
         else:
-            hyp_list = [
-                (getattr(self, hypothesis) if isinstance(hypothesis, str)
+            h = (getattr(self, hypothesis) if isinstance(hypothesis, str)
                  else hypothesis)
-            ]
+            hyp_list = [self.base & h]
 
-        feat_props = [self.prop(f) if isinstance(f, str) else f
-                      for f in features]
-        targ_prop  = self.prop(target) if isinstance(target, str) else target
+        # Lift features & target
+        feat_list = [] if features is None else features
+        targ_arg  = None if target is None else target
 
-        # build the raw iterator
-        def raw_all() -> Iterator[Conjecture]:
+        feat_props = [
+            (self.prop(f) if isinstance(f, str) else f)
+            for f in feat_list
+        ]
+        targ_prop = (self.prop(targ_arg) if isinstance(targ_arg, str) else targ_arg)
+
+        # 4) raw iterator
+        def raw_all():
             for gen_fn in gens:
                 for hyp in hyp_list:
                     yield from gen_fn(
@@ -167,6 +176,9 @@ class ConjecturePlayground:
                         hypothesis = hyp,
                         **kwargs
                     )
+
+        # … + heuristics & post‐processing as before …
+        stream = raw_all()
 
         # ———————————————————————————————
         # 2) apply heuristics into a new iterator
@@ -209,6 +221,63 @@ class ConjecturePlayground:
         self.conjectures = find_strengthened_equalities(conjs)
         self.conjectures.extend(conjs)
         return self.conjectures
+
+    def discover_equalities(
+        self,
+        *,
+        generators:    list[Callable[..., Iterator[Conjecture]]] = None,
+        min_fraction:  float = 0.15
+    ) -> list[Predicate]:
+        """
+        Find all single‐feature inequalities of the form L≤R or L≥R
+        (with hypothesis TRUE) that are *tight* (slack==0) on at least
+        `min_fraction` of the rows.  For each, register & return
+        a Predicate `L_eq_R`.
+        """
+        df   = self.df
+        gens = generators or list_gens()
+        N    = len(df)
+        found: list[tuple[Predicate, float]] = []
+
+        # 1) numeric columns as Properties
+        num_cols = df.select_dtypes(include=[np.number]).columns
+        props = {c: self.prop(c) for c in num_cols}
+
+        # 2) for each generator × each (P,Q) pair
+        for gen_fn in gens:
+            for P_name, Q_name in itertools.permutations(num_cols, 2):
+                P, Q = props[P_name], props[Q_name]
+                # run under TRUE, but safely
+                try:
+                    conj_iter = gen_fn(
+                        df,
+                        features   = [P],
+                        target     = Q,
+                        hypothesis = TRUE
+                    )
+                except Exception:
+                    # skip any generator that errors out on this (P,Q)
+                    continue
+
+                for conj in conj_iter:
+                    if not isinstance(conj.conclusion, Inequality):
+                        continue
+                    ineq = conj.conclusion
+
+                    support = ineq.touch_count(df) / N
+                    if support < min_fraction:
+                        continue
+
+                    L, R = ineq.lhs, ineq.rhs
+
+                    pred = L == R
+                    if pred.name not in self.custom_hypotheses:
+                        self.custom_hypotheses[pred.name] = pred
+                        found.append((pred, support))
+
+        # 3) return just the Predicates, sorted by descending support
+        found.sort(key=lambda pr: pr[1], reverse=True)
+        return [pr[0] for pr in found]
 
     def append_row(self, row: dict):
         """
@@ -254,3 +323,27 @@ class ConjecturePlayground:
     def convert_columns(self, convert_dict : dict):
         for key, func in convert_dict.items():
             self.df[key] = self.df[key].map(func)
+
+    def export_to_lean(
+        self,
+        path: str,
+        name_prefix: str = "conjecture",
+        object_symbol: Optional[str] = None
+    ):
+        """
+        Write all cached conjectures to `path` in Lean theorem‐stub format.
+        Each theorem will be named `{name_prefix}_{i}`.
+        """
+        symbol = object_symbol or self.object_symbol
+        lines = []
+        for i, conj in enumerate(self.conjectures, start=1):
+            thm_name = f"{name_prefix}_{i}"
+            # render using your helper, passing through the object symbol
+            src = conjecture_to_lean4(conj, thm_name, object_symbol=symbol)
+            lines.append(src)
+
+        # Write out to file
+        with open(path, "w") as f:
+            f.write("\n".join(lines))
+
+        print(f"Wrote {len(lines)} Lean theorems to {path}")

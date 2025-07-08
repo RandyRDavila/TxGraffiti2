@@ -22,10 +22,11 @@ from collections.abc import Mapping
 import pandas as pd
 from typing import Any
 
-from txgraffiti.logic.conjecture_logic import Conjecture
+from txgraffiti.logic.conjecture_logic import *
 
 __all__ = [
     "conjecture_to_lean",
+    "conjecture_to_lean4",
     "auto_var_map",
     "LEAN_SYMBOLS",
     "LEAN_SYMBOLS",
@@ -110,3 +111,35 @@ def conjecture_to_lean(
     if theorem_name:
         proposition = f"theorem {theorem_name} : {proposition} := by\n  -- sketch proof\n  sorry"
     return proposition
+
+# txgraffiti/utils/lean_export.py
+
+
+# txgraffiti/utils/lean_export.py
+
+def conjecture_to_lean4(
+    conj: Conjecture,
+    name: str,
+    object_symbol: str = "G",
+    object_decl: str = "SimpleGraph V"
+) -> str:
+    # 1) extract hypothesis Predicates
+    terms = getattr(conj.hypothesis, "_and_terms", [conj.hypothesis])
+    binds = []
+    for idx, p in enumerate(terms, start=1):
+        lean_pred = p.name
+        binds.append(f"(h{idx} : {lean_pred} {object_symbol})")
+
+    # 2) extract conclusion
+    ineq = conj.conclusion
+    lhs, op, rhs = ineq.lhs.name, ineq.op, ineq.rhs.name
+    lean_rel = {"<=":"≤", "<":"<", ">=":"≥", ">":">", "==":"=", "!=":"≠"}[op]
+
+    # 3) assemble
+    bind_str = "\n    ".join(binds)
+    return (
+        f"theorem {name} ({object_symbol} : {object_decl})\n"
+        f"    {bind_str} : {lhs} {object_symbol} {lean_rel} {rhs} {object_symbol} :=\n"
+        f"sorry \n"
+    )
+
