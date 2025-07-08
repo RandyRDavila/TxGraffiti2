@@ -11,4 +11,4 @@ graph_data = _load_csv("graph_data.csv")
 
 integer_data = _load_csv("integer_data.csv")
 
-nba_game_data = _load_csv("integer_data.csv")
+nba_game_data = _load_csv("nba_game_data.csv")
