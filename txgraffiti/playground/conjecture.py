@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-from typing import Union, Iterator, List, Callable, Sequence
+import itertools
+from typing import Union, Iterator, List, Callable, Sequence, Optional
 
 from txgraffiti.logic import *
 from txgraffiti.playground.registry import list_playgrounds

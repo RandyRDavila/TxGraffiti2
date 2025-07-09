@@ -1,31 +1,21 @@
 """
-lean_export.py
-==============
+Module for exporting TxGraffiti conjectures to Lean 4 syntax.
 
-Tools for turning Conjecture names into Lean-4 propositions.
-
-Key public entry points
------------------------
-conjecture_to_lean(conj, df, *, theorem_name=None) -> str
-    Translate Conjecture *conj* into a Lean statement, using *df* to discover
-    which variable names exist.  If *theorem_name* is given, wrap it in a
-    `theorem ... :` block with a final `:= sorry`.
-
-auto_var_map(df, *, skip=("name",)) -> dict[str, str]
-    Build the {python_name: lean_name} map automatically from the columns of
-    *df*.  Numeric or Boolean – doesn’t matter.
+This module provides functions to convert symbolic conjectures into
+Lean-compatible theorems or propositions. It includes Lean-friendly
+symbol mappings, automatic variable mappings, and translators from
+Conjecture objects to Lean 4 strings.
 """
 
 from __future__ import annotations
 import re
 from collections.abc import Mapping
 import pandas as pd
-from typing import Any
+
 
 from txgraffiti.logic.conjecture_logic import *
 
 __all__ = [
-    "conjecture_to_lean",
     "conjecture_to_lean4",
     "auto_var_map",
     "LEAN_SYMBOLS",
@@ -57,8 +47,19 @@ LEAN_SYMBOLS: Mapping[str, str] = {
 # ---------------------------------------------------------------------------
 def auto_var_map(df: pd.DataFrame, *, skip: tuple[str, ...] = ("name",)) -> dict[str, str]:
     """
-    Build a mapping  {column_name -> "column_name G"}   (for Lean)
-    while skipping columns in *skip* (default: "name").
+    Build a variable mapping for Lean 4 translation.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataframe from which to extract column names.
+    skip : tuple of str, optional
+        Column names to skip in the output (default is ('name',)).
+
+    Returns
+    -------
+    dict of str to str
+        A mapping from column names to Lean variable expressions.
     """
     return {c: f"{c} G" for c in df.columns if c not in skip}
 
@@ -81,27 +82,30 @@ def _translate(expr: str, var_map: Mapping[str, str]) -> str:
 
 
 def conjecture_to_lean(
-    conj: "Conjecture | str",           # accepts object or raw string
+    conj: "Conjecture | str",
     df: pd.DataFrame,
     *,
     theorem_name: str | None = None,
     extra_var_map: Mapping[str, str] | None = None,
 ) -> str:
     """
+    Translate a Conjecture into a Lean 4 proposition or theorem string.
+
     Parameters
     ----------
-    conj : Conjecture | str
-        Either a Conjecture instance or a raw name string to translate.
+    conj : Conjecture or str
+        The conjecture to translate. If a string is given, it is treated as the raw formula.
     df : pandas.DataFrame
-        DataFrame whose columns define which variables exist.
+        DataFrame containing the columns referenced in the conjecture.
     theorem_name : str, optional
-        If provided, wrap the result in a `theorem … :` Lean block.
+        If provided, wraps the result in a Lean `theorem` block with this name.
     extra_var_map : dict, optional
-        Add/override variable translations.
+        Optional overrides or additions to the default variable mapping.
 
     Returns
     -------
-    str : Lean 4 proposition (or theorem block).
+    str
+        A Lean 4-formatted string representing the conjecture or theorem.
     """
     name_str = conj.name if hasattr(conj, "name") else str(conj)
     var_map = {**auto_var_map(df), **(extra_var_map or {})}
@@ -112,17 +116,32 @@ def conjecture_to_lean(
         proposition = f"theorem {theorem_name} : {proposition} := by\n  -- sketch proof\n  sorry"
     return proposition
 
-# txgraffiti/utils/lean_export.py
-
-
-# txgraffiti/utils/lean_export.py
-
 def conjecture_to_lean4(
     conj: Conjecture,
     name: str,
     object_symbol: str = "G",
     object_decl: str = "SimpleGraph V"
 ) -> str:
+    """
+    Convert a Conjecture object into a Lean 4 theorem with explicit hypotheses.
+
+    Parameters
+    ----------
+    conj : Conjecture
+        The conjecture object to convert.
+    name : str
+        Name of the theorem in Lean.
+    object_symbol : str, optional
+        Symbol representing the graph (default is 'G').
+    object_decl : str, optional
+        Lean type declaration for the object (default is 'SimpleGraph V').
+
+    Returns
+    -------
+    str
+        A Lean 4 theorem string with bound hypotheses and a conclusion.
+    """
+
     # 1) extract hypothesis Predicates
     terms = getattr(conj.hypothesis, "_and_terms", [conj.hypothesis])
     binds = []
@@ -142,4 +161,3 @@ def conjecture_to_lean4(
         f"    {bind_str} : {lhs} {object_symbol} {lean_rel} {rhs} {object_symbol} :=\n"
         f"sorry \n"
     )
-

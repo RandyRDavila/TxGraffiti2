@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from txgraffiti.logic import Property, Predicate, Inequality, Conjecture
+from txgraffiti.logic import Property, Predicate
 
 # ——————— Fixtures ———————
 @pytest.fixture

@@ -1,3 +1,18 @@
+# txgraffiti.logic.conjecture_logic.py
+"""
+Logical components for symbolic reasoning over dataframes.
+
+This module defines core classes used for automated conjecturing,
+including:
+
+- `Property`: symbolic numeric expressions over DataFrame columns.
+- `Predicate`: boolean-valued expressions that support logical algebra.
+- `Inequality`: a comparison between `Property` objects.
+- `Conjecture`: logical implications between `Predicate` expressions.
+
+All expressions can be evaluated on a pandas DataFrame row-wise.
+"""
+
 import pandas as pd
 from dataclasses import dataclass
 from typing import Callable, Union
@@ -8,6 +23,25 @@ import functools
 
 @dataclass(frozen=True)
 class Property:
+    """
+    A symbolic property representing a real-valued function on a pandas DataFrame.
+
+    Properties can be combined with arithmetic operators (`+`, `-`, `*`, `/`, etc.)
+    and compared using inequality operators (`<`, `<=`, `==`, `!=`, `>=`, `>`).
+
+    Parameters
+    ----------
+    name : str
+        A symbolic name for the property.
+    func : Callable[[pd.DataFrame], pd.Series]
+        A function that computes the property row-wise from a DataFrame.
+
+    Examples
+    --------
+    >>> deg = Property("deg", lambda df: df["degree"])
+    >>> 2 * deg + 3
+    <Property (2 * deg) + 3>
+    """
     name: str
     func: Callable[[pd.DataFrame], pd.Series]
 
@@ -82,6 +116,19 @@ class Property:
 
 
 def Constant(c: Number) -> Property:
+    """
+    Create a constant-valued Property.
+
+    Parameters
+    ----------
+    c : Number
+        The constant value to use.
+
+    Returns
+    -------
+    Property
+        A Property that returns `c` for every row in the DataFrame.
+    """
     return Property(str(c), lambda df, v=c: pd.Series(v, index=df.index))
 
 
@@ -90,12 +137,33 @@ def Constant(c: Number) -> Property:
 @dataclass(frozen=True)
 class Predicate:
     """
-    A boolean test on each row of a DataFrame.
-    Implements:
-      - Idempotence:  P ∧ P == P,   P ∨ P == P
-      - Nested flattening:  (A ∧ B) ∧ C → A ∧ B ∧ C  (similarly for ∨)
-      - Identity laws with True/False
-      - Double‐negation elimination: ¬(¬P) → P
+    A boolean-valued expression on a DataFrame.
+
+    Predicates support logical operations including AND (`&`), OR (`|`),
+    XOR (`^`), NOT (`~`), and implication via `.implies()` or `>>`.
+
+    Parameters
+    ----------
+    name : str
+        The symbolic name of the predicate.
+    func : Callable[[pd.DataFrame], pd.Series]
+        A function that evaluates to a boolean Series row-wise.
+
+    Attributes
+    ----------
+    _and_terms : list[Predicate], optional
+        Flattened AND operands, used internally.
+    _or_terms : list[Predicate], optional
+        Flattened OR operands, used internally.
+    _neg_operand : Predicate, optional
+        The negated operand, if this predicate is a negation.
+
+    Examples
+    --------
+    >>> even = Predicate("even", lambda df: df["n"] % 2 == 0)
+    >>> gt_5 = Predicate(">5", lambda df: df["n"] > 5)
+    >>> even & gt_5
+    <Predicate (even) ∧ (>5)>
     """
     name: str
     func: Callable[[pd.DataFrame], pd.Series]
@@ -251,22 +319,25 @@ class Predicate:
 
     def implies(self, other: "Predicate", *, as_conjecture: bool = False) -> "Predicate":
         """
-        Logical implication  self → other.
+        Logical implication: self → other.
 
         Parameters
         ----------
         other : Predicate
-            The conclusion.
-        as_conjecture : bool, default False
-            • False  → return a plain Predicate (¬self ∨ other); good for
-              further boolean algebra.
-            • True   → return a Conjecture(self, other) with .is_true(),
-              .accuracy(), etc.
+            The consequence.
+        as_conjecture : bool, optional
+            If True, returns a `Conjecture`. If False, returns a `Predicate`
+            equivalent to ¬self ∨ other.
+
+        Returns
+        -------
+        Predicate or Conjecture
+            The implication formula.
 
         Examples
         --------
-        P.implies(Q)                  # ≡ ¬P ∨ Q  (Predicate)
-        P.implies(Q, as_conjecture=True)   # Conjecture(P, Q)
+        >>> P.implies(Q)                # returns Predicate
+        >>> P.implies(Q, as_conjecture=True)  # returns Conjecture
         """
         if as_conjecture:
             return Conjecture(self, other)
@@ -306,6 +377,34 @@ FALSE = Predicate("False", lambda df: pd.Series(False, index=df.index))
 # ───────── Inequality ─────────
 
 class Inequality(Predicate):
+    """
+    A comparison between two `Property` expressions.
+
+    Constructed automatically when using operators like `p1 < p2`.
+
+    Parameters
+    ----------
+    lhs : Property
+        The left-hand side of the inequality.
+    op : str
+        The comparison operator. One of {"<", "<=", ">", ">=", "==", "!="}.
+    rhs : Property
+        The right-hand side of the inequality.
+
+    Attributes
+    ----------
+    lhs : Property
+        Left operand.
+    rhs : Property
+        Right operand.
+    op : str
+        The operator used.
+
+    Examples
+    --------
+    >>> p1 < p2
+    <Inequality (p1 < p2)>
+    """
     def __init__(self, lhs: Property, op: str, rhs: Property):
         name = f"{lhs.name} {op} {rhs.name}"
         def func(df: pd.DataFrame) -> pd.Series:
@@ -321,10 +420,40 @@ class Inequality(Predicate):
         object.__setattr__(self, 'op',  op)
 
     def slack(self, df: pd.DataFrame) -> pd.Series:
+        """
+        Compute the slack of the inequality on a DataFrame.
+
+        Slack is defined as:
+        - rhs - lhs for "<", "<=", "≤"
+        - lhs - rhs for ">", ">="
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The data on which to evaluate the slack.
+
+        Returns
+        -------
+        pd.Series
+            The row-wise slack values.
+        """
         L, R = self.lhs(df), self.rhs(df)
         return (R - L) if self.op in ("<","<=","≤") else (L - R)
 
     def touch_count(self, df: pd.DataFrame) -> int:
+        """
+        Count how many rows satisfy the inequality with equality.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The data to evaluate.
+
+        Returns
+        -------
+        int
+            The number of rows where slack is exactly zero.
+        """
         return int((self.slack(df) == 0).sum())
 
     def __eq__(self, other):
@@ -342,6 +471,24 @@ class Inequality(Predicate):
 # ───────── Conjecture ─────────
 
 class Conjecture(Predicate):
+    """
+    A logical implication between two predicates.
+
+    Represents a rule of the form: (hypothesis) → (conclusion).
+
+    Parameters
+    ----------
+    hypothesis : Predicate
+        The antecedent of the implication.
+    conclusion : Predicate
+        The consequent of the implication.
+
+    Examples
+    --------
+    >>> conj = P >> Q
+    >>> conj.is_true(df)
+    True
+    """
     def __init__(self, hypothesis: Predicate, conclusion: Predicate):
         name = f"({hypothesis.name}) → ({conclusion.name})"
         func = lambda df: (~hypothesis(df)) | conclusion(df)
@@ -350,15 +497,57 @@ class Conjecture(Predicate):
         object.__setattr__(self, 'conclusion',  conclusion)
 
     def is_true(self, df: pd.DataFrame) -> bool:
+        """
+        Check if the conjecture holds on all rows of the DataFrame.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The data to evaluate.
+
+        Returns
+        -------
+        bool
+            True if all rows satisfy the implication.
+        """
         return bool(self(df).all())
 
     def accuracy(self, df: pd.DataFrame) -> float:
+        """
+        Compute the conditional accuracy of the conjecture.
+
+        This is defined as the fraction of rows satisfying the conclusion
+        among those satisfying the hypothesis.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The data to evaluate.
+
+        Returns
+        -------
+        float
+            The accuracy of the conjecture.
+        """
         hyp = self.hypothesis(df)
         if not hyp.any():
             return 0.0
         return float(self(df)[hyp].mean())
 
     def counterexamples(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Return the rows that violate the conjecture.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The data to search.
+
+        Returns
+        -------
+        pd.DataFrame
+            Subset of rows where the implication fails.
+        """
         return df[~self(df)]
 
     def __repr__(self):

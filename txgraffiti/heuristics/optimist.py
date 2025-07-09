@@ -1,9 +1,8 @@
+
+from typing import List
 from txgraffiti.logic import *
 
 __all__ = [
-    'normalize_inequality_key',
-    'same_conclusion',
-    'is_strict_subset',
     'morgan',
 ]
 

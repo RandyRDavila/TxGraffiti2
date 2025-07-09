@@ -6,6 +6,7 @@ __pycache__/
 .venv/
 env/
 venv/
+testenv/
 
 # Pytest cache
 .pytest_cache/
@@ -16,3 +17,11 @@ venv/
 
 # Experiment files
 example.py
+example.ipynb
+
+*.pyo
+*.egg-info/
+dist/
+build/
+.env/
+.ipynb_checkpoints/

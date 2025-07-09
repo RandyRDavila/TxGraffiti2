@@ -1,12 +1,25 @@
+"""
+Linear programming-based conjecture generator.
+
+This module defines generators that formulate inequalities between numeric
+graph invariants using sum-of-slacks linear programs. Given a hypothesis
+and a list of feature properties, the LP computes the best linear upper and
+lower bounds on a target invariant, yielding inequalities suitable for
+conjecture generation.
+
+Requires an LP solver (CBC or GLPK) available on the system path.
+"""
+
 import numpy as np
 import pandas as pd
 import pulp
 import shutil
 
+
 from fractions import Fraction
-from typing import List, Tuple
+from typing import List, Tuple, Iterator
 from txgraffiti.generators.registry import register_gen
-from txgraffiti.logic import Constant, Property, Predicate, Conjecture, Inequality
+from txgraffiti.logic import *
 
 
 __all__ = [
@@ -29,14 +42,37 @@ def _solve_sum_slack_lp(
     sense: str = "upper"
 ) -> Tuple[np.ndarray, float]:
     """
-    Solve LP:
-      minimize sum_i s_i
-      s.t.  for all i:
-         if sense=="upper":   a·x_i + b - y_i   = s_i ≥ 0
-         if sense=="lower":   y_i - (a·x_i + b)   = s_i ≥ 0
+    Solve a sum-of-slacks linear program to fit a hyperplane bounding y.
 
-      Returns (a_sol, b_sol).
+    The objective is to minimize the total slack in approximating `y` using
+    a linear combination of `X` plus a bias term, either as an upper or
+    lower bound:
+
+    - If `sense == "upper"`: minimize ∑ (a·x_i + b - y_i), subject to nonnegative slack
+    - If `sense == "lower"`: minimize ∑ (y_i - a·x_i - b), subject to nonnegative slack
+
+    Parameters
+    ----------
+    X : np.ndarray
+        A 2D array of shape (n_samples, n_features) representing the feature values.
+
+    y : np.ndarray
+        A 1D array of target values, same length as the number of rows in `X`.
+
+    sense : {'upper', 'lower'}, optional
+        Whether to fit an upper or lower bounding hyperplane. Default is `"upper"`.
+
+    Returns
+    -------
+    Tuple[np.ndarray, float]
+        Tuple `(a, b)` where `a` is the weight vector and `b` is the intercept term.
+
+    Raises
+    ------
+    RuntimeError
+        If the LP does not solve optimally or no solver is found.
     """
+
     n, k = X.shape
     prob = pulp.LpProblem("sum_slack", pulp.LpMinimize)
 
@@ -78,14 +114,47 @@ def linear_programming(
     target:     Property,
     hypothesis: Predicate,
     tol:        float = 1e-8
-) -> Conjecture:
+) -> Iterator[Conjecture]:
     """
-    Solve a sum‐of‐slacks LP to find coefficients (a,b) such that
-      hypothesis → (y ≤ a^T x + b)
-      hypothesis → (y ≥ a^T x + b)
+    Generate linear inequality conjectures via sum-of-slacks linear programming.
 
-    Returns a generator of Conjectures.
+    For a set of objects (rows) satisfying the `hypothesis`, this function fits
+    two bounding hyperplanes — one upper and one lower — that linearly relate
+    the `target` invariant to a weighted combination of `features`. It does so by
+    minimizing the sum of slack variables in a linear program, producing:
+
+    - `hypothesis → target ≤ a₁·f₁ + ... + a_k·f_k + b`
+    - `hypothesis → target ≥ a₁·f₁ + ... + a_k·f_k + b`
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset containing invariant values of mathematical objects.
+
+    features : List[Property]
+        A list of properties to use as explanatory variables (features).
+
+    target : Property
+        The property to predict or bound, appearing on the LHS.
+
+    hypothesis : Predicate
+        Logical condition defining the subpopulation over which bounds are computed.
+
+    tol : float, optional
+        Tolerance for treating small coefficients as zero (default is `1e-8`).
+
+    Yields
+    ------
+    Conjecture
+        Conjectures expressing linear upper and lower bounds on the target
+        under the given hypothesis.
+
+    Raises
+    ------
+    ValueError
+        If no rows satisfy the hypothesis.
     """
+
     # 1) restrict to hypothesis‐true subset
     mask = hypothesis(df)
     sub = df[mask]

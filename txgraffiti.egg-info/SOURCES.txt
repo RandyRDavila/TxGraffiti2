@@ -1,4 +1,6 @@
+LICENSE
 README.md
+pyproject.toml
 setup.py
 txgraffiti/__init__.py
 txgraffiti.egg-info/PKG-INFO
@@ -6,6 +8,7 @@ txgraffiti.egg-info/SOURCES.txt
 txgraffiti.egg-info/dependency_links.txt
 txgraffiti.egg-info/requires.txt
 txgraffiti.egg-info/top_level.txt
+txgraffiti/example_data/__init__.py
 txgraffiti/export/__init__.py
 txgraffiti/export/lean_export.py
 txgraffiti/generators/__init__.py

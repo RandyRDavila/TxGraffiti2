@@ -1,3 +1,12 @@
+"""
+Convex-hull-based conjecture generator.
+
+This module defines a generator that builds linear inequality conjectures
+of the form `target ≥ RHS` or `target ≤ RHS` by computing the convex hull
+of feature-target vectors restricted to a logical hypothesis.
+"""
+
+
 import numpy as np
 from scipy.spatial import ConvexHull, QhullError
 import pandas as pd
@@ -21,6 +30,61 @@ def convex_hull(
     drop_side_facets: bool = True,
     tol:              float = 1e-8
 ) -> Iterator[Conjecture]:
+    """
+    Generate linear inequality conjectures using the convex hull of invariant vectors.
+
+    This function constructs the convex hull of points in `R^{k+1}` formed by appending
+    the `target` value to the values of each feature in `features`, restricted to rows
+    satisfying the given `hypothesis`. It interprets each facet of the convex hull as
+    a linear inequality between `target` and a linear combination of the features.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataset containing invariant values of mathematical objects.
+
+    features : List[Property]
+        A list of numeric-valued properties (functions on `df`) to appear on the RHS
+        of the inequality.
+
+    target : Property
+        The property to appear alone on the LHS of each inequality.
+
+    hypothesis : Predicate
+        A Boolean predicate restricting the rows (objects) used in convex hull generation.
+
+    drop_side_facets : bool, optional
+        If True (default), discard facets where the target coefficient is nearly 0, i.e.,
+        the inequality does not bound the target directly.
+
+    tol : float, optional
+        Numerical tolerance for filtering small coefficients. Default is `1e-8`.
+
+    Yields
+    ------
+    Conjecture
+        A conjecture of the form `hypothesis → target ≤ RHS` or `hypothesis → target ≥ RHS`,
+        where RHS is a linear combination of the features with rational coefficients.
+
+    Notes
+    -----
+    - Uses `scipy.spatial.ConvexHull` to derive inequalities from geometric facets.
+    - Coefficients are approximated by rational numbers using `Fraction.limit_denominator()`.
+    - If the convex hull cannot be constructed due to degeneracies, it is recomputed
+      with `qhull_options="QJ"` to jog input points slightly.
+
+    Examples
+    --------
+    >>> from txgraffiti.logic import Property, TRUE
+    >>> from txgraffiti.generators.hull_generators import convex_hull
+    >>> df = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 4, 8], 't': [3, 6, 11]})
+    >>> a = Property('a', lambda df: df['a'])
+    >>> b = Property('b', lambda df: df['b'])
+    >>> t = Property('t', lambda df: df['t'])
+    >>> list(convex_hull(df, features=[a, b], target=t, hypothesis=TRUE))
+    [Conjecture(TRUE → t >= 1*a + 1*b), Conjecture(TRUE → t <= 2*a + 3*b)]
+    """
+
     # … same body as before …
     mask, subdf = hypothesis(df), df[hypothesis(df)]
     k = len(features)
