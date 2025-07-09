@@ -110,8 +110,7 @@ Dataframe Updates
 Exporting
 ----------
 
-- `export_conjectures(path, format='json')` writes `.conjectures` to JSON (or CSV)
-- `export_to_lean(path, name_prefix='conjecture', object_symbol=None)` writes Lean 4
+- `def conjecture_to_lean4(conj: Conjecture, name: str, object_symbol: str = "G", object_decl: str = "SimpleGraph V") -> str` writes Lean 4
   theorem stubs for all cached conjectures
 
 Column Conversions
@@ -153,7 +152,12 @@ Illustrative Example
    )
 
    # 5) Export to Lean
-   pg.export_to_lean("graph_conjectures.lean", name_prefix="graph_conj")
+   pg.conjecture_to_lean4(
+    "graph_conjectures.lean",
+    name="graph_conj",
+    object_symbol: str = "G",
+    object_decl: str = "SimpleGraph V",
+    )
 
    # 6) Wrap and print top 3
    for i, conj in enumerate(pg.conjectures[:3], start=1):
