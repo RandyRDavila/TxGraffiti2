@@ -44,9 +44,3 @@ jobs:
           # Leave `password:` blank when using OIDC / Trusted Publishing
           skip-existing: true
 
-      # ▸ Option B — **Classic API token** (uncomment if not using OIDC):
-      # - name: Publish to PyPI (token)
-      #   uses: pypa/gh-action-pypi-publish@release/v1
-      #   with:
-      #     password: ${{ secrets.PYPI_API_TOKEN }}
-      #     skip-existing: true
