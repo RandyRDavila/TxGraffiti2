@@ -25,3 +25,20 @@ dist/
 build/
 .env/
 .ipynb_checkpoints/
+
+
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Test cache
+.pytest_cache/
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
