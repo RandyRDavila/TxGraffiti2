@@ -1,43 +1,50 @@
-# TxGraffiti: Automated Conjecture Generation Library for Python
+# TxGraffiti: Automated Conjecture Generation in Python
 
-[![Docs](https://img.shields.io/readthedocs/txgraffiti2)](https://txgraffiti2.readthedocs.io/en/latest/)
-[![PyPI](https://img.shields.io/pypi/v/txgraffiti.svg)](https://pypi.org/project/txgraffiti/)
+[![PyPI version](https://img.shields.io/pypi/v/txgraffiti.svg)](https://pypi.org/project/txgraffiti/)
+[![Documentation Status](https://readthedocs.org/projects/txgraffiti2/badge/?version=latest)](https://txgraffiti2.readthedocs.io/en/latest/)
+[![Build Status](https://github.com/RandyRDavila/TxGraffiti2/actions/workflows/python-ci.yml/badge.svg)](https://github.com/RandyRDavila/TxGraffiti2/actions)
+[![License](https://img.shields.io/github/license/RandyRDavila/TxGraffiti2)](LICENSE)
 
+---
 
-**TxGraffiti** is a Python package for building, evaluating, and refining mathematical conjectures over tabular data (e.g., graph invariants). It provides a clean, composable API for:
+**TxGraffiti** is a Python library for building, evaluating, and discovering mathematical conjectures from structured data—particularly graph invariants and number-theoretic quantities.
 
-* **Numeric expressions** (`Property`): lift columns or constants into first‑class objects supporting `+, -, *, /, **`.
-* **Boolean predicates** (`Predicate`): define row‑wise tests and combine them with `∧`, `∨`, and `¬`.
-* **Inequalities** (`Inequality`): compare `Property` objects to generate rich, named predicates, with helper methods for slack and touch counts.
-* **Implications** (`Conjecture`): express and verify if a hypothesis implies a conclusion, with methods for accuracy, counterexample extraction, and more.
+Inspired by the original *Graffiti* program of Siemion Fajtlowicz, this package automates the creative mathematical process using a combination of symbolic logic, optimization, heuristics, and postprocessing.
 
-This repo will evolve into a full framework for:
+---
 
-1. **Conjecture generation** via linear programming and heuristic filtering.
-2. **Conjecture ranking** using sharpness, significance, and geometric scores.
-3. **Counterexample search** integrated into a feedback loop (Optimist–Pessimist agents).
-4. **Dataset management** for known mathematical objects (graphs, polytopes, integers, etc.).
-5. **Notebook examples** showcasing end‑to‑end workflows from data to publishable conjectures.
+## Features
+
+- Work with **properties** (numeric features), **predicates** (boolean tests), and **inequalities**
+- Automatically **generate conjectures** using convex hull, LP, and ratio methods
+- Apply **heuristics** to reduce noise and prioritize meaningful conjectures
+- Compose logical hypotheses and filter conjectures by truth and significance
+- Use built-in datasets on graphs and integers, or plug in your own
+- Export results to Lean4, search for counterexamples, and iterate
 
 ---
 
 ## Installation
 
+Install from PyPI:
+
 ```bash
-pip install txgraffiti  # coming soon
-# or
-git clone https://github.com/RandyRDavila/txgraffiti2.git
-cd txgraffiti2
-pip install -e .
+pip install txgraffiti
+```
+
+To install from source:
+
+```bash
+git clone https://github.com/RandyRDavila/TxGraffiti2.git
+cd TxGraffiti2
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .[dev]
 ```
 
 ---
 
-## Quickstart
-
-Below we give examples of the basic functionality of `txgraffiti` using included sample datasets.
-
-### Graph Theory Sample Data Example
+## Example: Graph Theory Conjectures
 
 Below is a minimal example of using `txgraffiti` on a built in dataset of precomputed values on simple, connected, and nontrivial graphs.
 
@@ -85,7 +92,7 @@ Conjecture 1. ∀ G: ((connected) ∧ (bipartite)) → (independence_number == (
 Conjecture 2. ∀ G: ((connected) ∧ (max_degree == min_degree) ∧ (bipartite)) → (independence_number == matching_number)
 ```
 
-### Integer Sample Data Example
+## Example: Integer Dataset
 
 Next, we conjecture on the built in integer dataset.
 ```python
@@ -139,13 +146,31 @@ Conjecture 6. ∀ n.PositiveInteger: (is_fibonacci) → (collatz_steps >= prime_
 Run the existing pytest suite:
 
 ```bash
-pytest -q
+pytest
 ```
 
-Contributions, issues, and suggestions are very welcome! See [CONTRIBUTING.md](/CONTRIBUTING.md) for guidelines.
+## Contributing
+
+Contributions, ideas, and suggestions are welcome!
+To get involved:
+
+1. Fork the repository
+2. Create a new branch
+3. Submit a pull request
+
+See [CONTRIBUTING.md](/CONTRIBUTING.md) for details.
 
 ---
 
-### Authors
+## License
 
-© 2025 Randy Davila and Jillian Eddy. Licensed under MIT.
+This project is licensed under the MIT License. See the [LICENSE](/LICENSE) file for details.
+
+
+---
+
+## Authors
+
+- Randy Davila, PhD – Lead developer
+
+- Jillian Eddy – Co-developer, logic design
