@@ -1,5 +1,8 @@
 version: 2
 
+sphinx:
+  configuration: docs/source/conf.py
+
 build:
   os: ubuntu-22.04
   tools:
@@ -10,7 +13,3 @@ python:
     - method: pip
       path: .
     - requirements: docs/requirements.txt
-
-sphinx:
-  configuration: docs/source/conf.py
-  builder: html
