@@ -46,7 +46,7 @@ To work on the source or run the tests:
 
 .. code-block:: bash
 
-   git clone https://github.com/yourusername/txgraffiti.git
+   git clone https://github.com/RandyRDavila/TxGraffiti2.git
    cd txgraffiti
    # create an isolated environment (recommended)
    python -m venv .venv
@@ -67,7 +67,7 @@ Install from Source
 
 .. code-block:: bash
 
-   git clone https://github.com/RandyRDavila/txgraffiti2.git
+   git clone https://github.com/RandyRDavila/TxGraffiti2.git
    cd txgraffiti
    pip install -e .
 
