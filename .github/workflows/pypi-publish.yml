@@ -1,11 +1,10 @@
 # .github/workflows/pypi-publish.yml
-name: Publish to PyPI
+name: Publish Python 🐍 distribution 📦 to PyPI
 
 on:
-  # Publish when you push a git tag like  v0.1.0  or  v1.2.3
   push:
     tags:
-      - "v*"
+      - 'v*'
   # Allow manual triggers from the GitHub UI
   workflow_dispatch:
 
