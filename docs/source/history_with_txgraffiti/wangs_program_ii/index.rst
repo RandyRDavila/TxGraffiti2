@@ -1,5 +1,5 @@
-Wang's Program II (1959)
-========================
+Wang's Program II
+=================
 
 This page recreates the logic-based conjecturing process of Wang's early AI system using `txgraffiti`'s symbolic logic layer.
 

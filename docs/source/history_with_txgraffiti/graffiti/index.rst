@@ -1,5 +1,5 @@
-Graffiti and the Dalmatian Heuristic
-====================================
+Fajtlowicz's Graffiti
+=====================
 
 The *Graffiti* program, developed by Siemion Fajtlowicz in the 1980s, was one of the first systems to generate novel mathematical conjectures. It proposed inequalities between graph invariants — such as independence number, residue, radius, and domination number — and led to the discovery and eventual proofs of dozens of new theorems.
 

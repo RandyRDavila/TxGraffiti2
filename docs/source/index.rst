@@ -35,18 +35,22 @@ Let your machine dream. Let it write mathematics.
 
    key_features/logic/index
    key_features/generators/index
+   key_features/heuristics/index
    playground/conjecture_playground
 
 
 
 .. toctree::
    :maxdepth: 1
-   :caption: Tutorial with Historic Systems
+   :caption: Automated Conjecturing Systems
 
    history_with_txgraffiti/history
    history_with_txgraffiti/wangs_program_ii/index
-   history_with_txgraffiti/graphedron/index
    history_with_txgraffiti/graffiti/index
+   history_with_txgraffiti/graffiti_pc/index
+   history_with_txgraffiti/graphedron/index
+   history_with_txgraffiti/txgraffiti/index
+
 
 .. ------
 

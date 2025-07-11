@@ -8,4 +8,4 @@ TxGraffiti's generators module allows for discovery of inequalities and equaliti
 
    enumeration
    convex_hull
-   linear_programming
+   linear_pro

@@ -1,5 +1,5 @@
-GraPHedron and Geometric Conjecturing
-=====================================
+Melót's GraPHedron
+===================
 
 The **GraPHedron** system introduced a geometric approach to automated conjecturing:
 each mathematical object is mapped to a point in Euclidean space based on its invariant

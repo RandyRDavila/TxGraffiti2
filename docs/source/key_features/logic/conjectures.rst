@@ -1,154 +1,118 @@
-Conjecture Objects
-==================
+Conjecture
+==========
 
-A **Conjecture** is the central object in TxGraffiti’s DSL for expressing and
-evaluating logical implications over tabular data.  It represents
+A **Conjecture** packages a row‐wise logical implication
 
 .. math::
 
    H(x)\;\Longrightarrow\;C(x)
 
-where:
+where **H** (the hypothesis) and **C** (the conclusion) are both `Predicate` objects.
+It provides:
 
-- **H** (the *hypothesis*) and **C** (the *conclusion*) are both `Predicate` objects
-- Evaluation is deferred until you apply the conjecture to a `pandas.DataFrame`
+- **Deferred evaluation**: calling `conj(df)` returns a Boolean mask
+- **Universal check**: `conj.is_true(df)` tells you if it holds on every row
+- **Accuracy, counterexamples**, and integration into discovery pipelines
 
-Each `Conjecture` carries not only its symbolic form but also methods to test,
-measure, and inspect it on your dataset.
+Creation Methods
+----------------
 
-Key Features
-------------
+There are three equivalent ways to build a `Conjecture(H, C)`:
 
-- **Construction**
-  Create a conjecture by passing two `Predicate` instances, or use the right‐shift
-  operator `>>` for syntactic sugar:
+1. **Direct constructor**
+2. **`.implies(..., as_conjecture=True)`**
+3. **Shift operator `>>`**
 
-  .. code-block:: python
+Below we illustrate all three.
 
-     from txgraffiti.logic.conjecture_logic import Conjecture
+.. code-block:: python
 
-     # explicit constructor
-     conj1 = Conjecture(hyp_pred, conc_pred)
+   import pandas as pd
+   from txgraffiti.logic.conjecture_logic import (
+       Property, Predicate, Conjecture, TRUE
+   )
 
-     # using >> operator
-     conj2 = hyp_pred >> conc_pred
+   # Sample DataFrame
+   df = pd.DataFrame({
+       'alpha':    [1, 2, 3],
+       'beta':     [3, 1, 1],
+       'connected':[True, True, True],
+       'tree':     [False, False, True],
+   })
 
-- **Row-wise mask**
-  Calling the `Conjecture` on a DataFrame yields a Boolean `Series`:
+   # Lift numeric columns to Property
+   alpha = Property('alpha',   lambda df: df['alpha'])
+   beta  = Property('beta',    lambda df: df['beta'])
 
-  .. code-block:: python
+   # Hypothesis and conclusion
+   hypothesis = Predicate('connected', lambda df: df['connected'])
+   conclusion = alpha <= (2 * beta + 3)
 
-     mask = conj(df)
-     # equivalent to (~hyp_pred(df)) | conc_pred(df)
+   # 1) Direct constructor
+   conj1 = Conjecture(hypothesis, conclusion)
+   print(f"conj1 = {conj1}")
+   print(conj1(df))
+   print(f"conj1.is_true(df) = {conj1.is_true(df)}\n")
 
-- **Universal truth check**
-  Test if the implication holds on *every* row:
+   # 2) Using .implies(..., as_conjecture=True)
+   conj2 = hypothesis.implies(conclusion, as_conjecture=True)
+   print(f"conj2 = {conj2}")
+   print(conj2(df))
+   print(f"conj2.is_true(df) = {conj2.is_true(df)}\n")
 
-  .. code-block:: python
+   # 3) Using >> operator
+   conj3 = hypothesis >> conclusion
+   print(f"conj3 = {conj3}")
+   print(conj3(df))
+   print(f"conj3.is_true(df) = {conj3.is_true(df)}\n")
 
-     holds_all = conj.is_true(df)
-     print("Always true?", holds_all)
-
-- **Accuracy**
-  Among the rows where **H** is true, compute the fraction where **C** also holds:
-
-  .. code-block:: python
-
-     acc = conj.accuracy(df)
-     print(f"Accuracy under hypothesis: {acc:.2%}")
-
-- **Counterexamples**
-  Retrieve the subset of rows that violate the implication:
-
-  .. code-block:: python
-
-     bad_rows = conj.counterexamples(df)
-     print("Counterexamples:\n", bad_rows)
-
-Motivation
-----------
-
-In exploratory data analysis and automated conjecturing, you frequently need to:
-
-1. **Define** a row-wise condition **H** on your data
-2. **Define** a conclusion **C** you think follows from **H**
-3. **Test** the implication across your entire dataset
-4. **Quantify** how often it holds (accuracy) and inspect failures (counterexamples)
-
-A standalone boolean mask or pair of masks is cumbersome: you lose the logical
-structure, naming, and integrated metrics.  `Conjecture` packages all of these
-concerns into a single, composable object that plays nicely with generators,
-heuristics, and export tools.
-
-Illustrative Example
---------------------
-
-Suppose we have two numeric columns \(x\) and \(y\), and we wish to test:
-
-.. math::
-
-   \text{if }x \ge 2\text{ then }y \le 1.2\,x.
-
-1) **Prepare the DataFrame**:
-
-   .. code-block:: python
-
-      import pandas as pd
-
-      df = pd.DataFrame({
-          'x': [1, 2, 3, 4, 5],
-          'y': [1.1, 1.9, 3.0, 4.2, 4.8],
-      })
-
-2) **Lift to `Property`**:
-
-   .. code-block:: python
-
-      from txgraffiti.logic.conjecture_logic import Property
-
-      X = Property('x', lambda df: df['x'])
-      Y = Property('y', lambda df: df['y'])
-
-3) **Define hypothesis** \(\,H(x)= (x \ge 2)\) and **conclusion**
-   \(C(x)= (y \le 1.2\,x)\):
-
-   .. code-block:: python
-
-      hyp = (X >= 2)
-      conc = (Y <= 1.2 * X)
-
-4) **Construct the `Conjecture`**:
-
-   .. code-block:: python
-
-      from txgraffiti.logic.conjecture_logic import Conjecture
-
-      conj = Conjecture(hyp, conc)
-
-5) **Evaluate and summarize**:
-
-   .. code-block:: python
-
-      mask    = conj(df)
-      holds   = conj.is_true(df)
-      accuracy = conj.accuracy(df)
-      cex     = conj.counterexamples(df)
-
-      print("Mask:", mask.tolist())
-      print("Holds on all rows?", holds)
-      print(f"Accuracy under H: {accuracy:.2%}")
-      print("Counterexamples:\n", cex)
-
-Output:
+# Expected output:
 
 .. code-block:: text
 
-   Mask: [True, True, True, True, True]
-   Holds on all rows? True
-   Accuracy under H: 100.00%
-   Counterexamples:
-   Empty DataFrame
+   conj1 = <Conj (connected) → (alpha <= ((2 * beta) + 3))>
+   0    True
+   1    True
+   2    True
+   dtype: bool
+   conj1.is_true(df) = True
 
-After this you can pass your `Conjecture` into discovery pipelines, apply
-heuristics (e.g. Morgan, Dalmatian), post‐process (sorting, deduplication),
-and even export to formal theorem stubs for Lean or Coq.
+   conj2 = <Conj (connected) → (alpha <= ((2 * beta) + 3))>
+   0    True
+   1    True
+   2    True
+   dtype: bool
+   conj2.is_true(df) = True
+
+   conj3 = <Conj (connected) → (alpha <= ((2 * beta) + 3))>
+   0    True
+   1    True
+   2    True
+   dtype: bool
+   conj3.is_true(df) = True
+
+Key Methods
+-----------
+
+- **`conj(df)`**
+  Returns a `pandas.Series[bool]` mask equal to \((¬H(df)) ∨ C(df)\).
+
+- **`conj.is_true(df)`**
+  Returns **True** iff every row satisfies the implication.
+
+- **`conj.accuracy(df)`**
+  Fraction of rows where `H` is true that also satisfy `C`.
+
+- **`conj.counterexamples(df)`**
+  Returns a `DataFrame` of rows violating the implication.
+
+Integration
+-----------
+
+`Conjecture` objects can be:
+
+- Filtered by **heuristics** (e.g. Morgan, Dalmatian)
+- Sorted or deduplicated in **post‐processors**
+- Exported to formal‐proof stubs (Lean 4) via `export_to_lean`
+
+Use `Conjecture` as the core unit in your automated‐discovery workflows.
