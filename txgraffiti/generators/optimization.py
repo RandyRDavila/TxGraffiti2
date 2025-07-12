@@ -19,6 +19,7 @@ import shutil
 from fractions import Fraction
 from typing import List, Tuple, Iterator
 from txgraffiti.generators.registry import register_gen
+from txgraffiti.utils.safe_generator import safe_generator
 from txgraffiti.logic import *
 
 
@@ -106,6 +107,7 @@ def _solve_sum_slack_lp(
     b_sol = float(b_var.value())
     return a_sol, b_sol
 
+@safe_generator
 @register_gen
 def linear_programming(
     df: pd.DataFrame,

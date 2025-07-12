@@ -16,6 +16,10 @@ dependencies = ["pandas", "numpy", "scipy", "pulp"]
 Homepage = "https://github.com/RandyRDavila/txgraffiti2"
 Documentation = "https://txgraffiti.readthedocs.io"
 
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "coverage"]
+
+
 [tool.setuptools.packages.find]
 where = ["."]
 

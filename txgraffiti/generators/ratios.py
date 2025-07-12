@@ -13,11 +13,13 @@ from fractions import Fraction
 
 from txgraffiti.logic import *
 from txgraffiti.generators.registry import register_gen
+from txgraffiti.utils.safe_generator import safe_generator
 
 __all__ = [
     'ratios',
 ]
 
+@safe_generator
 @register_gen
 def ratios(
     df: pd.DataFrame,

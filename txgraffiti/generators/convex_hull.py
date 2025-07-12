@@ -15,11 +15,13 @@ from fractions import Fraction
 
 from txgraffiti.logic import Constant, Property, Predicate, Conjecture, Inequality
 from txgraffiti.generators.registry import register_gen
+from txgraffiti.utils.safe_generator import safe_generator
 
 __all__ = [
     'convex_hull',
 ]
 
+@safe_generator
 @register_gen
 def convex_hull(
     df: pd.DataFrame,
