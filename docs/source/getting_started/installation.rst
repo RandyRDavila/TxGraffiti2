@@ -71,8 +71,6 @@ Install from Source
    cd txgraffiti
    pip install -e .
 
----
-
 Once installed, verify your setup:
 
 .. code-block:: bash

@@ -10,3 +10,4 @@ TxGraffiti's logic system allows you to build symbolic expressions over tabular 
    predicates
    inequalities
    conjectures
+   tables

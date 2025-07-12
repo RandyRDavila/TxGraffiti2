@@ -1,90 +1,107 @@
 Quickstart
 ==========
 
-Follow these steps to generate your first conjectures in under ten lines of code.
+Get started in just a few lines: load a dataset, define hypotheses, and generate mathematical conjectures using symbolic expressions and heuristics.
 
-1.  **Import and load data**
-    You can use your own `pandas.DataFrame`, or try the built-in `graph_data` toy dataset:
+Step 1: Load your data
+----------------------
 
-    .. code-block:: python
+You can use any `pandas.DataFrame`—TxGraffiti works on tabular data with numeric or boolean columns.
 
-       import pandas as pd
-       from txgraffiti.example_data import graph_data
+Try the built-in graph dataset:
 
-       # Option A: use the bundled graph dataset
-       df = graph_data
+.. code-block:: python
 
-       # Option B: load your own CSV
-       # df = pd.read_csv("my_graph_invariants.csv")
+   from txgraffiti.example_data import graph_data
+   df = graph_data  # structured invariants for connected graphs
 
-2.  **Create a ConjecturePlayground**
-    Wrap the DataFrame in a session.  Choose a symbol (e.g. `G`) to represent each row:
+Step 2: Initialize a playground
+-------------------------------
 
-    .. code-block:: python
+Wrap your dataset in a `ConjecturePlayground` session. This gives you symbolic access to all features.
 
-       from txgraffiti.playground import ConjecturePlayground
+.. code-block:: python
 
-       pg = ConjecturePlayground(
-           df,
-           object_symbol="G",    # used in ∀/∃ output
-           base="connected"      # optional: assume every graph is connected
-       )
+   from txgraffiti.playground import ConjecturePlayground
 
-3.  **Define hypotheses**
-    Lift Boolean columns or build new ones using `Predicate` expressions:
+   ai = ConjecturePlayground(
+       df,
+       object_symbol="G",      # used in printed formulas (∀ G: …)
+       base="connected",       # optional: global assumption
+   )
 
-    .. code-block:: python
+Step 3: Define hypotheses
+-------------------------
 
-       # Existing Boolean columns become Predicates automatically:
-       regular = (pg.max_degree == pg.min_degree)
+You can build logical predicates using symbolic expressions:
 
-       # You can also combine or create new Predicates:
-       cubic   = regular & (pg.max_degree == 3)
-       bipartite = pg.bipartite  # if 'bipartite' column exists
+.. code-block:: python
 
-4.  **Run discovery**
-    Choose one or more **generator** functions, supply numeric **features** and a **target**,
-    and optionally pass **heuristics** and **post-processors** to filter & sort results:
+   regular = ai.max_degree == ai.min_degree
+   cubic   = regular & (ai.max_degree == 3)
+   small   = ai.max_degree <= 3
+   not_complete = ~ai.Kn
 
-    .. code-block:: python
+Step 4: Generate conjectures
+----------------------------
 
-       from txgraffiti.generators import convex_hull, linear_programming, ratios
-       from txgraffiti.heuristics import morgan, dalmatian
-       from txgraffiti.processing import remove_duplicates, sort_by_touch_count
+Choose your generator methods, features, target invariant, and heuristics:
 
-       pg.discover(
-           methods         = [convex_hull, linear_programming, ratios],
-           features        = ['order', 'matching_number', 'min_degree'],
-           target          = 'independence_number',
-           hypothesis      = [cubic, regular],
-           heuristics      = [morgan, dalmatian],
-           post_processors = [remove_duplicates, sort_by_touch_count],
-           # You can also pass generator-specific kwargs:
-           # drop_side_facets = True,
-           # round_decimals   = 3,
-           # min_fraction     = 0.10,
-       )
+.. code-block:: python
 
-5.  **Inspect your top conjectures**
-    The `.conjectures` list is sorted by your post-processors (e.g. touch-count):
+   from txgraffiti.generators import ratios, convex_hull, linear_programming
+   from txgraffiti.heuristics import dalmatian_accept, morgan_accept
+   from txgraffiti.processing import remove_duplicates, sort_by_touch_count
 
-    .. code-block:: python
+   ai.discover(
+       methods         = [ratios, convex_hull, linear_programming],
+       features        = [ai.independence_number],
+       target          = ai.zero_forcing_number,
+       hypothesis      = [cubic, small & not_complete],
+       heuristics      = [dalmatian_accept, morgan_accept],
+       post_processors = [remove_duplicates, sort_by_touch_count],
+   )
 
-       for i, conj in enumerate(pg.conjectures[:5], start=1):
-           print(f"Conjecture {i}.", pg.forall(conj))
-           print("  → accuracy:", f"{conj.accuracy(df):.2%}\n")
+Step 5: Print your top conjectures
+----------------------------------
 
-    Example output:
+.. code-block:: python
 
-    .. code-block:: text
+   for i, conj in enumerate(ai.conjectures[:5], start=1):
+       print(f"Conjecture {i}.", ai.forall(conj))
+       print("    Accuracy:", f"{conj.accuracy(df):.0%}\n")
 
-       Conjecture 1. ∀ G: (cubic) ∧ (order ≤ 2 · matching_number)
-         → accuracy: 100.00%
+Example output:
 
-       Conjecture 2. ∀ G: (connected) ∧ (min_degree ≥ 2)
-         → (independence_number ≤ order − 2)
-         accuracy:  85.71%
+.. code-block:: text
 
-That’s it!  You’ve generated and evaluated your first conjectures—mix and match
-different generators, hypotheses, and processing steps to discover new patterns
-in your data.
+   Conjecture 1. ∀ G: ((connected) ∧ (regular) ∧ (max_degree == 3)) → (zero_forcing_number ≥ 3)
+       Accuracy: 100%
+
+   Conjecture 2. ∀ G: ((connected) ∧ (max_degree ≤ 3) ∧ (¬(Kn))) → (zero_forcing_number ≤ (1 + independence_number))
+       Accuracy: 100%
+
+   Conjecture 3. ∀ G: ((connected) ∧ (regular) ∧ (max_degree == 3)) → (zero_forcing_number ≥ ((2 · independence_number) − 8))
+       Accuracy: 100%
+
+   Conjecture 4. ∀ G: ((connected) ∧ (max_degree ≤ 3) ∧ (¬(Kn))) → (zero_forcing_number ≥ ((6/5 · independence_number) − 37/5))
+       Accuracy: 100%
+
+   Conjecture 5. ∀ G: ((connected) ∧ (max_degree ≤ 3) ∧ (¬(Kn))) → (zero_forcing_number ≤ ((−1/5 · independence_number) + 47/5))
+       Accuracy: 100%
+
+----
+
+What's next?
+------------
+
+- Try other generators like `in_reverie` or `make_upper_linear_conjecture`.
+- Swap in your own dataset of tabular numerical data.
+- Explore how to export formulas to Lean 4 or generate new predicates recursively.
+
+.. seealso::
+
+   - :doc:`installation <installation>`
+   - :doc:`logic/index <../key_features/logic/index>`
+   - :doc:`playground/index <../key_features/playground/index>`
+
