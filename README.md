@@ -2,17 +2,24 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/txgraffiti.svg)](https://pypi.org/project/txgraffiti/)
 [![Documentation Status](https://readthedocs.org/projects/txgraffiti2/badge/?version=latest)](https://txgraffiti2.readthedocs.io/en/latest/)
-[![Build Status](https://github.com/RandyRDavila/TxGraffiti2/actions/workflows/python-ci.yml/badge.svg)](https://github.com/RandyRDavila/TxGraffiti2/actions)
+[![Build Status](https://github.com/RandyRDavila/TxGraffiti2/actions/workflows/ci.yml/badge.svg)](https://github.com/RandyRDavila/TxGraffiti2/actions)
 [![License](https://img.shields.io/github/license/RandyRDavila/TxGraffiti2)](LICENSE)
 [![codecov](https://codecov.io/gh/RandyRDavila/txgraffiti2/branch/main/graph/badge.svg)](https://codecov.io/gh/RandyRDavila/txgraffiti2)
 
-
-
 ---
 
-**TxGraffiti** is a Python library for building, evaluating, and discovering mathematical conjectures from structured data—particularly graph invariants and number-theoretic quantities.
+**TxGraffiti** is a Python package for **automated mathematical conjecture generation**.
 
-Inspired by the original *Graffiti* program of Siemion Fajtlowicz, this package automates the creative mathematical process using a combination of symbolic logic, optimization, heuristics, and postprocessing.
+It uncovers patterns, equalities, and inequalities in structured datasets by forming symbolic expressions and proposing data-backed conjectures. While originally developed to explore graph-theoretic invariants, TxGraffiti is domain-agnostic and can be applied to any tabular data where mathematical relationships may be discovered.
+
+Built on principles from the Graffiti family of programs, **TxGraffiti** blends logic, optimization, and heuristics to create meaningful, testable mathematical statements. It is designed for:
+
+- 📐 Mathematicians exploring new bounds and relationships
+- 📊 Data scientists modeling symbolic structure in tabular data
+- 🤖 AI researchers studying machine-driven discovery
+- 📚 Educators demonstrating the intersection of math and computation
+
+The system combines symbolic logic, heuristic filtering, and optimization techniques to produce clear, interpretable conjectures—making it a powerful tool for researchers, educators, and AI-assisted discovery.
 
 ---
 
@@ -27,23 +34,29 @@ Inspired by the original *Graffiti* program of Siemion Fajtlowicz, this package 
 
 ---
 
-## Installation
+## 📦 Installation
 
-Install from PyPI:
+Install the latest release from PyPI:
 
 ```bash
 pip install txgraffiti
 ```
 
-To install from source:
+To install the development version from source:
 
 ```bash
 git clone https://github.com/RandyRDavila/TxGraffiti2.git
 cd TxGraffiti2
+
+# Optional: create and activate a virtual environment
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate   # On Windows, use: .venv\Scripts\activate
+
+# Install the package in editable mode with development dependencies
 pip install -e .[dev]
 ```
+
+TxGraffiti requires Python 3.8 or later.
 
 ---
 
@@ -52,24 +65,23 @@ pip install -e .[dev]
 Below is a minimal example of using `txgraffiti` on a built in dataset of precomputed values on simple, connected, and nontrivial graphs.
 
 ```python
-from txgraffiti.playground    import ConjecturePlayground # the main class for finding conjectures
-from txgraffiti.generators    import convex_hull, linear_programming, ratios # methods for producing inequalities
-from txgraffiti.heuristics    import morgan_acceptance, dalmatian_acceptance # heuristics to reduce number of statements accepted.
-from txgraffiti.processing    import remove_duplicates, sort_by_touch_count # post processing for removal and sorting of conjectures.
-from txgraffiti.example_data  import graph_data   # bundled toy dataset
+from txgraffiti.playground    import ConjecturePlayground  # main interface for discovery
+from txgraffiti.generators    import convex_hull, linear_programming, ratios
+from txgraffiti.heuristics    import morgan_acceptance, dalmatian_acceptance
+from txgraffiti.processing    import remove_duplicates, sort_by_touch_count
+from txgraffiti.example_data  import graph_data            # bundled toy dataset
 
-# 2) Instantiate your playground
-#    object_symbol will be used when you pretty-print "∀ G.connected: …"
+# 1. Instantiate your playground
 ai = ConjecturePlayground(
     graph_data,
-    object_symbol='G'
+    object_symbol='G'  # used in pretty-printing: ∀ G: ...
 )
 
-# 3) (Optional) define any custom predicates
+# 2. (Optional) Define custom predicates
 regular = (ai.max_degree == ai.min_degree)
 cubic   = regular & (ai.max_degree == 3)
 
-# 4) Run discovery
+# 3. Run conjecture discovery
 ai.discover(
     methods         = [convex_hull, linear_programming, ratios],
     features        = ['order', 'matching_number', 'min_degree'],
@@ -80,11 +92,10 @@ ai.discover(
     post_processors = [remove_duplicates, sort_by_touch_count],
 )
 
-# 5) Print your top conjectures
+# 4. Print your top conjectures
 for idx, conj in enumerate(ai.conjectures[:10], start=1):
-    # wrap in ∀-notation for readability and conversion to Lean4
-    formula = ai.forall(conj)
-    print(f"Conjecture {idx}. {formula}\n")
+    print(f"Conjecture {idx}. {ai.forall(conj)}\n")
+
 ```
 
 The output of the above code should look something like the following:

@@ -34,12 +34,12 @@ Create constant‐valued properties and combine them:
    print(c2)           # <Constant 2>
    print(c2(df))       # Series: [2, 2, 2]
 
-   print(c2 + c3)      # <Constant 5>
+   print(c2 + c3)      # <Constant (2 + 3)>
    print((c2 + c3)(df))
    # [5, 5, 5]
 
    expr = 2*c2 - c3
-   print(expr)         # <Constant 1>
+   print(expr)         # <Constant ((2 * 2) - 3)>
    print(expr(df))     # [1, 1, 1]
 
 Properties

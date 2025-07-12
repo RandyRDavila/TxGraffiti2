@@ -1,4 +1,4 @@
-name: Docs Doctest CI
+name: Documentation
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  doctest:
-    name: Run Sphinx doctests
+  doctests:
+    name: Sphinx Doctests (RST)
     runs-on: ubuntu-latest
 
     steps:
@@ -19,17 +19,37 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install package (editable)
-        run: pip install -e .
-
-      - name: Install documentation + test dependencies
+      - name: Install dependencies
         run: |
-          pip install sphinx
+          pip install -e .
           pip install -r requirements.txt
-          pip install -r requirements-dev.txt || true  # optional
+          pip install -r requirements-dev.txt || true
+          pip install sphinx
 
       - name: Run Sphinx doctests
         run: |
-          pip install sphinx
           sphinx-build -b doctest docs/source docs/_build/doctest
 
+  docstring-tests:
+    name: Docstring Tests (Python)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt || true
+          pip install pytest
+
+      - name: Run docstring tests
+        run: |
+          pytest --doctest-modules txgraffiti
