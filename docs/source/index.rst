@@ -28,7 +28,6 @@ Let your machine dream. Let it write mathematics.
    getting_started/installation
    getting_started/quickstart
 
-
 .. toctree::
    :maxdepth: 1
    :caption: Key Features
@@ -37,9 +36,6 @@ Let your machine dream. Let it write mathematics.
    key_features/generators/index
    key_features/heuristics/index
    key_features/playground/index
-   key_features/export_utils/index
-
-
 
 .. toctree::
    :maxdepth: 1

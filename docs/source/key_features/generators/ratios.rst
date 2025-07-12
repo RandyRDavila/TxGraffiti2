@@ -1,61 +1,66 @@
 .. _key_features/generators/ratios:
 
-Ratio Derived Inequalities
-==========================
+Ratio-Based Inequalities
+=========================
 
-The **`ratios`** generator produces simple linear bounds of the form
+The **`ratios`** generator produces simple linear bounds of the form:
 
 .. math::
 
-   \text{if }H(x)\text{ then }
-   \begin{cases}
-     T(x) \;\ge\; c\,F(x),\\
-     T(x) \;\le\; C\,F(x),
-   \end{cases}
+   \text{If } H(x) \text{ then} \quad
+   T(x) \ge c \cdot F(x)
+   \quad \text{and} \quad
+   T(x) \le C \cdot F(x)
 
 where:
 
-- **H** is a `Predicate` (the hypothesis)
-- **T** is the **target** `Property`
-- **F** is a single **feature** `Property`
-- **c** is the lower bound constant:
+- \(H(x)\) is a `Predicate` (hypothesis),
+- \(T(x)\) is the **target** `Property`,
+- \(F(x)\) is a **feature** `Property`,
+- \(c\) is a **lower bound constant**:
 
-.. math::
-    c = \min_{H(x)=\mathrm{True}}\frac{T(x)}{F(x)}
+  .. math::
 
-- **C** is the lower bound constant:
+     c = \min_{x \in H^{-1}(\text{True})} \frac{T(x)}{F(x)}
 
-.. math::
-    C = \max_{H(x)=\mathrm{True}}\frac{T(x)}{F(x)}
+- \(C\) is an **upper bound constant**:
 
-It yields exactly two `Conjecture` objects per feature: one lower‐bound and one upper‐bound.
+  .. math::
 
-Key Steps
----------
+     C = \max_{x \in H^{-1}(\text{True})} \frac{T(x)}{F(x)}
 
-1. **Restrict** to the rows where the hypothesis holds:
-   \(\{x \mid H(x)=\mathrm{True}\}\).
+The generator emits exactly **two `Conjecture` objects per feature**: one lower-bound and one upper-bound inequality.
 
-2. **Compute ratios** are:
+Workflow
+--------
 
-.. math::
-    r_i = \frac{T(x_i)}{F(x_i)}
+1. **Restrict** the dataset to rows where the hypothesis holds:
 
- .. math::
-    c = \min_i r_i
+   .. math::
 
-.. math::
-    C = \max_i r_i.
+      D_H = \{x : H(x) = \text{True}\}
 
-3. **Emit** two conjectures per feature:
+2. **Compute ratios** for each object in \(D_H\):
 
-.. math::
+   .. math::
 
-    H(x)\;\Longrightarrow\;T(x) \;\ge\; c\,F(x)
+      r_i = \frac{T(x_i)}{F(x_i)}
 
-.. math::
+3. **Extract constants**:
 
-    H(x)\;\Longrightarrow\;T(x) \;\le\; C\,F(x)
+   .. math::
+
+      c = \min_i r_i,
+      \quad
+      C = \max_i r_i
+
+4. **Emit conjectures**:
+
+   .. math::
+
+      H(x) \Rightarrow T(x) \ge c \cdot F(x),
+      \quad
+      H(x) \Rightarrow T(x) \le C \cdot F(x)
 
 Usage Example
 -------------
@@ -66,7 +71,7 @@ Usage Example
    from txgraffiti.logic.conjecture_logic import Property, Predicate
    from txgraffiti.generators import ratios
 
-   # Sample DataFrame
+   # Sample dataset
    df = pd.DataFrame({
        'alpha':    [1, 2, 3],
        'beta':     [3, 1, 1],
@@ -74,69 +79,60 @@ Usage Example
        'tree':     [False, False, True],
    })
 
-   # 1) Lift columns to Property
-   target   = Property('alpha',   lambda df: df['alpha'])
-   features = [ Property('beta',  lambda df: df['beta']) ]
+   # Define target and features
+   target   = Property('alpha', lambda df: df['alpha'])
+   features = [Property('beta', lambda df: df['beta'])]
 
-   # 2) Define hypothesis
-   hypothesis = Predicate('connected', lambda df: df['connected'])
+   # Define hypothesis
+   hyp = Predicate('connected', lambda df: df['connected'])
 
-   # 3) Run the ratios generator
-   conjs = list(ratios(
-       df,
-       features   = features,
-       target     = target,
-       hypothesis = hypothesis
-   ))
+   # Generate conjectures
+   conjs = list(ratios(df, features=features, target=target, hypothesis=hyp))
 
-   print(conjs)
+   for c in conjs:
+       print(c)
 
 Expected Output
 ---------------
 
 .. code-block:: text
 
-   [
-     <Conj (connected) → (alpha >= (1/3 * beta))>,
-     <Conj (connected) → (alpha <= (3 * beta))>
-   ]
+   (connected) → (alpha >= (1/3 * beta))
+   (connected) → (alpha <= (3 * beta))
 
 Explanation
 -----------
 
-- For each row with `connected == True`, compute `alpha/beta`:
-  \([1/3, 2/1, 3/1] = [0.333…, 2.0, 3.0]\).
+For each row with `connected == True`, the `ratios` generator computes:
 
-- The **minimum** ratio \(c = 1/3\) yields
-  \((\alpha \ge \tfrac13\,\beta)\).
+.. math::
 
-- The **maximum** ratio \(C = 3\) yields
-  \((\alpha \le 3\,\beta)\).
+   \left[\frac{1}{3}, \frac{2}{1}, \frac{3}{1}\right] = [0.333…, 2.0, 3.0]
 
-These two `Conjecture` objects assert that, among connected graphs, the `alpha`
-value always lies between \(0.333\,\beta\) and \(3\,\beta\).
+- **Minimum** ratio is \(c = \tfrac{1}{3}\), yielding: \(\alpha \ge \tfrac{1}{3} \beta\)
+- **Maximum** ratio is \(C = 3\), yielding: \(\alpha \le 3 \beta\)
 
-Integration
------------
+These two inequalities form conjectures about how `alpha` is bounded by `beta` for connected graphs.
 
-You can combine `ratios` with:
+Integration with Playground
+----------------------------
 
-- **Multiple features**: supply a list of `Property` objects
-- **Heuristics**: filter by tightness, accuracy, or custom logic
-- **Post-processing**: dedupe, sort by touch-count, or strengthen to equalities
-
-For example, within a `ConjecturePlayground`:
+Use `ratios` inside the `ConjecturePlayground` to automate discovery:
 
 .. code-block:: python
 
+   from txgraffiti.playground import ConjecturePlayground
+   from txgraffiti.heuristics import morgan_accept, dalmatian_accept
+   from txgraffiti.processing import remove_duplicates, sort_by_touch_count
+
    pg = ConjecturePlayground(df, object_symbol='G')
    pg.discover(
-       methods   = [ratios],
-       features  = ['beta', 'gamma', ...],
-       target    = 'alpha',
-       hypothesis= 'connected',
-       heuristics= [morgan, dalmatian],
+       methods         = [ratios],
+       features        = ['beta', 'gamma'],
+       target          = 'alpha',
+       hypothesis      = 'connected',
+       heuristics      = [morgan_accept, dalmatian_accept],
        post_processors = [remove_duplicates, sort_by_touch_count],
    )
 
-The `ratios` generator will contribute linear bounds to your automated‐discovery workflow.
+The `ratios` generator contributes clean, data-driven bounds to your symbolic conjecture workflow.
