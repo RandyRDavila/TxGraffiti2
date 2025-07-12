@@ -1,4 +1,4 @@
-name: 📚 Docs Doctest CI
+name: 📚 Doctest
 
 on:
   push:
