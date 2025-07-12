@@ -81,19 +81,3 @@ Combine constants and columns seamlessly:
    expr2 = (alpha + beta) * c3 - c2
    print(expr2)        # <Property (((alpha + beta) * 3) - 2)>
    print(expr2(df))    # [10, 4, 4]
-
-Key Features
-------------
-
-- **Lifting**
-  - `Property(name, func)` wraps any column‐extracting function.
-  - `Constant(n)` lifts a scalar to a `Property`.
-- **Automatic simplification**
-  - `Constant(2) + Constant(3)` → `Constant(5)`
-  - `x + 0` → `x`, `x * 1` → `x`, `x * 0` → `Constant(0)`
-- **Operator overloading**
-  Use `+`, `-`, `*`, `/`, `**`, `%` between `Property` and scalars or other `Property`s.
-- **Deferred evaluation**
-  No DataFrame access until you call the object on `df`:
-  ```python
-  result = (alpha + 1)(df)

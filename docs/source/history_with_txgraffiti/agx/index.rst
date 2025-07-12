@@ -1,2 +1,0 @@
-Hansen & Caprossi's AGX
-===================

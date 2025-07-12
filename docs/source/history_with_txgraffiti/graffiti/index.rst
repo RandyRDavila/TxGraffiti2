@@ -71,9 +71,3 @@ The **Dalmatian heuristic** is a modern formalization of what Graffiti did infor
 - It retains only conjectures that are true across all known data
 - It checks for *significance* — the conjecture must be sharp (tight) on at least one example
 - The result is a filtered set of inequalities that tend to be *mathematically meaningful*
-
-.. note::
-
-   The name "Dalmatian" comes from the black-and-white nature of its tests: either a conjecture holds everywhere and is sharp somewhere, or it is discarded.
-
-Learn more about the Dalmatian filter in the :doc:`Heuristics Explained <../txgraffiti.heuristics>` page.

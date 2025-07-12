@@ -1,11 +1,11 @@
-Generators Module
-================
+Generators
+==========
 
 TxGraffiti's generators module allows for discovery of inequalities and equalities.
 
 .. toctree::
    :maxdepth: 1
 
-   enumeration
+   ratios
    convex_hull
-   linear_pro
+   linear_programming

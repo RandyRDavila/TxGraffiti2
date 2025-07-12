@@ -1,4 +1,4 @@
-Heuristics Module
-===================
+Heuristics
+==========
 
 

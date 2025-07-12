@@ -36,13 +36,14 @@ Let your machine dream. Let it write mathematics.
    key_features/logic/index
    key_features/generators/index
    key_features/heuristics/index
-   playground/conjecture_playground
+   key_features/playground/index
+   key_features/export_utils/index
 
 
 
 .. toctree::
    :maxdepth: 1
-   :caption: Automated Conjecturing Systems
+   :caption: Automated Conjecturing
 
    history_with_txgraffiti/history
    history_with_txgraffiti/wangs_program_ii/index
@@ -51,42 +52,19 @@ Let your machine dream. Let it write mathematics.
    history_with_txgraffiti/graphedron/index
    history_with_txgraffiti/txgraffiti/index
 
-
-.. ------
-
-.. Curious how automated conjecture-making evolved from logic programs in the 1950s to the agents of today?
-
-.. .. toctree::
-..    :maxdepth: 1
-..    :caption: What is Automated Conjecturing?
-
-..    what_is_automated_conjecturing/index
-..    what_is_automated_conjecturing/symbolic_heuristics
-..    what_is_automated_conjecturing/graffiti_and_dalmatian
-..    what_is_automated_conjecturing/optimization
-..    what_is_automated_conjecturing/geometry
-..    what_is_automated_conjecturing/ml_and_neural
-..    what_is_automated_conjecturing/agent_based
-..    what_is_automated_conjecturing/timeline
-
-
 ----------------
 
 .. toctree::
    :maxdepth: 1
    :caption: API Reference
 
-   txgraffiti.generators
-   txgraffiti.heuristics
-   txgraffiti.logic
-   txgraffiti.playground
-   txgraffiti.processing
-   txgraffiti.export
-
-
-
-
-
+   api/txgraffiti.generators
+   api/txgraffiti.heuristics
+   api/txgraffiti.logic
+   api/txgraffiti.playground
+   api/txgraffiti.processing
+   api/txgraffiti.export_utils
+   api/txgraffiti.example_data
 
 Learn More
 -------------
