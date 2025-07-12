@@ -1,0 +1,33 @@
+Results of doctest builder run on 2025-07-12 11:47:44
+=====================================================
+
+Document: api/txgraffiti.generators
+-----------------------------------
+1 item passed all tests:
+  14 tests in default
+14 tests in 1 item.
+14 passed.
+Test passed.
+
+Document: api/txgraffiti.heuristics
+-----------------------------------
+1 item passed all tests:
+  55 tests in default
+55 tests in 1 item.
+55 passed.
+Test passed.
+
+Document: api/txgraffiti.logic
+------------------------------
+1 item passed all tests:
+  26 tests in default
+26 tests in 1 item.
+26 passed.
+Test passed.
+
+Doctest summary
+===============
+   95 tests
+    0 failures in tests
+    0 failures in setup code
+    0 failures in cleanup code

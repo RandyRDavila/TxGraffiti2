@@ -29,6 +29,7 @@ jobs:
           pip install -r requirements-dev.txt || true  # optional
 
       - name: Run Sphinx doctests
-        working-directory: docs
         run: |
-          sphinx-build -b doctest . _build/doctest
+          pip install sphinx
+          sphinx-build -b doctest docs/source docs/_build/doctest
+
