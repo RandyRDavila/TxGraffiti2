@@ -1,4 +1,4 @@
-name: 📚 Doctest
+name: 📚 Test Doc's
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   doctest:
-    name: Run Sphinx doctests
+    name: Sphinx Tests
     runs-on: ubuntu-latest
 
     steps:
