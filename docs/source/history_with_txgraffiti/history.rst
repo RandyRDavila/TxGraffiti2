@@ -1,7 +1,7 @@
 .. _history:
 
-History of Automated Conjecturing
-=================================
+History
+=======
 
 *“Hi-de-hi, ho-de-ho — discovery begins with a call, and an echo.”*
 — *Inspired by Cab Calloway, Minnie the Moocher (1931)*

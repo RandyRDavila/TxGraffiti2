@@ -1,2 +1,2 @@
-Convex Hull Generator
-================
+Convex Hull Derived Inequalities
+================================

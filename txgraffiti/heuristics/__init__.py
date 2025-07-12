@@ -1,2 +1,3 @@
-from txgraffiti.heuristics.graffiti import *
-from txgraffiti.heuristics.optimist import *
+from txgraffiti.heuristics.fajtlowicz import *
+from txgraffiti.heuristics.delavina import *
+from txgraffiti.heuristics.davila import *

@@ -51,7 +51,7 @@ Below is a minimal example of using `txgraffiti` on a built in dataset of precom
 ```python
 from txgraffiti.playground    import ConjecturePlayground # the main class for finding conjectures
 from txgraffiti.generators    import convex_hull, linear_programming, ratios # methods for producing inequalities
-from txgraffiti.heuristics    import morgan, dalmatian # heuristics to reduce number of statements accepted.
+from txgraffiti.heuristics    import morgan_acceptance, dalmatian_acceptance # heuristics to reduce number of statements accepted.
 from txgraffiti.processing    import remove_duplicates, sort_by_touch_count # post processing for removal and sorting of conjectures.
 from txgraffiti.example_data  import graph_data   # bundled toy dataset
 
@@ -73,7 +73,7 @@ ai.discover(
     target          = 'independence_number',
     hypothesis      = [ai.connected & ai.bipartite,
                        ai.connected & regular],
-    heuristics      = [morgan, dalmatian],
+    heuristics      = [morgan_acceptance, dalmatian_acceptance],
     post_processors = [remove_duplicates, sort_by_touch_count],
 )
 
@@ -95,10 +95,11 @@ Conjecture 2. ∀ G: ((connected) ∧ (max_degree == min_degree) ∧ (bipartite)
 ## Example: Integer Dataset
 
 Next, we conjecture on the built in integer dataset.
+
 ```python
 from txgraffiti.playground    import ConjecturePlayground
 from txgraffiti.generators    import convex_hull, linear_programming, ratios
-from txgraffiti.heuristics    import morgan, dalmatian
+from txgraffiti.heuristics    import morgan_acceptance, dalmatian_acceptance
 from txgraffiti.processing    import remove_duplicates, sort_by_touch_count
 from txgraffiti.example_data  import integer_data   # bundled toy dataset
 
@@ -114,7 +115,7 @@ ai.discover(
     features        = ['sum_divisors', 'divisor_count', 'totient', 'prime_factor_count'],
     target          = 'collatz_steps',
     hypothesis      = [ai.is_square, ai.is_fibonacci, ai.is_power_of_two],
-    heuristics      = [morgan, dalmatian],
+    heuristics      = [morgan_acceptance, dalmatian_acceptance],
     post_processors = [remove_duplicates, sort_by_touch_count],
 )
 
@@ -165,7 +166,6 @@ See [CONTRIBUTING.md](/CONTRIBUTING.md) for details.
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](/LICENSE) file for details.
-
 
 ---
 

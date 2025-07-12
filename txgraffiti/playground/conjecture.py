@@ -6,7 +6,7 @@ from typing import Union, Iterator, List, Callable, Sequence, Optional
 from txgraffiti.logic import *
 from txgraffiti.playground.registry import list_playgrounds
 from txgraffiti.processing.registry import get_post
-from txgraffiti.export.lean_export import conjecture_to_lean4
+from txgraffiti.export_utils.lean4 import conjecture_to_lean4
 from txgraffiti.generators import list_gens
 
 
@@ -68,10 +68,10 @@ def find_strengthened_equalities(conjs):
 
 class ForAll:
     def __init__(self, conj: Predicate, df: pd.DataFrame, object_symbol="G"):
-        self.conj = conj; self.df = df
+        self.pred = conj; self.df = df
         self.name = f"∀ {object_symbol}: {conj.name}"
     def is_true(self) -> bool:
-        return self.conj.is_true(self.df)
+        return bool(self.pred(self.df).all())
     def counterexamples(self) -> pd.DataFrame:
         return self.conj.counterexamples(self.df)
     def __repr__(self):

@@ -1,5 +1,5 @@
-GraPHedron and Geometric Conjecturing
-=====================================
+Melót's GraPHedron
+===================
 
 The **GraPHedron** system introduced a geometric approach to automated conjecturing:
 each mathematical object is mapped to a point in Euclidean space based on its invariant
@@ -10,8 +10,6 @@ TxGraffiti replicates and extends this idea using the `convex_hull` generator.
 
 Convex Hull Generator
 ---------------------
-
-.. autofunction:: txgraffiti.generators.hull_generators.convex_hull
 
 **Input**:
 - A list of numeric invariants (as `Property` objects)
@@ -37,7 +35,7 @@ Suppose we have the following data table:
     import networkx as nx
     import pandas as pd
     from txgraffiti.logic import Property, TRUE
-    from txgraffiti.generators.geometric import convex_hull
+    from txgraffiti.generators import convex_hull
     from itertools import combinations
     from graphcalc import diameter, size  # replace with your actual graph invariant functions
 
@@ -98,6 +96,3 @@ Use Cases
 - Reproducing the geometric insights of GraPHedron.
 - Exploring the boundary structure of invariant spaces.
 - Producing tight **upper and lower bounds** on a target invariant.
-
-Learn more about GraPHedron’s original motivation in the `timeline.rst` and `symbolic_heuristics.rst` files.
-

@@ -1,97 +1,83 @@
-Properties
-==========
+Properties & Constants
+======================
 
-The ``Property`` class is the core abstraction for **numeric** data in TxGraffiti.
-It wraps a DataFrame column (or any Pandas‐Series–producing function) and lets you
-develop algebraic expressions entirely within the DSL, deferring actual DataFrame
-access until evaluation time.
+The **Property** class lifts either a DataFrame column or a scalar constant into a symbolic
+object that supports arithmetic, comparisons, and lazy evaluation.  A **Constant** is simply
+a `Property` that always returns the same number for every row.
 
-Key Features
-------------
-
-- **Auto-lifting of scalars**
-  You can mix ``Property`` objects and plain numbers seamlessly:
-
-  .. code-block:: python
-
-     from txgraffiti.logic.conjecture_logic import Property, Constant
-     P = Property('price', lambda df: df['price'])
-     expr = P * 1.2 + 5          # automatically lifts 5 → Constant(5)
-
-- **Standard arithmetic operators**
-  Supports ``+``, ``-``, ``*``, ``/``, and ``**``, with identity simplifications:
-
-  .. code-block:: python
-
-     zero = Constant(0)
-     assert (P + zero).name == P.name   # P + 0 simplifies to P
-
-- **Human-readable names**
-  Every composed expression records its textual form in ``.name``:
-
-  .. code-block:: python
-
-     expr = (P * 0.9) - Constant(2)
-     print(expr.name)
-     # → "(price * 0.9) - 2"
-
-- **Deferred evaluation**
-  The underlying lambda is not executed until you call the ``Property`` on a DataFrame:
-
-  .. code-block:: python
-
-     series = expr(df)   # returns a pandas.Series of computed values
-
-Motivation
-----------
-
-When building conjectures, you often need to:
-
-  1.  **Compose** linear or nonlinear expressions over columns,
-  2.  **Inspect** the symbolic form for printing or exporting,
-  3.  **Evaluate** those expressions on your DataFrame rows,
-  4.  **Re-use** them in predicate logic or inequality generation.
-
-A raw lambda alone can’t carry its own “name” or simplify repeated constants.
-``Property`` unifies these concerns by pairing a Python function with a
-symbolic name and operator‐overloads that keep everything readable.
-
-Example
--------
-
-Below is a simple end-to-end example of defining and using a ``Property``.
+Example DataFrame
+-----------------
 
 .. code-block:: python
 
    import pandas as pd
-   from txgraffiti.logic.conjecture_logic import Property, Constant, Inequality
 
-   # 1) Sample DataFrame
    df = pd.DataFrame({
-       'price': [10.0, 20.0, 15.0],
-       'cost':  [ 8.0, 18.0, 14.0],
+       'alpha':     [1, 2, 3],
+       'beta':      [3, 1, 1],
+       'connected': [True, True, True],
+       'tree':      [False, False, True],
    })
 
-   # 2) Lift columns to Property
-   P = Property('price', lambda df: df['price'])
-   C = Property('cost',  lambda df: df['cost'])
-   K = Constant(0.9)   # a fixed discount factor
+Constants
+---------
 
-   # 3) Build a new Property for discounted margin
-   margin = (P * K) - C
-   print("Expression name:", margin.name)
-   # → "(price * 0.9) - cost"
+Create constant‐valued properties and combine them:
 
-   # 4) Evaluate on the DataFrame
-   print(margin(df))
-   # 0    1.0   # 10*0.9 - 8.0
-   # 1    0.0   # 20*0.9 - 18.0
-   # 2   -0.5   # 15*0.9 - 14.0
+.. code-block:: python
 
-   # 5) Use in an Inequality
-   ineq = Inequality(margin, '>=', Constant(0))
-   print(ineq.name)
-   # → "(price * 0.9) - cost >= 0"
+   from txgraffiti import Constant
 
-You can now wrap ``ineq`` in a ``Conjecture`` or feed ``margin`` into any generator
-to discover bounds or test hypotheses over your data.
+   c2 = Constant(2)
+   c3 = Constant(3)
+
+   print(c2)           # <Constant 2>
+   print(c2(df))       # Series: [2, 2, 2]
+
+   print(c2 + c3)      # <Constant 5>
+   print((c2 + c3)(df))
+   # [5, 5, 5]
+
+   expr = 2*c2 - c3
+   print(expr)         # <Constant 1>
+   print(expr(df))     # [1, 1, 1]
+
+Properties
+----------
+
+Lift DataFrame columns into symbolic properties and build expressions:
+
+.. code-block:: python
+
+   from txgraffiti import Property
+
+   alpha = Property('alpha', lambda df: df['alpha'])
+   beta  = Property('beta',  lambda df: df['beta'])
+
+   print(alpha)        # <Property alpha>
+   print(alpha(df))    # [1, 2, 3]
+
+   expr1 = 2 * alpha
+   print(expr1)        # <Property (2 * alpha)>
+   print(expr1(df))    # [2, 4, 6]
+
+   combo = alpha*alpha + 5
+   print(combo)        # <Property ((alpha * alpha) + 5)>
+   print(combo(df))    # [6, 9, 14]
+
+Mixed Example
+-------------
+
+Combine constants and columns seamlessly:
+
+.. code-block:: python
+
+   # c2 and c3 from above, alpha from above
+   bound = c2 * alpha + c3
+   print(bound)        # <Property ((2 * alpha) + 3)>
+   print(bound(df))    # [5, 7, 9]
+
+   # Using multiple properties and constants:
+   expr2 = (alpha + beta) * c3 - c2
+   print(expr2)        # <Property (((alpha + beta) * 3) - 2)>
+   print(expr2(df))    # [10, 4, 4]
