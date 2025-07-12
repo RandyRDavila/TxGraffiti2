@@ -1,2 +1,3 @@
 include txgraffiti/example_data/graph_data.csv
 include txgraffiti/example_data/integer_data.csv
+include txgraffiti/example_data/nba_game_data.csv
