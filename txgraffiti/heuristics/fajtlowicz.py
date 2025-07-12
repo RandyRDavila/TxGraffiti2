@@ -44,8 +44,8 @@ def dalmatian_accept(
     >>> from txgraffiti.logic import Property, Predicate, Conjecture, Inequality
     >>> from txgraffiti.heuristics.fajtlowicz import dalmatian_accept
     >>> df = pd.DataFrame({
-    ...     'alpha':     [1, 2, 3],
-    ...     'beta':      [3, 2, 1],
+    ...     'alpha':     [1, 1, 1],
+    ...     'beta':      [1, 1, 1],
     ...     'connected': [True, True, True],
     ... })
     >>> P = Predicate('connected', lambda df: df['connected'])

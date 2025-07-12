@@ -1,0 +1,42 @@
+name: Doctest CI
+
+on:
+  push:
+    paths:
+      - "txgraffiti/**.py"
+      - "docs/**"
+      - ".github/workflows/docstrings.yml"
+  pull_request:
+    paths:
+      - "txgraffiti/**.py"
+      - "docs/**"
+
+jobs:
+  doctest:
+    name: Run Docstring Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install txgraffiti in editable mode
+        run: pip install -e .
+
+      - name: Install test + docs dependencies
+        run: |
+          pip install pytest sphinx
+          pip install -r requirements-dev.txt || true  # if you have one
+
+      - name: Run module-level doctests
+        run: |
+          PYTHONPATH=. pytest --doctest-modules txgraffiti
+
+      - name: Run Sphinx .rst doctests (if docs/ exists)
+        run: |
+          cd docs
+          make doctest

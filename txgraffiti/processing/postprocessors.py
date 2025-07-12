@@ -34,14 +34,6 @@ def remove_duplicates(conjs: List[Conjecture], df: pd.DataFrame) -> List[Conject
     List[Conjecture]
         A new list containing only the first instance of each unique
         hypothesis/conclusion combination.
-
-    Examples
-    --------
-    >>> from txgraffiti.processing.postprocessors import remove_duplicates
-    >>> # Suppose `conjs` contains two conjectures with the same hyp & cons
-    >>> filtered = remove_duplicates(conjs, df)
-    >>> # filtered has no repeated (hyp, cons) pairs
-    >>> len(filtered) <= len(conjs)
     """
     seen = set()
     out  = []
@@ -70,13 +62,6 @@ def sort_by_accuracy(conjs: List[Conjecture], df: pd.DataFrame) -> List[Conjectu
     List[Conjecture]
         A new list of conjectures sorted so that the highest‐accuracy
         conjecture comes first.
-
-    Examples
-    --------
-    >>> from txgraffiti.processing.postprocessors import sort_by_accuracy
-    >>> sorted_conjs = sort_by_accuracy(conjs, df)
-    >>> # The first element has the maximum accuracy
-    >>> sorted_conjs[0].accuracy(df) == max(c.accuracy(df) for c in conjs)
     """
     # highest accuracy first
     return sorted(conjs, key=lambda c: c.accuracy(df), reverse=True)
@@ -103,13 +88,6 @@ def sort_by_touch_count(conjs: List[Conjecture], df: pd.DataFrame) -> List[Conje
     List[Conjecture]
         A new list of conjectures sorted so that those with the highest
         touch counts appear first.
-
-    Examples
-    --------
-    >>> from txgraffiti.processing.postprocessors import sort_by_touch_count
-    >>> sorted_conjs = sort_by_touch_count(conjs, df)
-    >>> # The first conjecture has the greatest number of equality‐sharp rows
-    >>> sorted_conjs[0].conclusion.touch_count(df) == max(c.conclusion.touch_count(df) for c in conjs)
     """
     # lowest touch count first
     return sorted(

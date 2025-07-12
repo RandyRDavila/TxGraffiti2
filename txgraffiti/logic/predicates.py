@@ -36,6 +36,7 @@ class Predicate:
 
     Examples
     --------
+    from txgraffiti.logic import Predicate
     >>> even = Predicate("even", lambda df: df["n"] % 2 == 0)
     >>> gt_5 = Predicate(">5", lambda df: df["n"] > 5)
     >>> even & gt_5
@@ -209,11 +210,6 @@ class Predicate:
         -------
         Predicate or Conjecture
             The implication formula.
-
-        Examples
-        --------
-        >>> P.implies(Q)                # returns Predicate
-        >>> P.implies(Q, as_conjecture=True)  # returns Conjecture
         """
         from txgraffiti.logic import Conjecture
         if as_conjecture:

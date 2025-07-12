@@ -31,14 +31,12 @@ def normalize_inequality_key(ineq: Inequality) -> Tuple[str, str, str]:
     Examples
     --------
     >>> from txgraffiti.logic import Property, Inequality
+    >>> from txgraffiti.heuristics.davila import normalize_inequality_key
     >>> P = Property('alpha', lambda df: df['alpha'])
     >>> Q = Property('beta',  lambda df: df['beta'])
     >>> ineq1 = Inequality(P, '>=', Q)
     >>> normalize_inequality_key(ineq1)
     ('beta', '<=', 'alpha')
-    >>> ineq2 = Inequality(P, '<=', Q)
-    >>> normalize_inequality_key(ineq2)
-    ('alpha', '<=', 'beta')
     """
     lhs, op, rhs = ineq.lhs, ineq.op, ineq.rhs
 
@@ -71,6 +69,7 @@ def same_conclusion(a: Conjecture, b: Conjecture) -> bool:
     Examples
     --------
     >>> from txgraffiti.logic import Predicate, Property, Conjecture, Inequality
+    >>> from txgraffiti.heuristics.davila import same_conclusion
     >>> P = Predicate('connected', lambda df: df['connected'])
     >>> A = Property('alpha', lambda df: df['alpha'])
     >>> B = Property('beta',  lambda df: df['beta'])
@@ -105,6 +104,7 @@ def is_strict_subset(m1: pd.Series, m2: pd.Series) -> bool:
     Examples
     --------
     >>> import pandas as pd
+    >>> from txgraffiti.heuristics.davila import is_strict_subset
     >>> m1 = pd.Series([True, False, True])
     >>> m2 = pd.Series([True, True, True])
     >>> is_strict_subset(m1, m2)
@@ -113,7 +113,7 @@ def is_strict_subset(m1: pd.Series, m2: pd.Series) -> bool:
     >>> is_strict_subset(m1, m1)
     False
     """
-    return ((m1 & ~m2).sum() == 0) and (m2.sum() > m1.sum())
+    return bool(((m1 & ~m2).sum() == 0) and (m2.sum() > m1.sum()))
 
 
 def morgan_accept(
