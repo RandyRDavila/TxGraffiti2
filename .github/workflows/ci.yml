@@ -1,0 +1,34 @@
+name: TxGraffiti CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install package in editable mode
+        run: pip install -e .
+
+      - name: Install dev/test dependencies
+        run: |
+          pip install -r requirements-dev.txt
+          pip install pytest pytest-cov
+
+      - name: Run tests and collect coverage
+        run: |
+          pytest --doctest-modules --cov=txgraffiti --cov-report=term-missing
+
+      - name: Upload coverage to Codecov (optional)
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}  # Set this in GitHub repo > Settings > Secrets
+        continue-on-error: true  # Optional: don’t fail build if Codecov is unreachable
