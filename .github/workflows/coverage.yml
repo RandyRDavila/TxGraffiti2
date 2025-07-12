@@ -1,4 +1,4 @@
-name: Python CI
+name: Code Coverage
 
 on: [push, pull_request]
 
