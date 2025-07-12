@@ -70,8 +70,7 @@ def convex_hull(
     -----
     - Uses `scipy.spatial.ConvexHull` to derive inequalities from geometric facets.
     - Coefficients are approximated by rational numbers using `Fraction.limit_denominator()`.
-    - If the convex hull cannot be constructed due to degeneracies, it is recomputed
-    with `qhull_options="QJ"` to jog input points slightly.
+    - If the convex hull cannot be constructed due to degeneracies, it is recomputed with `qhull_options="QJ"` to jog input points slightly.
 
     Examples
     --------
