@@ -13,11 +13,13 @@ from fractions import Fraction
 
 from txgraffiti.logic import *
 from txgraffiti.generators.registry import register_gen
+from txgraffiti.utils.safe_generator import safe_generator
 
 __all__ = [
     'ratios',
 ]
 
+@safe_generator
 @register_gen
 def ratios(
     df: pd.DataFrame,
@@ -68,13 +70,21 @@ def ratios(
 
     Examples
     --------
-    >>> from txgraffiti.logic import Property, TRUE
-    >>> from txgraffiti.generators.enumeration import ratios
-    >>> df = pd.DataFrame({'a': [1, 2, 4], 'b': [2, 4, 8], 'c': [4, 8, 16]})
-    >>> f = Property('a', lambda df: df['a'])
-    >>> t = Property('c', lambda df: df['c'])
-    >>> list(ratios(df, features=[f], target=t, hypothesis=TRUE))
-    [Conjecture(TRUE → c >= 4*a), Conjecture(TRUE → c <= 4*a)]
+    >>> from txgraffiti import KnowledgeTable
+    >>> from txgraffiti.generators import ratios
+    >>> df = KnowledgeTable({
+    ...     'alpha': [1, 2, 3],
+    ...     'beta': [3, 1, 1],
+    ...     'connected': [True, True, True],
+    ...     'tree': [False, False, True],
+    ... })
+    >>> target = df.alpha
+    >>> features = [df.beta]
+    >>> hypothesis = df.connected
+    >>> for conj in ratios(df, features=features, target=target, hypothesis=hypothesis):
+    ...     print(conj)
+    <Conj (connected) → (alpha >= (1/3 * beta))>
+    <Conj (connected) → (alpha <= (3 * beta))>
     """
 
     mask = hypothesis(df)

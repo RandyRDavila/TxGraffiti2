@@ -48,8 +48,11 @@ class Inequality(Predicate):
 
     Examples
     --------
+    >>> from txgraffiti import Property
+    >>> p1 = Property('alpha', lambda df: df['alpha'])
+    >>> p2 = Property('beta', lambda df: df['beta'])
     >>> p1 < p2
-    <Inequality (p1 < p2)>
+    <Predicate alpha < beta>
     """
     def __init__(self, lhs: Property, op: str, rhs: Property):
         name = f"{lhs.name} {op} {rhs.name}"

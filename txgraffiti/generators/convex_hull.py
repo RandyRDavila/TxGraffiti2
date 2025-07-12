@@ -15,11 +15,13 @@ from fractions import Fraction
 
 from txgraffiti.logic import Constant, Property, Predicate, Conjecture, Inequality
 from txgraffiti.generators.registry import register_gen
+from txgraffiti.utils.safe_generator import safe_generator
 
 __all__ = [
     'convex_hull',
 ]
 
+@safe_generator
 @register_gen
 def convex_hull(
     df: pd.DataFrame,
@@ -70,19 +72,25 @@ def convex_hull(
     -----
     - Uses `scipy.spatial.ConvexHull` to derive inequalities from geometric facets.
     - Coefficients are approximated by rational numbers using `Fraction.limit_denominator()`.
-    - If the convex hull cannot be constructed due to degeneracies, it is recomputed
-      with `qhull_options="QJ"` to jog input points slightly.
+    - If the convex hull cannot be constructed due to degeneracies, it is recomputed with `qhull_options="QJ"` to jog input points slightly.
 
     Examples
     --------
-    >>> from txgraffiti.logic import Property, TRUE
+    >>> from txgraffiti import KnowledgeTable
     >>> from txgraffiti.generators.convex_hull import convex_hull
-    >>> df = pd.DataFrame({'a': [1, 2, 3], 'b': [2, 4, 8], 't': [3, 6, 11]})
-    >>> a = Property('a', lambda df: df['a'])
-    >>> b = Property('b', lambda df: df['b'])
-    >>> t = Property('t', lambda df: df['t'])
-    >>> list(convex_hull(df, features=[a, b], target=t, hypothesis=TRUE))
-    [Conjecture(TRUE → t >= 1*a + 1*b), Conjecture(TRUE → t <= 2*a + 3*b)]
+    >>> df = KnowledgeTable({
+    ...     'alpha': [1, 2, 3],
+    ...     'beta': [3, 1, 1],
+    ...     'connected': [True, True, True],
+    ...     'tree': [False, False, True],
+    ... })
+    >>> target = df.alpha
+    >>> features = [df.beta]
+    >>> hypothesis = df.connected
+    >>> for conj in convex_hull(df, features=features, target=target, hypothesis=hypothesis):
+    ...     print(conj)
+    <Conj (connected) → (alpha >= ((-1/2 * beta) + 5/2))>
+    <Conj (connected) → (alpha <= ((-1 * beta) + 4))>
     """
 
     # … same body as before …

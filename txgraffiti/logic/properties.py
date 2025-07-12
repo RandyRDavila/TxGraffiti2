@@ -41,9 +41,10 @@ class Property:
 
     Examples
     --------
+    from txgraffiti.logic import Property
     >>> deg = Property("deg", lambda df: df["degree"])
     >>> 2 * deg + 3
-    <Property (2 * deg) + 3>
+    <Property ((2 * deg) + 3)>
     """
     name: str
     func: Callable[[pd.DataFrame], pd.Series]
@@ -149,5 +150,14 @@ def Constant(c: Number) -> Property:
     -------
     Property
         A Property that returns `c` for every row in the DataFrame.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from txgraffiti.logic import Constant
+    >>> df = pd.DataFrame({"x": [1, 2, 3]})
+    >>> p = Constant(7)
+    >>> p(df).tolist()
+    [7, 7, 7]
     """
     return Property(str(c), lambda df, v=c: pd.Series(v, index=df.index))

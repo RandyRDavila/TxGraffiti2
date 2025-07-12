@@ -24,7 +24,17 @@ class Conjecture(Predicate):
 
     Examples
     --------
-    >>> conj = P >> Q
+    >>> from txgraffiti.logic import KnowledgeTable, Conjecture
+    >>> df = KnowledgeTable({
+    ...     'alpha': [1, 2, 3],
+    ...     'beta': [3, 1, 1],
+    ...     'connected': [True, True, True],
+    ...     'tree': [False, False, True],
+    ... })
+    >>> alpha = df.alpha
+    >>> beta = df.beta
+    >>> connected = df.connected
+    >>> conj = Conjecture(connected, beta >= alpha - 2)
     >>> conj.is_true(df)
     True
     """

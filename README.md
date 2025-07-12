@@ -4,6 +4,9 @@
 [![Documentation Status](https://readthedocs.org/projects/txgraffiti2/badge/?version=latest)](https://txgraffiti2.readthedocs.io/en/latest/)
 [![Build Status](https://github.com/RandyRDavila/TxGraffiti2/actions/workflows/python-ci.yml/badge.svg)](https://github.com/RandyRDavila/TxGraffiti2/actions)
 [![License](https://img.shields.io/github/license/RandyRDavila/TxGraffiti2)](LICENSE)
+[![codecov](https://codecov.io/gh/RandyRDavila/txgraffiti2/branch/main/graph/badge.svg)](https://codecov.io/gh/RandyRDavila/txgraffiti2)
+
+
 
 ---
 

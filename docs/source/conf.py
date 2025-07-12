@@ -18,6 +18,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
+    'sphinx.ext.doctest',
     'sphinx_autodoc_typehints',
     'myst_parser',  # if you want Markdown support
 ]

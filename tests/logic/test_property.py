@@ -105,3 +105,8 @@ def test_property_on_knowledgetable(kt):
     # unit outcomes
     assert (alpha / alpha)(kt).tolist() == [1, 1, 1]
     assert (alpha ** 0)(kt).tolist() == [1, 1, 1]
+
+
+def docstring_test():
+    import doctest
+    doctest.testobj(Property)

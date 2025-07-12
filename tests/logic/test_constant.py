@@ -106,3 +106,7 @@ def test_constant_property_knowledgetable(kt):
     # multiplicative identity
     assert (const1 * 1)(kt).tolist() == [1, 1, 1]
     assert (const2 * 1)(kt).tolist() == [2, 2, 2]
+
+def docstring_test():
+    import doctest
+    doctest.testobj(Constant)
