@@ -67,6 +67,7 @@ Conjectures in TxGraffiti are modeled as symbolic logical implications of the fo
 ```
 
 Typically, the predicate is an inequality between two symbolic expressions. The `Conjecture` class encodes these implications and tracks rich metadata, including:
+
 - A hypothesis `Predicate` (or `True` for universally quantified conjectures),
 - A symbolic inequality between `Property` objects,
 - Metadata such as equality cases, sharpness, significance, and touched objects.
@@ -77,21 +78,21 @@ Conjectures can be printed, ranked, exported to formal systems, or evaluated on 
 
 Conjecture discovery is organized into a modular pipeline:
 
-- **Generators** (`txgraffiti.generators`) propose candidate inequalities between symbolic expressions. These include:
+- **Inequality Generators** (`txgraffiti.generators`) propose candidate inequalities between symbolic expressions. These include:
   - `ratios`: compares ratios of expressions,
   - `convex_hull`: mines bounding inequalities from convex geometry,
   - `linear`: uses mixed-integer programming to optimize bounds.
 
-- **Heuristics** (`txgraffiti.heuristics`) evaluate and filter generated conjectures. Notable heuristics include:
-  - `hazel`: favors conjectures with broad coverage and generality,
-  - `morgan`: promotes conjectures with structural novelty,
-  - `dalmatian` and `calloway`: perform correctness checks, coverage analysis, and local sharpness scoring.
+- **Acceptance Heuristics** (`txgraffiti.heuristics`) evaluate and filter generated conjectures. Notable heuristics include:
+  - `morgan_accept`: favors conjectures with generality,
+  - `dalmatian_accept` and `calloway`: perform correctness checks, coverage analysis, and local sharpness scoring.
 
 - **Playground Interface** (`txgraffiti.playground.ConjecturePlayground`) provides a high-level interface for experimentation. It enables users to apply generators and heuristics to datasets with minimal boilerplate and retrieve conjectures ranked by strength or novelty.
 
 ### Integration and Extensibility
 
 TxGraffiti is designed to be general-purpose and modular:
+
 - Operates directly on Pandas DataFrames,
 - Supports any domain expressible via tabular invariants (e.g., graphs, integers, sports statistics),
 - Conjectures can be exported to **Lean 4** for formal verification using `txgraffiti.export_utils`,
@@ -152,6 +153,7 @@ Additional examples—including applications to number theory, real-world datase
 TxGraffiti includes a comprehensive suite of unit and integration tests covering core symbolic logic components (`Property`, `Predicate`, `Conjecture`), discovery modules (`generators`, `heuristics`), and data interfaces. The package is continuously tested using GitHub Actions against multiple Python versions to ensure correctness and stability.
 
 Tests are written using `pytest` and cover:
+
 - Logical correctness of symbolic expression evaluation,
 - Generator output validity across varied datasets,
 - Heuristic acceptance criteria and performance,
