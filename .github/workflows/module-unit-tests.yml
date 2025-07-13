@@ -1,0 +1,32 @@
+name: Python CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          pip install -e .[dev]
+          pip install pytest pytest-cov coverage
+
+      - name: Run pytest with coverage
+        run: |
+          pytest --cov=txgraffiti --cov-report=xml --cov-report=term
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+          flags: unittests
+          name: codecov-coverage
