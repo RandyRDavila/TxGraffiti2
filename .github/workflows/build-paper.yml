@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install pandoc
-      run: sudo apt-get update && sudo apt-get install -y pandoc
+      run: sudo apt-get update && sudo apt-get install -y pandoc curl
 
     - name: Install tectonic manually
       run: |
@@ -23,14 +23,23 @@ jobs:
         tar -xzf tectonic.tar.gz
         sudo mv tectonic /usr/local/bin/
 
-    - name: Build paper.pdf
+    - name: Download JOSS LaTeX template
+      run: |
+        mkdir -p joss-latex
+        curl -L https://raw.githubusercontent.com/openjournals/joss/main/latex/joss.cls -o joss-latex/joss.cls
+        curl -L https://raw.githubusercontent.com/openjournals/joss/main/latex/template.tex -o joss-latex/template.tex
+
+    - name: Build paper.pdf with JOSS formatting
       run: |
         pandoc paper.md \
           --from markdown \
           --output paper.pdf \
           --pdf-engine=tectonic \
           --citeproc \
-          --bibliography=paper.bib
+          --template=joss-latex/template.tex \
+          --bibliography=paper.bib \
+          -V classoption=twocolumn \
+          -V geometry:margin=1in
 
     - name: Upload paper.pdf
       uses: actions/upload-artifact@v4
