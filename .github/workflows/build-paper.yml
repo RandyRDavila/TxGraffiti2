@@ -1,4 +1,4 @@
-name: Build JOSS Paper
+name: Build JOSS Paper PDF
 
 on:
   pull_request:
@@ -6,29 +6,29 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  build-paper:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+    - name: Install pandoc + TeXLive
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y pandoc texlive texlive-latex-extra
 
-      - name: Install dependencies
-        run: |
-          pip install -U pip
-          pip install jupyter jupytext
-          pip install -r requirements.txt || true  # Optional
+    - name: Convert Markdown to PDF
+      run: |
+        pandoc paper.md \
+          --from markdown \
+          --output paper.pdf \
+          --pdf-engine=xelatex \
+          --citeproc \
+          --bibliography=paper.bib
 
-      - name: Build JOSS paper PDF
-        uses: openjournals/joss-paper-action@v1
-        with:
-          paper-path: paper.md
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: joss-paper-pdf
-          path: paper.pdf
+    - name: Upload paper.pdf
+      uses: actions/upload-artifact@v4
+      with:
+        name: joss-paper-pdf
+        path: paper.pdf
