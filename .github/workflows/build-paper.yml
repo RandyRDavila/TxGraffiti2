@@ -13,12 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install pandoc + Tectonic
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y pandoc tectonic
+    - name: Install pandoc
+      run: sudo apt-get update && sudo apt-get install -y pandoc
 
-    - name: Convert Markdown to PDF
+    - name: Install tectonic manually
+      run: |
+        curl -L https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.14.1/tectonic-0.14.1-x86_64-unknown-linux-musl.tar.gz \
+          -o tectonic.tar.gz
+        tar -xzf tectonic.tar.gz
+        sudo mv tectonic /usr/local/bin/
+
+    - name: Build paper.pdf
       run: |
         pandoc paper.md \
           --from markdown \
