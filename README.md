@@ -66,8 +66,8 @@ Below is a minimal example of using `txgraffiti` on a built in dataset of precom
 
 ```python
 from txgraffiti.playground    import ConjecturePlayground  # main interface for discovery
-from txgraffiti.generators    import convex_hull, linear_programming, ratios
-from txgraffiti.heuristics    import morgan_acceptance, dalmatian_acceptance
+from txgraffiti.generators    import convex_hull, ratios
+from txgraffiti.heuristics    import morgan_accept, dalmatian_accept
 from txgraffiti.processing    import remove_duplicates, sort_by_touch_count
 from txgraffiti.example_data  import graph_data            # bundled toy dataset
 
@@ -83,12 +83,12 @@ cubic   = regular & (ai.max_degree == 3)
 
 # 3. Run conjecture discovery
 ai.discover(
-    methods         = [convex_hull, linear_programming, ratios],
+    methods         = [convex_hull, ratios],
     features        = ['order', 'matching_number', 'min_degree'],
     target          = 'independence_number',
     hypothesis      = [ai.connected & ai.bipartite,
                        ai.connected & regular],
-    heuristics      = [morgan_acceptance, dalmatian_acceptance],
+    heuristics      = [morgan_accept, dalmatian_accept],
     post_processors = [remove_duplicates, sort_by_touch_count],
 )
 
@@ -112,8 +112,8 @@ Next, we conjecture on the built in integer dataset.
 
 ```python
 from txgraffiti.playground    import ConjecturePlayground
-from txgraffiti.generators    import convex_hull, linear_programming, ratios
-from txgraffiti.heuristics    import morgan_acceptance, dalmatian_acceptance
+from txgraffiti.generators    import convex_hull, ratios
+from txgraffiti.heuristics    import morgan_accept, dalmatian_accept
 from txgraffiti.processing    import remove_duplicates, sort_by_touch_count
 from txgraffiti.example_data  import integer_data   # bundled toy dataset
 
@@ -125,11 +125,11 @@ ai = ConjecturePlayground(
 )
 
 ai.discover(
-    methods         = [convex_hull, linear_programming, ratios],
+    methods         = [convex_hull, ratios],
     features        = ['sum_divisors', 'divisor_count', 'totient', 'prime_factor_count'],
     target          = 'collatz_steps',
     hypothesis      = [ai.is_square, ai.is_fibonacci, ai.is_power_of_two],
-    heuristics      = [morgan_acceptance, dalmatian_acceptance],
+    heuristics      = [morgan_accept, dalmatian_accept],
     post_processors = [remove_duplicates, sort_by_touch_count],
 )
 
