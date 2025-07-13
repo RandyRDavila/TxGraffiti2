@@ -27,7 +27,7 @@ bibliography: paper.bib
 
 # Summary
 
-**TxGraffiti** is a Python package for symbolic conjecture generation and automated discovery in mathematics. The system produces logical implications—typically inequalities—relating numerical and Boolean invariants of structured objects such as graphs, integers, or datasets. Built on foundations laid by earlier systems like *Graffiti*, *Graffiti.pc*, *CONJECTURING*, and *GraPHedron*, TxGraffiti reimagines the conjecturing process with a fully symbolic architecture, recursive logic construction, and modern optimization methods.
+**TxGraffiti** is a Python package for symbolic conjecture generation and automated discovery in mathematics. The system produces logical implications—typically inequalities—relating numerical and Boolean invariants of structured objects such as graphs, integers, or datasets. Built on foundations laid by earlier systems like *Graffiti* [@Fajtlowicz1988], *Graffiti.pc* [@DeLaVina2005], *CONJECTURING*, and *GraPHedron*, TxGraffiti reimagines the conjecturing process with a fully symbolic architecture, recursive logic construction, and modern optimization methods.
 
 At its core, TxGraffiti represents mathematical properties as first-class symbolic expressions and uses logical inference, linear programming, and heuristic evaluation to generate conjectures with minimal assumptions. It supports filtering by correctness, sharpness, generality, and structural significance—prioritizing conjectures with mathematical relevance. Generated conjectures can be exported to formal languages such as Lean 4 for verification.
 
