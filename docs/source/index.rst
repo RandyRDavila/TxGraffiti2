@@ -67,6 +67,5 @@ Learn More
 - 🌐 `Interactive Web App <https://txgraffiti.streamlit.app>`_
 - 📄 `Papers on arXiv <https://arxiv.org/search/?query=txgraffiti&searchtype=all>`_
 
----
 
 *Happy conjecturing.*
