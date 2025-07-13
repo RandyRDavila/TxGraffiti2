@@ -58,8 +58,7 @@ Output:
 Historical Note
 ---------------
 
-- **Conjecture 1**: \( \alpha(G) \geq \text{residue}(G) \) was one of the earliest Graffiti conjectures and has since been proven true.
-- **Conjecture 3**: \( \alpha(G) \geq \text{radius}(G) \) is also a well-known Graffiti result that became a published theorem.
+- **Conjecture 1** and **Conjecture 3** are two of the most well known conjectures of Graffiti
 
 These results demonstrate how TxGraffiti not only generalizes Graffiti’s approach but can also *rediscover* known results — a powerful indicator of its mathematical relevance.
 
