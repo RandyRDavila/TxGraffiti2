@@ -1,15 +1,26 @@
 import pandas as pd
+from pandas.api.types import is_bool_dtype, is_numeric_dtype
 from txgraffiti.logic.properties import Property
 from txgraffiti.logic.predicates import Predicate, TRUE
-
 
 __all__ = [
     'KnowledgeTable',
 ]
 
-import pandas as pd
-from txgraffiti.logic.properties import Property
-from txgraffiti.logic.predicates import Predicate, TRUE
+def auto_wrap(df: pd.DataFrame):
+    numeric_props = []
+    bool_preds = []
+
+    for col in df.columns:
+        if col in ["name", 'Unnamed: 0']:
+            continue
+        series = df[col]
+        if is_bool_dtype(series):
+            bool_preds.append(Predicate(col, lambda df, c=col: df[c]))
+        elif is_numeric_dtype(series):
+            numeric_props.append(Property(col, lambda df, c=col: df[c]))
+
+    return numeric_props, bool_preds
 
 class KnowledgeTable(pd.DataFrame):
     """
@@ -127,3 +138,18 @@ class KnowledgeTable(pd.DataFrame):
         return ConjecturePlayground(self,
                                     object_symbol=object_symbol,
                                     base=base)
+
+    def auto_wrap(self):
+        self.numeric_properties = []
+        self.bool_predicates = []
+
+        for col in self.columns:
+            if col in ["name", 'Unnamed: 0']:
+                continue
+            series = self[col]
+            if is_bool_dtype(series):
+                self.bool_predicates.append(Predicate(col, lambda df, c=col: df[c]))
+            elif is_numeric_dtype(series):
+                self.numeric_properties.append(Property(col, lambda df, c=col: df[c]))
+            else:
+                continue
