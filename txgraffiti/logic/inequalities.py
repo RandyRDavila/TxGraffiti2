@@ -115,3 +115,27 @@ class Inequality(Predicate):
 
     def __hash__(self):
         return hash((self.lhs, self.op, self.rhs))
+
+    def __invert__(self) -> "Inequality":
+        """
+        Return the logical negation of this inequality as a new Inequality
+        with the opposite operator:
+
+            ¬(lhs < rhs)  →  lhs >= rhs
+            ¬(lhs <= rhs) →  lhs >  rhs
+            ¬(lhs > rhs)  →  lhs <= rhs
+            ¬(lhs >= rhs) →  lhs <  rhs
+            ¬(lhs == rhs) →  lhs != rhs
+            ¬(lhs != rhs) →  lhs == rhs
+        """
+        # map each op to its De Morgan–style complement
+        neg_ops = {
+            "<":  ">=",
+            "<=": ">",
+            ">":  "<=",
+            ">=": "<",
+            "==": "!=",
+            "!=": "==",
+        }
+        new_op = neg_ops[self.op]
+        return Inequality(self.lhs, new_op, self.rhs)

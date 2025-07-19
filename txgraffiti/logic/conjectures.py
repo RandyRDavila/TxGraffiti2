@@ -101,3 +101,9 @@ class Conjecture(Predicate):
 
     def __repr__(self):
         return f"<Conj {self.name}>"
+
+    def contrapositive(self) -> "Conjecture":
+        """
+        Return the contrapositive: ¬(conclusion) → ¬(hypothesis).
+        """
+        return (~self.conclusion) >> (~self.hypothesis)
