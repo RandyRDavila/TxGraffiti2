@@ -10,30 +10,13 @@ from txgraffiti.processing import (
     filter_with_dalmatian,
     filter_with_morgan,
     sort_by_touch_count,
+    auto_wrap,
 )
 from txgraffiti.heuristics.delavina import sophie_accept
 
 __all__ = [
     "christine",
 ]
-
-def auto_wrap(df: pd.DataFrame):
-    """
-    Turn each boolean column into a Predicate and each numeric
-    column into a Property (skipping 'name' and 'Unnamed: 0').
-    """
-    numeric_props: List[Property] = []
-    bool_preds:   List[Predicate] = []
-
-    for col in df.columns:
-        if col in ("name", "Unnamed: 0"):
-            continue
-        if is_bool_dtype(df[col]):
-            bool_preds.append(Predicate(col, lambda df, c=col: df[c]))
-        elif is_numeric_dtype(df[col]):
-            numeric_props.append(Property(col, lambda df, c=col: df[c]))
-
-    return numeric_props, bool_preds
 
 def christine(
     df: pd.DataFrame,

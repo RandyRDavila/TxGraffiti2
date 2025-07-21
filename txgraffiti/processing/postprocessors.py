@@ -7,10 +7,16 @@ ConjecturePlayground’s `post_processors` step.
 """
 
 import pandas as pd
-from typing import List
+from typing import List, Tuple
 from txgraffiti.processing.registry import register_post
-from txgraffiti.logic import Conjecture
+from txgraffiti.logic import Conjecture, Inequality
 
+__all__ = [
+    'remove_duplicates',
+    'sort_by_accuracy',
+    'sort_by_touch_count',
+    'extract_equalities',
+]
 
 @register_post("remove_duplicates")
 def remove_duplicates(conjs: List[Conjecture], df: pd.DataFrame) -> List[Conjecture]:
@@ -95,3 +101,41 @@ def sort_by_touch_count(conjs: List[Conjecture], df: pd.DataFrame) -> List[Conje
         key=lambda c: c.conclusion.touch_count(df),
         reverse=True
     )
+
+@register_post("extract_equalities")
+def extract_equalities(
+    conjs: List[Conjecture],
+    df: pd.DataFrame
+) -> Tuple[List[Conjecture], List[Conjecture]]:
+    """
+    Given conjectures whose conclusions are Inequalities, check each one:
+      – if on all rows where the hypothesis holds the slack == 0,
+        convert it to an equality Conjecture (lhs == rhs);
+      – otherwise keep the original inequality Conjecture.
+
+    Returns
+    -------
+    (equalities, inequalities)
+    """
+    eqs: List[Conjecture] = []
+    ineqs: List[Conjecture] = []
+
+    for c in conjs:
+        concl = c.conclusion
+        # only handle Inequality conclusions
+        if isinstance(concl, Inequality):
+            hyp_mask = c.hypothesis(df)
+            # only consider it an equality if there's at least one row
+            # and slack is zero everywhere under the hypothesis
+            slack = concl.slack(df)
+            if hyp_mask.any() and (slack[hyp_mask] == 0).all():
+                # build a new equality predicate
+                eq_pred = Inequality(concl.lhs, "==", concl.rhs)
+                eqs.append(Conjecture(c.hypothesis, eq_pred))
+            else:
+                ineqs.append(c)
+        else:
+            # leave any non-inequality conjecture untouched
+            ineqs.append(c)
+
+    return eqs, ineqs
