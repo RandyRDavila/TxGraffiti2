@@ -38,7 +38,7 @@ If the issue only occurs for specific inputs, please attach or describe them cle
 
 What result did you expect from this code or function?
 
-## Actual Behavior
+## 🚨 Actual Behavior
 
 What actually happened instead? If there was an error, paste the full traceback below.
 
