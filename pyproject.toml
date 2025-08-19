@@ -10,14 +10,24 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = { file = "LICENSE" }
 authors = [{ name = "Randy Davila" }, { name = "Jillian Eddy" }]
-dependencies = ["pandas", "numpy", "scipy", "pulp"]
+dependencies = ["pandas", "numpy", "scipy", "pulp", "networkx", "graphcalc"]
 
 [project.urls]
 Homepage = "https://github.com/RandyRDavila/txgraffiti2"
 Documentation = "https://txgraffiti.readthedocs.io"
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "coverage"]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "coverage",
+    "pandas",
+    "numpy",
+    "scipy",
+    "pulp",
+    "networkx",
+    "graphcalc",
+]
 
 
 [tool.setuptools.packages.find]
