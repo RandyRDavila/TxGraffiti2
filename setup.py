@@ -31,7 +31,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="txgraffiti",
-    version="0.1.6",
+    version="0.3.0",
     author="Randy Davila",
     description="Automated conjecturing system for mathematics and graph theory.",
     long_description=open("README.md").read(),
