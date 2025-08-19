@@ -20,6 +20,9 @@ jobs:
           pip install -e .[dev]
           pip install pytest pytest-cov coverage
 
+      - name: Install HiGHS
+        run: sudo apt install -y coinor-cbc
+
       - name: Run pytest with coverage
         run: |
           pytest --cov=txgraffiti --cov-report=xml --cov-report=term

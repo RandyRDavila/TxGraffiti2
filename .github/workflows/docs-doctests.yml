@@ -50,6 +50,9 @@ jobs:
           pip install -r requirements-dev.txt || true
           pip install pytest
 
+      - name: Install HiGHS
+        run: sudo apt install -y coinor-cbc
+
       - name: Run docstring tests
         run: |
           pytest --doctest-modules txgraffiti
