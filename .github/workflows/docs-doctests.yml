@@ -21,10 +21,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -e .
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt || true
-          pip install sphinx
+          pip install --upgrade pip
+          pip install -e '.[dev]'
+          pip install sphinx  # or add sphinx to [project.optional-dependencies].dev
 
       - name: Run Sphinx doctests
         run: |
@@ -45,9 +44,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -e .
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt || true
+          pip install --upgrade pip
+          pip install -e '.[dev]'
           pip install pytest
 
       - name: Install HiGHS
@@ -55,4 +53,4 @@ jobs:
 
       - name: Run docstring tests
         run: |
-          pytest --doctest-modules txgraffiti
+          pytest --doctest-modules src/txgraffiti

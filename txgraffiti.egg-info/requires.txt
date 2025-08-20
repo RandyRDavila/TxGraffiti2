@@ -1,9 +1,0 @@
-pandas
-numpy
-scipy
-pulp
-
-[dev]
-pytest
-pytest-cov
-coverage

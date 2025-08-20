@@ -9,8 +9,18 @@ description = "A Python package for automated mathematical conjecturing"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { file = "LICENSE" }
-authors = [{ name = "Randy Davila" }, { name = "Jillian Eddy" }]
-dependencies = ["pandas", "numpy", "scipy", "pulp", "networkx", "graphcalc"]
+authors = [
+    { name = "Randy Davila" },
+    { name = "Jillian Eddy" }
+]
+dependencies = [
+    "pandas",
+    "numpy",
+    "scipy",
+    "pulp",
+    "networkx",
+    "graphcalc"
+]
 
 [project.urls]
 Homepage = "https://github.com/RandyRDavila/txgraffiti2"
@@ -27,17 +37,21 @@ dev = [
     "pulp",
     "networkx",
     "graphcalc",
+    "sphinx",
+    "sphinx-autodoc-typehints",
+    "myst_parser"
 ]
 
-
-[tool.setuptools.packages.find]
-where = ["."]
-
 [tool.setuptools]
+package-dir = {"" = "src"}
 include-package-data = true
 
-[tool.pytest.ini_options]
-addopts = "--doctest-modules"
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.package-data]
 txgraffiti = ["example_data/*.csv", "example_data/graph-edgelists/*.txt"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "--doctest-modules"
