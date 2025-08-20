@@ -37,6 +37,7 @@ dev = [
     "pulp",
     "networkx",
     "graphcalc"
+    "sphinx-autodoc-typehints"
 ]
 
 [tool.setuptools]
