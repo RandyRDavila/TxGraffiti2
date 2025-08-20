@@ -1,5 +1,0 @@
-dist
-docs
-testenv
-tests
-txgraffiti
