@@ -45,8 +45,9 @@ def txgraffiti2(
 
     # 2) generate all raw conjectures
     raw: List[Conjecture] = []
-    for gen in generators:
-        for feat_tuple in combinations(features_candidates, feature_size):
+
+    for feat_tuple in combinations(features_candidates, feature_size):
+        for gen in generators:
             feats = list(feat_tuple)
             for hyp in bool_preds:
                 conjs = gen(
