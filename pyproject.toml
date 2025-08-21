@@ -4,23 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "txgraffiti"
-version = "0.3.6"
+version = "0.3.7"
 description = "A Python package for automated mathematical conjecturing"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { file = "LICENSE" }
-authors = [
-    { name = "Randy Davila" },
-    { name = "Jillian Eddy" }
-]
-dependencies = [
-    "pandas",
-    "numpy",
-    "scipy",
-    "pulp",
-    "networkx",
-    "graphcalc"
-]
+authors = [{ name = "Randy Davila" }, { name = "Jillian Eddy" }]
+dependencies = ["pandas", "numpy", "scipy", "pulp", "networkx", "graphcalc"]
 
 [project.urls]
 Homepage = "https://github.com/RandyRDavila/txgraffiti2"
@@ -39,11 +29,11 @@ dev = [
     "graphcalc",
     "sphinx",
     "sphinx-autodoc-typehints",
-    "myst_parser"
+    "myst_parser",
 ]
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+package-dir = { "" = "src" }
 include-package-data = true
 
 [tool.setuptools.packages.find]
