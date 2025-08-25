@@ -154,8 +154,10 @@ def _insert_missing_hypotheses(hdr_and_g: str, hyp_block: str) -> str:
         pieces.append(f"\n{indent}(h{n} : connected G) ")
         n += 1
     if need_order:
-        pieces.append(f"\n{indent}(h{n} : order G ≥ 2) ")  # change to ≥ if you prefer
+        # Keep Nat here; hypotheses should live in ℕ
+        pieces.append(f"\n{indent}(h{n} : order G ≥ (2 : ℕ)) ")
     return hdr_and_g + "".join(pieces)
+
 
 def fix_lean_conjectures(text: str, func_names: Iterable[str]) -> str:
     """
@@ -311,13 +313,114 @@ def fix_integers_in_conclusions(lean_text: str) -> str:
 
     return concl_pat.sub(_one, lean_text)
 
+import re
+
+_INT_OR_TYPE = r"[\wℕℤℚℝα-ωΑ-Ω]+"  # for ':\ TYPE' guards
+
+def cast_all_int_literals(expr: str, *, to_type: str) -> str:
+    """
+    Wrap all standalone integer literals as (k : to_type), including positives and zero.
+    Skips:
+      • numerators in a/b (handled earlier as ℚ)
+      • already-typed numerals '(k : TYPE)'
+      • exponent numerals immediately after '^'
+    """
+    pat = re.compile(r"""
+        (?<![\w.])          # not preceded by name/number/dot
+        (-?\s*\d+)          # integer literal (allow '-  3')
+        (?!\s*/\s*\d)       # not a fraction numerator
+        (?!\s*:\s*%s)       # not already typed
+        """ % _INT_OR_TYPE, re.VERBOSE)
+
+    def repl(m: re.Match) -> str:
+        s = re.sub(r"-\s*(\d+)", r"-\1", m.group(1))  # '-  12' -> '-12'
+        # skip exponents: look left for '^'
+        i = m.start()
+        j = i - 1
+        while j >= 0 and expr[j].isspace():
+            j -= 1
+        if j >= 0 and expr[j] == "^":
+            return m.group(0)
+        return f"({s} : {to_type})"
+
+    return pat.sub(repl, expr)
+
+
+def _choose_target_type(expr: str) -> str:
+    """Pick the ambient type for the conclusion."""
+    if "ℚ" in expr:
+        return "ℚ"
+    # If any negative integer appears, ℤ is required
+    if re.search(r"(?<![\w.])-\s*\d+", expr):
+        return "ℤ"
+    # Otherwise stay in ℕ (we'll type literals as ℕ)
+    return "ℕ"
+
+
+def _cast_invariants(expr: str, func_names: Iterable[str], to_type: str) -> str:
+    """Cast 'fn G' to '(fn G : to_type)' when target is not ℕ."""
+    if to_type == "ℕ":
+        return expr
+    for fn in sorted(func_names, key=len, reverse=True):
+        # wrap bare `fn G` that is not already typed
+        expr = re.sub(
+            rf"\b{re.escape(fn)}\s+G\b(?!\s*:\s*(?:ℕ|ℤ|ℚ))",
+            rf"({fn} G : {to_type})",
+            expr
+        )
+    return expr
+
+
+def _fix_token_adjacency(expr: str) -> str:
+    """
+    Insert ' + ' if a closing ')' (usually after a typed numeral) is
+    immediately followed by a bare number, '(' or an invariant/function name.
+    This repairs cases like '(-1 : ℚ)5/4' -> '(-1 : ℚ) + (5/4 : ℚ)'.
+    """
+    expr = re.sub(r"\)\s*(?=\d)", r") + ", expr)
+    expr = re.sub(r"\)\s*(?=\()", r") + ", expr)
+    expr = re.sub(r"\)\s*(?=[A-Za-z_])", r") + ", expr)
+    return expr
+
+
+def _normalize_relation_spacing(expr: str) -> str:
+    """Ensure spaces after relation symbols like ≥, ≤, <, >, =, ≠ when followed by '('."""
+    expr = re.sub(r"(≥|≤|=|<|>|≠)\(", r"\1 (", expr)
+    return expr
+
+
+def retarget_and_cast_conclusions(lean_text: str, func_names: Iterable[str]) -> str:
+    """
+    For each ': <expr> :=':
+      1) Normalize spacing around relations.
+      2) Choose target type (ℚ if present, else ℤ if any negative int, else ℕ).
+      3) Cast all integer literals to that type.
+      4) If target is ℤ or ℚ, cast invariants 'fn G' on BOTH sides to that type.
+      5) Fix adjacency like ')5/4' -> ') + (5/4 : ℚ)'.
+    """
+    concl_pat = re.compile(r":\s*(?P<expr>.*?)\s*:=", flags=re.DOTALL)
+
+    def _one(m: re.Match) -> str:
+        expr = m.group("expr")
+        expr = _normalize_relation_spacing(expr)
+
+        target = _choose_target_type(expr)
+        # note: fractions should already be '(a/b : ℚ)' from your earlier pass
+        expr = cast_all_int_literals(expr, to_type=target)
+        expr = _cast_invariants(expr, func_names, to_type=target)
+        expr = _fix_token_adjacency(expr)
+        return f": {expr} :="
+
+    return concl_pat.sub(_one, lean_text)
+
+
 def necessary_conjecture_to_lean(conjectures: list, keys: list, name="TxGraffitiBench") -> list:
     lean_conjectures = []
     for i, conj in enumerate(conjectures):
         conj = conjecture_to_lean4(conj, f"{name}_{i+1}")
-        conj = fix_lean_conjectures(conj, keys)
-        conj = fix_fractions_in_conclusions(conj)   # (a/b) -> (a/b : ℚ)
-        conj = fix_integers_in_conclusions(conj)    #  -1, 0, 2, 17 -> (: ℤ/ℚ)
+        conj = fix_lean_conjectures(conj, keys)         # ensure '... G' forms & add missing hyps
+        conj = fix_fractions_in_conclusions(conj)       # (a/b) -> (a/b : ℚ)
+        conj = retarget_and_cast_conclusions(conj, keys)# type all integers & cast invariants if needed
         lean_conjectures.append(conj)
     return lean_conjectures
 
@@ -354,6 +457,10 @@ def parse_sufficient_line(line: str):
     if not m:
         raise ValueError(f"Not a valid <Conj (...) → (... )> line: {line}")
     return m.group("cond"), m.group("prop")
+
+
+
+
 
 
 # --- Public API ---------------------------------------------------------------
