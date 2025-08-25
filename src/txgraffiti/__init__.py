@@ -1,4 +1,4 @@
-__version__ = "0.3.8"
+__version__ = "0.3.9"
 
 from txgraffiti.logic import *  # noqa: F401,F403
 from txgraffiti.heuristics import *

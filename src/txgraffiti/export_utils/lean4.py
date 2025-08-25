@@ -12,6 +12,7 @@ import re
 from typing import Iterable
 from collections.abc import Mapping
 import pandas as pd
+from typing import Iterable, List
 
 
 from txgraffiti.logic import *
@@ -255,12 +256,158 @@ def fix_fractions_in_conclusions(lean_text: str) -> str:
 
     return concl_pat.sub(_one, lean_text)
 
+_INT_OR_FRAC_TYPE = r"[\wℕℤℚℝα-ωΑ-Ω]+"  # for robust '(: TYPE)' checks
+
+def cast_all_int_literals(expr: str, *, to_type: str) -> str:
+    """
+    Wrap *all* standalone integer literals as (k : to_type), including positives and zero.
+    Skips:
+      • numerators/denominators in fractions (handled elsewhere as ℚ)
+      • anything already typed '... : TYPE'
+      • numerals used as exponents right after '^'
+    """
+    pat = re.compile(
+        r"""
+        (?<![\w.])          # not preceded by name/number/dot
+        (-?\s*\d+)          # integer literal (allows '-   3' -> normalized to '-3')
+        (?!\s*/\s*\d)       # not a fraction's numerator (a/b)
+        (?!\s*:\s*%s)       # not already annotated ':\ TYPE'
+        """ % _INT_OR_FRAC_TYPE,
+        re.VERBOSE
+    )
+
+    def repl(m: re.Match) -> str:
+        s = m.group(1)
+        # normalize '-  12' -> '-12'
+        s = re.sub(r"-\s*(\d+)", r"-\1", s)
+
+        # Skip if this literal is used as an exponent: look left for the last non-space char
+        i = m.start()
+        j = i - 1
+        while j >= 0 and expr[j].isspace():
+            j -= 1
+        if j >= 0 and expr[j] == "^":
+            return m.group(0)  # leave exponent numerals alone (they live in ℕ)
+
+        return f"({s} : {to_type})"
+
+    return pat.sub(repl, expr)
+
+
+def fix_integers_in_conclusions(lean_text: str) -> str:
+    """
+    In every conclusion ': <expr> :=':
+      • If '<expr>' mentions 'ℚ' (e.g., due to 'a/b : ℚ'), cast ALL integer literals to ℚ.
+      • Otherwise, cast ALL integer literals to ℤ.
+    Fractions should already be handled by 'fix_fractions_in_conclusions'.
+    """
+    concl_pat = re.compile(r":\s*(?P<expr>.*?)\s*:=", flags=re.DOTALL)
+
+    def _one(m: re.Match) -> str:
+        expr = m.group("expr")
+        tgt = "ℚ" if "ℚ" in expr else "ℤ"
+        expr2 = cast_all_int_literals(expr, to_type=tgt)
+        return f": {expr2} :="
+
+    return concl_pat.sub(_one, lean_text)
 
 def necessary_conjecture_to_lean(conjectures: list, keys: list, name="TxGraffitiBench") -> list:
     lean_conjectures = []
     for i, conj in enumerate(conjectures):
         conj = conjecture_to_lean4(conj, f"{name}_{i+1}")
         conj = fix_lean_conjectures(conj, keys)
-        conj = fix_fractions_in_conclusions(conj)
+        conj = fix_fractions_in_conclusions(conj)   # (a/b) -> (a/b : ℚ)
+        conj = fix_integers_in_conclusions(conj)    #  -1, 0, 2, 17 -> (: ℤ/ℚ)
         lean_conjectures.append(conj)
     return lean_conjectures
+
+# --- Core token handling ------------------------------------------------------
+
+def _push_paren_G(expr: str, func_names: Iterable[str]) -> str:
+    """Turn '... <func>) G ...' into '... <func> G) ...' for each func in func_names."""
+    for fn in func_names:
+        expr = re.sub(rf"\b({re.escape(fn)})\s*\)\s*G\b", rf"\1 G)", expr)
+    return expr
+
+def _ensure_G(expr: str, func_names: Iterable[str]) -> str:
+    """Ensure each listed function/invariant in expr is followed by ' G' unless already."""
+    for fn in func_names:
+        expr = re.sub(rf"\b({re.escape(fn)})\b(?!\s*G\b|\s*\()", rf"\1 G", expr)
+    return expr
+
+def _normalize_comparator(s: str) -> str:
+    """Map ASCII comparators to Lean-friendly forms (keep unicode if present)."""
+    # keep ≤ ≥ if already there
+    s = s.replace("==", "=")
+    s = re.sub(r"(?<!<)<>", "≠", s)  # (rare) if you ever use <>
+    s = s.replace("<=", "≤").replace(">=", "≥")
+    return s
+
+# --- Parser for a single '<Conj (...) → (...)>' line -------------------------
+
+LINE_RE = re.compile(
+    r"^\s*<\s*Conj\s*\(\s*(?P<cond>.+?)\s*\)\s*→\s*\(\s*(?P<prop>[A-Za-z0-9_]+)\s*\)\s*>$"
+)
+
+def parse_sufficient_line(line: str):
+    m = LINE_RE.match(line)
+    if not m:
+        raise ValueError(f"Not a valid <Conj (...) → (... )> line: {line}")
+    return m.group("cond"), m.group("prop")
+
+
+# --- Public API ---------------------------------------------------------------
+
+def sufficient_conjs_to_lean(
+    lines: List[str],
+    func_names: Iterable[str],
+    start_index: int = 1,
+    theorem_prefix: str = "TxSufficient",
+) -> List[str]:
+    """
+    Convert sufficient conjecture lines like
+        <Conj (independence_number < (1 + radius)) → (claw_free)>
+    into Lean4 theorems that assume the inequality and conclude the property.
+
+    Parameters
+    ----------
+    lines : list of str
+        Each a single-line conjecture in the angle-bracket format shown above.
+    func_names : iterable of str
+        All invariant / function identifiers that should apply to ' G'.
+        e.g. ['independence_number','radius','slater','size', ...].
+    start_index : int
+        Starting theorem index.
+    theorem_prefix : str
+        Base name for theorems, e.g. 'TxSufficient' -> 'theorem TxSufficient 1 ...'
+
+    Returns
+    -------
+    list of str
+        Lean4 theorem strings.
+    """
+    out = []
+    k = start_index
+    for raw in lines:
+        cond, prop = parse_sufficient_line(raw)
+
+        # Normalize comparator spelling first
+        cond = _normalize_comparator(cond)
+
+        # Push ') G' inside, then ensure each listed function token has ' G'
+        cond = _push_paren_G(cond, func_names)
+        cond = _ensure_G(cond, func_names)
+
+        # Build theorem text
+        thm = (
+f"""theorem {theorem_prefix} {k} (G : SimpleGraph V)
+    (h1 : connected G)
+    (h2 : order G >= 2)
+    (hcond : {cond}) :
+    {prop} G := by
+  sorry
+"""
+        )
+        out.append(thm)
+        k += 1
+    return out
