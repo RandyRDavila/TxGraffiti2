@@ -375,22 +375,19 @@ LEAN_PROP = {
 
 # ---- tiny parser utilities ---------------------------------------------------
 
+# ---------- tiny helpers ----------
 def _strip_outer_parens(s: str) -> str:
     s = s.strip()
     while s.startswith("(") and s.endswith(")"):
-        # quick balance check
         depth = 0
         ok = True
         for i, ch in enumerate(s):
-            if ch == "(":
-                depth += 1
+            if ch == "(": depth += 1
             elif ch == ")":
                 depth -= 1
-                if depth < 0:
-                    ok = False
-                    break
-            if i < len(s) - 1 and depth == 0:
-                ok = False  # outermost ) closes too early
+                if depth < 0: ok = False; break
+            if i < len(s)-1 and depth == 0:
+                ok = False
         if ok and depth == 0:
             s = s[1:-1].strip()
         else:
@@ -398,69 +395,48 @@ def _strip_outer_parens(s: str) -> str:
     return s
 
 def _tokenize_sum(expr: str) -> List[Tuple[int, str]]:
-    """
-    Split a linear expression into signed terms at top level (no parentheses).
-    Returns list of (sign, term_without_sign).
-    """
     e = _strip_outer_parens(expr.replace(" ", ""))
-    # remove inner parentheses entirely (we only support linear combos)
     e = e.replace("(", "").replace(")", "")
-    if not e:
-        return []
-    if e[0] not in "+-":
-        e = "+" + e
-    terms: List[Tuple[int,str]] = []
+    if not e: return []
+    if e[0] not in "+-": e = "+" + e
+    out: List[Tuple[int,str]] = []
     i = 0
     while i < len(e):
         sign = +1
-        if e[i] == "+":
-            sign = +1; i += 1
-        elif e[i] == "-":
-            sign = -1; i += 1
+        if e[i] == "+": sign = +1; i += 1
+        elif e[i] == "-": sign = -1; i += 1
         j = i
-        while j < len(e) and e[j] not in "+-":
-            j += 1
+        while j < len(e) and e[j] not in "+-": j += 1
         term = e[i:j]
-        if term:  # skip empties
-            terms.append((sign, term))
+        if term: out.append((sign, term))
         i = j
-    return terms
+    return out
 
 def _parse_linear_comb(expr: str, allowed_vars: Dict[str,str]) -> Tuple[Dict[str, Fraction], Fraction]:
-    """
-    Parse expressions like:
-      "5", "2+domination_number", "(-1/2*total_domination_number)+7", "-1*minimum_degree"
-    into (coeffs, const) with rational coefficients.
-
-    coeffs[var] is Fraction; const is Fraction.
-    """
     coeffs: Dict[str, Fraction] = {}
     const = Fraction(0)
     for sign, raw in _tokenize_sum(expr):
-        term = raw
-        if "*" in term:
-            coef_str, var = term.split("*", 1)
+        if "*" in raw:
+            coef_str, var = raw.split("*", 1)
             coef = Fraction(coef_str)
             var = var.strip()
             if var not in allowed_vars:
                 raise ValueError(f"Unknown variable '{var}' in term '{raw}'")
             coeffs[var] = coeffs.get(var, Fraction(0)) + sign * coef
         else:
-            # either a bare variable or a constant
-            if term in allowed_vars:
-                coeffs[term] = coeffs.get(term, Fraction(0)) + sign * Fraction(1)
+            if raw in allowed_vars:
+                coeffs[raw] = coeffs.get(raw, Fraction(0)) + sign * Fraction(1)
             else:
-                const += sign * Fraction(term)
+                const += sign * Fraction(raw)
     return coeffs, const
 
 def _lcm(a: int, b: int) -> int:
     from math import gcd
     return abs(a*b) // gcd(a, b) if a and b else abs(a or b)
 
-def _denom_lcm(fracs: Iterable[Fraction]) -> int:
+def _denom_lcm(fracs) -> int:
     d = 1
-    for f in fracs:
-        d = _lcm(d, f.denominator)
+    for f in fracs: d = _lcm(d, f.denominator)
     return d or 1
 
 def _lean_Z(n: int) -> str:
@@ -469,56 +445,41 @@ def _lean_Z(n: int) -> str:
 def _lean_var(var: str) -> str:
     return f"({LEAN_INV[var]} G : ℤ)"
 
-# ---- main API ----------------------------------------------------------------
+def _detect_ineq(lhs_rhs: str) -> Tuple[str, str, str]:
+    """Return (lhs, op, rhs). Supports >=, <=, ==, =, >, < ."""
+    s = lhs_rhs
+    for op in [">=", "<=", "==", "=", ">", "<"]:
+        parts = s.split(op)
+        if len(parts) == 2:
+            return parts[0].strip(), op, parts[1].strip()
+    raise ValueError("No inequality/equality operator found.")
 
+def _flip_op(op: str) -> str:
+    return {">=":"<=", "<=":">=", ">":"<", "<":">", "=":"=", "==":"="}[op]
+
+# ---------- main ----------
 def conjectures_to_lean(
     conjs: Iterable[object],
     *,
     name_prefix: str = "Conj"
 ) -> List[str]:
     """
-    Convert conjecture objects (whose __repr__ look like
-      "<Conj (property) → (lhs >= rhs)>")
-    into Lean4 theorem stubs with added hypotheses (connected G) and (order G ≥ 2).
-
-    Parameters
-    ----------
-    conjs : Iterable[object]
-        Iterable of conjecture objects. Each object's `repr(obj)` must return a string
-        like "<Conj (chordal) → (independence_number >= ((-1/2 * total_domination_number) + 7))>".
-    name_prefix : str, default "Conj"
-        Prefix for theorem names. Theorems are named `{name_prefix}_{i}` (1-based).
-
-    Returns
-    -------
-    List[str]
-        Lean4 theorem strings, each ending with `:=\nsorry\n`.
-
-    Notes
-    -----
-    • All numeric/invariant terms are interpreted as integers; fractional coefficients
-      are cleared by multiplying both sides by the LCM of denominators so the whole
-      inequality lives in `ℤ`.
-
-    • Adds hypotheses:
-        (h_conn : connected G)
-        (h_ord  : order G ≥ (2 : ℕ))
-      plus any property from the conjecture (e.g., tree/chordal/planar/subcubic/K_4_free),
-      avoiding duplication if the property is `connected`.
-
-    • LHS and RHS invariants are cast to `ℤ`, e.g. `(independence_number G : ℤ)`.
+    Accepts repr strings like:
+      "<Conj (chordal) → (independence_number >= 5)>"
+      "<Conj (tree) → (independence_number = 2 + residue)>"
+      "<Conj (planar) → (independence_number <= (-1/2 * total_domination_number) + 7)>"
+      "<Conj (subcubic) → (7 + residue <= independence_number)>"
+    and emits Lean4 theorems with added (connected G) and (order G ≥ 2).
+    Handles >=, <=, =/==, >, < and auto-flips sides if the invariant is on the right.
     """
     results: List[str] = []
-
     for i, obj in enumerate(conjs, start=1):
         s = repr(obj).strip()
-        # Expected shape: "<Conj (PROPERTY) → (LHS >= RHS)>"
         try:
             inner = s[s.index("<Conj ") + 6 : s.rindex(">")].strip()
         except Exception:
             raise ValueError(f"Unrecognized repr format: {s}")
 
-        # Split "(property) → (inequality)"
         try:
             hyp_part, ineq_part = inner.split("→")
         except ValueError:
@@ -528,64 +489,61 @@ def conjectures_to_lean(
         if prop not in LEAN_PROP:
             raise ValueError(f"Unknown property '{prop}' in: {s}")
 
-        ineq = _strip_outer_parens(ineq_part).strip()
-        # Expect "(lhs >= rhs)" after stripping
-        if ">=" not in ineq:
-            raise ValueError(f"Missing '>=' in inequality: {s}")
-        lhs_raw, rhs_raw = map(_strip_outer_parens, ineq.split(">=", 1))
-        lhs_raw, rhs_raw = lhs_raw.strip(), rhs_raw.strip()
+        ineq_body = _strip_outer_parens(ineq_part).strip()
+        lhs_raw, op, rhs_raw = _detect_ineq(ineq_body)
+        lhs_raw, rhs_raw = _strip_outer_parens(lhs_raw), _strip_outer_parens(rhs_raw)
 
-        # LHS is expected to be a single invariant name
+        # If invariant is on the right (e.g., "… <= independence_number"), swap sides.
+        def _is_bare_invariant(tok: str) -> bool:
+            t = tok.strip()
+            return t in LEAN_INV
+
+        if not _is_bare_invariant(lhs_raw) and _is_bare_invariant(rhs_raw):
+            lhs_raw, rhs_raw, op = rhs_raw, lhs_raw, _flip_op(op)
+
+        # Require the (now) LHS to be a single invariant
         if lhs_raw not in LEAN_INV:
-            raise ValueError(f"Unknown LHS invariant '{lhs_raw}' in: {s}")
+            raise ValueError(f"LHS must be an invariant name; got '{lhs_raw}' in: {s}")
 
-        # Parse RHS linear combination over allowed invariants + constants
+        # Parse the RHS (arbitrary linear combo)
         coeffs, const = _parse_linear_comb(rhs_raw, LEAN_INV)
 
-        # Compute LCM of denominators across RHS coeffs, const, and (implicitly) LHS 1
+        # Denominator LCM across RHS and implicit LHS coefficient 1
         denoms = [const] + list(coeffs.values()) + [Fraction(1)]
         L = _denom_lcm(denoms)
 
-        # Build Lean left-hand side: possibly scaled by L
-        if L == 1:
-            lhs_lean = f"({LEAN_INV[lhs_raw]} G : ℤ)"
-        else:
-            lhs_lean = f"{_lean_Z(L)} * ({LEAN_INV[lhs_raw]} G : ℤ)"
+        # Build Lean LHS
+        lhs_lean = f"({LEAN_INV[lhs_raw]} G : ℤ)" if L == 1 else f"{_lean_Z(L)} * ({LEAN_INV[lhs_raw]} G : ℤ)"
 
-        # Build Lean right-hand side sum (all integers after scaling)
+        # Build Lean RHS (scaled integers)
         rhs_terms: List[str] = []
-        # variable terms
         for var, q in coeffs.items():
-            k = int(q * L)  # integer
-            if k == 0:
-                continue
-            if k == 1:
-                rhs_terms.append(f"{_lean_var(var)}")
-            elif k == -1:
-                rhs_terms.append(f"(-1 : ℤ) * {_lean_var(var)}")
-            else:
-                rhs_terms.append(f"{_lean_Z(k)} * {_lean_var(var)}")
-        # constant term
+            k = int(q * L)
+            if k == 0: continue
+            if k == 1: rhs_terms.append(f"{_lean_var(var)}")
+            elif k == -1: rhs_terms.append(f"(-1 : ℤ) * {_lean_var(var)}")
+            else: rhs_terms.append(f"{_lean_Z(k)} * {_lean_var(var)}")
         k0 = int(const * L)
         if k0 != 0 or not rhs_terms:
             rhs_terms.append(_lean_Z(k0))
-
         rhs_lean = " + ".join(rhs_terms)
 
-        # Hypotheses: connected/order plus property (if not 'connected')
+        # Hypotheses
         hyp_lines = [
             "    (h_conn : connected G)",
             "    (h_ord  : order G ≥ (2 : ℕ))",
         ]
         if prop != "connected":
             hyp_lines.append(f"    (h_{prop} : {LEAN_PROP[prop]} G)")
-
         hyps_block = "\n".join(hyp_lines)
+
+        # Normalize op to Lean token
+        op_lean = {"==":"=", "=":"=", ">=":"≥", "<=":"≤", ">":">", "<":"<"}[op]
 
         thm_name = f"{name_prefix}_{i}"
         theorem = (
             f"theorem {thm_name} (G : SimpleGraph V)\n"
-            f"{hyps_block} : {lhs_lean} ≥ {rhs_lean} :=\n"
+            f"{hyps_block} : {lhs_lean} {op_lean} {rhs_lean} :=\n"
             f"sorry\n"
         )
         results.append(theorem)
