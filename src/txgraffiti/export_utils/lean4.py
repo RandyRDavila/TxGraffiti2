@@ -1,520 +1,593 @@
+# txgraffiti/lean/export.py
 """
 Module for exporting TxGraffiti conjectures to Lean 4 syntax.
 
-This module provides functions to convert symbolic conjectures into
-Lean-compatible theorems or propositions. It includes Lean-friendly
-symbol mappings, automatic variable mappings, and translators from
-Conjecture objects to Lean 4 strings.
+This module converts symbolic TxGraffiti `Conjecture` objects into
+Lean-compatible theorems. It keeps hypotheses in `Prop`/`ℕ` (adding
+`connected G` and `order G ≥ (2 : ℕ)` if missing), and makes the conclusion
+type-correct by casting fractions to `ℚ`, typing all remaining integers,
+and coercing invariants to a single ambient type in the conclusion.
 """
 
 from __future__ import annotations
+
 import re
-from typing import Iterable
-from collections.abc import Mapping
-import pandas as pd
-from typing import Iterable, List
+from typing import Iterable, Mapping, List
+import pandas as pd  # only for auto_var_map’s signature
 
-
-from txgraffiti.logic import *
+from txgraffiti.logic import Conjecture
 
 __all__ = [
     "conjecture_to_lean4",
-    # "auto_var_map",
-    "LEAN_SYMBOLS",
-    "LEAN_SYMBOLS",
     "necessary_conjecture_to_lean",
+    "auto_var_map",
+    "conjectures_to_lean",
 ]
 
-# ---------------------------------------------------------------------------
-# 1. Lean-friendly replacements for operators & symbols
-# ---------------------------------------------------------------------------
-LEAN_SYMBOLS: Mapping[str, str] = {
-    "∧": "∧",
-    "∨": "∨",
-    "¬": "¬",
-    "→": "→",
-    "≥": "≥",
-    "<=": "≤",
-    ">=": "≥",
-    "==": "=",
-    "=": "=",
-    "!=": "≠",
-    "<": "<",
-    ">": ">",
-    "/": "/",
-    "**": "^",
-}
-
-# ---------------------------------------------------------------------------
-# 2. Automatic variable-map builder
-# ---------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
+# 0) Optional: build a quick var-map from a DataFrame (not required by pipeline)
+# ─────────────────────────────────────────────────────────────────────────────
 def auto_var_map(df: pd.DataFrame, *, skip: tuple[str, ...] = ("name",)) -> dict[str, str]:
-    """
-    Build a variable mapping for Lean 4 translation.
-
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        The dataframe from which to extract column names.
-    skip : tuple of str, optional
-        Column names to skip in the output (default is ('name',)).
-
-    Returns
-    -------
-    dict of str to str
-        A mapping from column names to Lean variable expressions.
-    """
+    """Return {column -> 'col G'} for Lean-friendly substitution."""
     return {c: f"{c} G" for c in df.columns if c not in skip}
 
 
-# ---------------------------------------------------------------------------
-# 3. The main translator
-# ---------------------------------------------------------------------------
-def _translate(expr: str, var_map: Mapping[str, str]) -> str:
-    # 3a. longest variable names first so 'order' doesn't clobber 'total_order'
-    for var in sorted(var_map, key=len, reverse=True):
-        expr = re.sub(rf"\b{re.escape(var)}\b", var_map[var], expr)
-
-    # 3b. symbolic replacements (do ** after >= / <= replacements)
-    for sym, lean_sym in LEAN_SYMBOLS.items():
-        expr = expr.replace(sym, lean_sym)
-
-    # tidy whitespace
-    expr = re.sub(r"\s+", " ", expr).strip()
-    return expr
+# ─────────────────────────────────────────────────────────────────────────────
+# 1) Header builder: renders hypotheses cleanly (Prop), raw inequality payload
+# ─────────────────────────────────────────────────────────────────────────────
+_REL_MAP = {"<=": "≤", "<": "<", ">=": "≥", ">": ">", "==": "=", "!=": "≠"}
 
 def conjecture_to_lean4(
     conj: Conjecture,
     name: str,
+    *,
     object_symbol: str = "G",
-    object_decl: str = "SimpleGraph V"
+    object_decl: str = "SimpleGraph V",
 ) -> str:
     """
-    Convert a Conjecture object into a Lean 4 theorem with explicit hypotheses.
-
-    Parameters
-    ----------
-    conj : Conjecture
-        The conjecture object to convert.
-    name : str
-        Name of the theorem in Lean.
-    object_symbol : str, optional
-        Symbol representing the graph (default is 'G').
-    object_decl : str, optional
-        Lean type declaration for the object (default is 'SimpleGraph V').
-
-    Returns
-    -------
-    str
-        A Lean 4 theorem string with bound hypotheses and a conclusion.
+    Build a Lean theorem skeleton:
+      theorem <name> (G : SimpleGraph V)
+        (h1 : P1 G) (h2 : P2 G) ... :
+        <raw-conclusion> :=
+      sorry
     """
+    # 1) Hypotheses (flatten only ANDs; necessary-conjectures typically use ∧)
+    and_terms = getattr(conj.hypothesis, "_and_terms", [conj.hypothesis])
+    binds = [f"(h{i} : {p.name} {object_symbol})" for i, p in enumerate(and_terms, 1)]
 
-    # 1) extract hypothesis Predicates
-    terms = getattr(conj.hypothesis, "_and_terms", [conj.hypothesis])
-    binds = []
-    for idx, p in enumerate(terms, start=1):
-        lean_pred = p.name
-        binds.append(f"(h{idx} : {lean_pred} {object_symbol})")
-
-    # 2) extract conclusion
+    # 2) Conclusion payload (symbolic, fix later passes)
     ineq = conj.conclusion
-    lhs, op, rhs = ineq.lhs.name, ineq.op, ineq.rhs.name
-    lean_rel = {"<=":"≤", "<":"<", ">=":"≥", ">":">", "==":"=", "!=":"≠"}[op]
+    lhs, op, rhs = ineq.lhs.name, _REL_MAP[ineq.op], ineq.rhs.name
 
-    # 3) assemble
-    bind_str = "\n    ".join(binds)
+    bind_block = "\n    ".join(binds) if binds else ""
     return (
         f"theorem {name} ({object_symbol} : {object_decl})\n"
-        f"    {bind_str} : {lhs} {object_symbol} {lean_rel} {rhs} {object_symbol} :=\n"
-        f"sorry \n"
+        f"    {bind_block} : {lhs} {object_symbol} {op} {rhs} {object_symbol} :=\n"
+        f"sorry\n"
     )
 
 
-
-# Recognize existing required hypotheses (supports >=, ≥, <=, ≤)
+# ─────────────────────────────────────────────────────────────────────────────
+# 2) Header hygiene: ensure (connected G) and (order G ≥ (2 : ℕ)) hypotheses
+# ─────────────────────────────────────────────────────────────────────────────
 RE_CONNECTED = re.compile(r"\(\s*h\d+\s*:\s*connected\s+G\s*\)")
-RE_ORDER     = re.compile(r"\(\s*h\d+\s*:\s*order\s+G\s*(?:>=|≥|<=|≤)\s*2\s*\)")
+RE_ORDER = re.compile(
+    r"\(\s*h\d+\s*:\s*order\s+G\s*(?:>=|≥|<=|≤)\s*(?:2|\(2\s*:\s*ℕ\))\s*\)"
+)
 
 def _next_h_index(hyp_block: str) -> int:
     idxs = [int(m.group(1)) for m in re.finditer(r"\(\s*h(\d+)\s*:", hyp_block)]
     return (max(idxs) + 1) if idxs else 1
 
 def _insert_missing_hypotheses(hdr_and_g: str, hyp_block: str) -> str:
-    need_connected = (RE_CONNECTED.search(hyp_block) is None)
-    need_order     = (RE_ORDER.search(hyp_block) is None)
+    need_connected = RE_CONNECTED.search(hyp_block) is None
+    need_order = RE_ORDER.search(hyp_block) is None
     if not (need_connected or need_order):
         return hdr_and_g + hyp_block
 
     indent_match = re.search(r"\n(\s*)\(", hyp_block)
     indent = indent_match.group(1) if indent_match else "    "
-
     n = _next_h_index(hyp_block)
+
     pieces = [hyp_block]
     if need_connected:
         pieces.append(f"\n{indent}(h{n} : connected G) ")
         n += 1
     if need_order:
-        # Keep Nat here; hypotheses should live in ℕ
         pieces.append(f"\n{indent}(h{n} : order G ≥ (2 : ℕ)) ")
     return hdr_and_g + "".join(pieces)
 
-
-def fix_lean_conjectures(text: str, func_names: Iterable[str]) -> str:
+def _fix_header_and_hyps(text: str, func_names: Iterable[str]) -> str:
     """
-    Fix Lean4 conjecture theorems by:
-      • Pushing ') G' onto the function inside parentheses.
-      • Ensuring each named invariant is written with ' G' (unless already ' G' or '(' call).
-      • Removing ONLY the stray ') G' right before ':=' (keeps 'residue G :=', etc.).
-      • Adding missing hypotheses: (connected G) and (order G ≥ 2).
-    Note: Operator-agnostic w.r.t. '==', '≥'/'>=', '≤'/'<=' in the conclusion.
+    Add missing (connected G) and (order G ≥ (2 : ℕ)) in the header only.
+    Do NOT touch the conclusion here.
     """
-
-    # A) Add missing hypotheses per theorem
-    def add_hyps(match: re.Match) -> str:
-        before = match.group("before")
-        hyps   = match.group("hyps") or ""
-        colon  = match.group("colon")
-        expr   = match.group("expr")
-        assign = match.group("assign")
-        header_plus_hyps = _insert_missing_hypotheses(before, hyps)
-        return f"{header_plus_hyps}{colon}{expr}{assign}"
-
     theorems_pat = re.compile(
         r"(?P<before>theorem\b.*?\(G\s*:\s*SimpleGraph\s+V\))"
         r"(?P<hyps>(?:.*?\(h\d+\s*:.*?\)\s*)*)"
         r"(?P<colon>:\s)"
         r"(?P<expr>.*?)"
         r"(?P<assign>\s*:=)",
-        flags=re.DOTALL
-    )
-    text = theorems_pat.sub(add_hyps, text)
-
-    # B) Expression-level fixes (between ':' and ':='), independent of comparator
-    concl_pat = re.compile(r":\s*(?P<expr>.*?)\s*:=", flags=re.DOTALL)
-
-    push_inside = [
-        (re.compile(rf"\b({re.escape(fn)})\s*\)\s*G\b"), rf"\1 G)")
-        for fn in func_names
-    ]
-    add_missing_G = [
-        (re.compile(rf"\b({re.escape(fn)})\b(?!\s*G\b|\s*\()"), rf"\1 G")
-        for fn in func_names
-    ]
-
-    def fix_expr(m: re.Match) -> str:
-        expr = m.group("expr")
-        for rx, repl in push_inside:
-            expr = rx.sub(repl, expr)
-        for rx, repl in add_missing_G:
-            expr = rx.sub(repl, expr)
-        return f": {expr} :="
-
-    text = concl_pat.sub(fix_expr, text)
-
-    # C) ONLY remove ') G' right before ':=' (don’t touch 'func G :=')
-    text = re.sub(r"\)\s*G(\s*:=)", r")\1", text)
-
-    return text
-
-def cast_numeric_fractions_to_q(expr: str) -> str:
-    """
-    Inside a Lean expression, cast any integer-literal fraction a/b to (a/b : ℚ).
-    Examples: 5/4 -> (5/4 : ℚ), -53/2 -> (-53/2 : ℚ), 1637/2403 -> (1637/2403 : ℚ)
-    Skips if it's already followed by ': ℚ'.
-    Only matches when BOTH numerator and denominator are integer literals.
-    """
-    # Match integer literal fraction possibly with leading minus on numerator.
-    # Ensure it's not already followed by ': ℚ' (no double casting).
-    frac_pat = re.compile(
-        r"""
-        (?<![\w.])          # not preceded by word char or dot (avoid part of name or float)
-        (-?\d+)             # numerator (int, optional leading '-')
-        \s*/\s*             # slash with optional spaces
-        (\d+)               # denominator (positive int)
-        (?!\s*:\s*ℚ)        # NOT already cast to ℚ
-        (?!\s*[\w(])        # don't match if immediately followed by a name or '(' (rare false positives)
-        """,
-        re.VERBOSE
+        flags=re.DOTALL,
     )
 
-    def repl(m: re.Match) -> str:
-        num, den = m.group(1), m.group(2)
-        return f"({num}/{den} : ℚ)"
+    def add_hyps(m: re.Match) -> str:
+        before, hyps, colon, expr, assign = (
+            m.group("before"),
+            m.group("hyps") or "",
+            m.group("colon"),
+            m.group("expr"),
+            m.group("assign"),
+        )
+        header_plus_hyps = _insert_missing_hypotheses(before, hyps)
+        return f"{header_plus_hyps}{colon}{expr}{assign}"
 
-    return frac_pat.sub(repl, expr)
+    return theorems_pat.sub(add_hyps, text)
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 3) Safe “conclusion only” editor
+# ─────────────────────────────────────────────────────────────────────────────
+def _edit_theorem_conclusions(lean_text: str, edit_fn) -> str:
+    """
+    For each 'theorem ... :=', apply edit_fn ONLY to the conclusion between
+    the final top-level ':' and the ':='.
+    """
+    out: list[str] = []
+    i = 0
+    theorempat = re.compile(r"\btheorem\b")
+    assign_pat = re.compile(r":=")
+
+    while True:
+        m = theorempat.search(lean_text, i)
+        if not m:
+            out.append(lean_text[i:])
+            break
+
+        out.append(lean_text[i:m.start()])
+        j = m.start()
+
+        a = assign_pat.search(lean_text, j)
+        if not a:
+            out.append(lean_text[j:])
+            break
+        k_assign = a.start()
+
+        # find last ':' at paren-depth 0 before ':='
+        depth, k_colon = 0, -1
+        p = j
+        while p < k_assign:
+            c = lean_text[p]
+            if c == "(":
+                depth += 1
+            elif c == ")":
+                depth = max(0, depth - 1)
+            elif c == ":" and depth == 0:
+                k_colon = p
+            p += 1
+
+        if k_colon == -1:
+            out.append(lean_text[j:k_assign])
+            i = k_assign
+            continue
+
+        header = lean_text[j:k_colon]
+        conclusion = lean_text[k_colon + 1 : k_assign]
+        fixed = edit_fn(conclusion)
+
+        out.append(header)
+        out.append(": ")
+        out.append(fixed.strip())
+        i = k_assign  # keep ':=' and beyond for next round
+
+    return "".join(out)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 4) Conclusion passes: fractions → ℚ; then integers; then invariant coercions
+# ─────────────────────────────────────────────────────────────────────────────
+# Fractions: a/b -> (a/b : ℚ)
+_FRAC = re.compile(
+    r"""
+    (?<![\w.])          # not preceded by name/num/dot
+    (-?\d+)             # numerator
+    \s*/\s*
+    (\d+)               # denominator
+    (?!\s*:\s*ℚ)        # not already cast
+    """,
+    re.VERBOSE,
+)
+def _cast_fractions_to_q(expr: str) -> str:
+    return _FRAC.sub(lambda m: f"({m.group(1)}/{m.group(2)} : ℚ)", expr)
 
 def fix_fractions_in_conclusions(lean_text: str) -> str:
+    return _edit_theorem_conclusions(lean_text, _cast_fractions_to_q)
+
+# Integers: stand-alone integer literal (not numerator of a/b), typed to ambient
+_INT_TYPE = r"[\wℕℤℚℝα-ωΑ-Ω]+"
+_INT = re.compile(
+    r"""
+    (?<![\w.])          # not preceded by name/num/dot
+    (-?\s*\d+)          # integer (allow '-  3')
+    (?!\s*/\s*\d)       # not a fraction numerator
+    (?=(?:\s|[(){}\[\]+\-*^<>=≠≤≥,:]|$))  # next is a delimiter (prevents '12'→'(1)2')
+    (?!\s*:\s*%s)       # not already ':\ TYPE'
     """
-    Find every conclusion segment ': <expr> :=' and cast numeric fractions inside <expr> to ℚ.
-    Leaves everything else (hypotheses, headers, proofs) unchanged.
-    """
-    concl_pat = re.compile(r":\s*(?P<expr>.*?)\s*:=", flags=re.DOTALL)
+    % _INT_TYPE,
+    re.VERBOSE,
+)
 
-    def _one(m: re.Match) -> str:
-        expr = m.group("expr")
-        expr_fixed = cast_numeric_fractions_to_q(expr)
-        return f": {expr_fixed} :="
+def _choose_target_type(expr: str) -> str:
+    if "ℚ" in expr:
+        return "ℚ"
+    if re.search(r"(?<![\w.])-\s*\d+(?=(?:\s|[(){}\[\]+\-*^<>=≠≤≥,:]|$))", expr):
+        return "ℤ"
+    return "ℕ"
 
-    return concl_pat.sub(_one, lean_text)
-
-_INT_OR_FRAC_TYPE = r"[\wℕℤℚℝα-ωΑ-Ω]+"  # for robust '(: TYPE)' checks
-
-def cast_all_int_literals(expr: str, *, to_type: str) -> str:
-    """
-    Wrap *all* standalone integer literals as (k : to_type), including positives and zero.
-    Skips:
-      • numerators/denominators in fractions (handled elsewhere as ℚ)
-      • anything already typed '... : TYPE'
-      • numerals used as exponents right after '^'
-    """
-    pat = re.compile(
-        r"""
-        (?<![\w.])          # not preceded by name/number/dot
-        (-?\s*\d+)          # integer literal (allows '-   3' -> normalized to '-3')
-        (?!\s*/\s*\d)       # not a fraction's numerator (a/b)
-        (?!\s*:\s*%s)       # not already annotated ':\ TYPE'
-        """ % _INT_OR_FRAC_TYPE,
-        re.VERBOSE
-    )
-
+def _cast_all_ints(expr: str, *, to_type: str) -> str:
     def repl(m: re.Match) -> str:
-        s = m.group(1)
-        # normalize '-  12' -> '-12'
-        s = re.sub(r"-\s*(\d+)", r"-\1", s)
-
-        # Skip if this literal is used as an exponent: look left for the last non-space char
-        i = m.start()
-        j = i - 1
-        while j >= 0 and expr[j].isspace():
-            j -= 1
-        if j >= 0 and expr[j] == "^":
-            return m.group(0)  # leave exponent numerals alone (they live in ℕ)
-
-        return f"({s} : {to_type})"
-
-    return pat.sub(repl, expr)
-
-
-def fix_integers_in_conclusions(lean_text: str) -> str:
-    """
-    In every conclusion ': <expr> :=':
-      • If '<expr>' mentions 'ℚ' (e.g., due to 'a/b : ℚ'), cast ALL integer literals to ℚ.
-      • Otherwise, cast ALL integer literals to ℤ.
-    Fractions should already be handled by 'fix_fractions_in_conclusions'.
-    """
-    concl_pat = re.compile(r":\s*(?P<expr>.*?)\s*:=", flags=re.DOTALL)
-
-    def _one(m: re.Match) -> str:
-        expr = m.group("expr")
-        tgt = "ℚ" if "ℚ" in expr else "ℤ"
-        expr2 = cast_all_int_literals(expr, to_type=tgt)
-        return f": {expr2} :="
-
-    return concl_pat.sub(_one, lean_text)
-
-import re
-
-_INT_OR_TYPE = r"[\wℕℤℚℝα-ωΑ-Ω]+"  # for ':\ TYPE' guards
-
-def cast_all_int_literals(expr: str, *, to_type: str) -> str:
-    """
-    Wrap all standalone integer literals as (k : to_type), including positives and zero.
-    Skips:
-      • numerators in a/b (handled earlier as ℚ)
-      • already-typed numerals '(k : TYPE)'
-      • exponent numerals immediately after '^'
-    """
-    pat = re.compile(r"""
-        (?<![\w.])          # not preceded by name/number/dot
-        (-?\s*\d+)          # integer literal (allow '-  3')
-        (?!\s*/\s*\d)       # not a fraction numerator
-        (?!\s*:\s*%s)       # not already typed
-        """ % _INT_OR_TYPE, re.VERBOSE)
-
-    def repl(m: re.Match) -> str:
-        s = re.sub(r"-\s*(\d+)", r"-\1", m.group(1))  # '-  12' -> '-12'
-        # skip exponents: look left for '^'
-        i = m.start()
-        j = i - 1
+        s = re.sub(r"-\s*(\d+)", r"-\1", m.group(1))  # '-  12' → '-12'
+        # Skip exponents (immediate non-space left is '^')
+        j = m.start() - 1
         while j >= 0 and expr[j].isspace():
             j -= 1
         if j >= 0 and expr[j] == "^":
             return m.group(0)
         return f"({s} : {to_type})"
+    return _INT.sub(repl, expr)
 
-    return pat.sub(repl, expr)
+def _normalize_rel_spacing(expr: str) -> str:
+    return re.sub(r"(≥|≤|=|<|>|≠)\(", r"\1 (", expr)
 
-
-def _choose_target_type(expr: str) -> str:
-    """Pick the ambient type for the conclusion."""
-    if "ℚ" in expr:
-        return "ℚ"
-    # If any negative integer appears, ℤ is required
-    if re.search(r"(?<![\w.])-\s*\d+", expr):
-        return "ℤ"
-    # Otherwise stay in ℕ (we'll type literals as ℕ)
-    return "ℕ"
-
-
-def _cast_invariants(expr: str, func_names: Iterable[str], to_type: str) -> str:
-    """Cast 'fn G' to '(fn G : to_type)' when target is not ℕ."""
+def _cast_invariants(expr: str, func_names: Iterable[str], *, to_type: str) -> str:
+    """Wrap 'fn G' as '(fn G : to_type)' when to_type ≠ ℕ."""
     if to_type == "ℕ":
         return expr
     for fn in sorted(func_names, key=len, reverse=True):
-        # wrap bare `fn G` that is not already typed
         expr = re.sub(
-            rf"\b{re.escape(fn)}\s+G\b(?!\s*:\s*(?:ℕ|ℤ|ℚ))",
+            rf"(?<![\w.]){re.escape(fn)}\s+G(?!\s*:\s*(?:ℕ|ℤ|ℚ))",
             rf"({fn} G : {to_type})",
-            expr
+            expr,
         )
     return expr
 
-
-def _fix_token_adjacency(expr: str) -> str:
-    """
-    Insert ' + ' if a closing ')' (usually after a typed numeral) is
-    immediately followed by a bare number, '(' or an invariant/function name.
-    This repairs cases like '(-1 : ℚ)5/4' -> '(-1 : ℚ) + (5/4 : ℚ)'.
-    """
-    expr = re.sub(r"\)\s*(?=\d)", r") + ", expr)
-    expr = re.sub(r"\)\s*(?=\()", r") + ", expr)
-    expr = re.sub(r"\)\s*(?=[A-Za-z_])", r") + ", expr)
-    return expr
-
-
-def _normalize_relation_spacing(expr: str) -> str:
-    """Ensure spaces after relation symbols like ≥, ≤, <, >, =, ≠ when followed by '('."""
-    expr = re.sub(r"(≥|≤|=|<|>|≠)\(", r"\1 (", expr)
-    return expr
-
-
 def retarget_and_cast_conclusions(lean_text: str, func_names: Iterable[str]) -> str:
-    """
-    For each ': <expr> :=':
-      1) Normalize spacing around relations.
-      2) Choose target type (ℚ if present, else ℤ if any negative int, else ℕ).
-      3) Cast all integer literals to that type.
-      4) If target is ℤ or ℚ, cast invariants 'fn G' on BOTH sides to that type.
-      5) Fix adjacency like ')5/4' -> ') + (5/4 : ℚ)'.
-    """
-    concl_pat = re.compile(r":\s*(?P<expr>.*?)\s*:=", flags=re.DOTALL)
-
-    def _one(m: re.Match) -> str:
-        expr = m.group("expr")
-        expr = _normalize_relation_spacing(expr)
-
-        target = _choose_target_type(expr)
-        # note: fractions should already be '(a/b : ℚ)' from your earlier pass
-        expr = cast_all_int_literals(expr, to_type=target)
-        expr = _cast_invariants(expr, func_names, to_type=target)
-        expr = _fix_token_adjacency(expr)
-        return f": {expr} :="
-
-    return concl_pat.sub(_one, lean_text)
+    def edit(expr: str) -> str:
+        expr = _normalize_rel_spacing(expr)
+        tgt = _choose_target_type(expr)
+        expr = _cast_all_ints(expr, to_type=tgt)
+        expr = _cast_invariants(expr, func_names, to_type=tgt)
+        return expr
+    return _edit_theorem_conclusions(lean_text, edit)
 
 
-def necessary_conjecture_to_lean(conjectures: list, keys: list, name="TxGraffitiBench") -> list:
-    lean_conjectures = []
-    for i, conj in enumerate(conjectures):
-        conj = conjecture_to_lean4(conj, f"{name}_{i+1}")
-        conj = fix_lean_conjectures(conj, keys)         # ensure '... G' forms & add missing hyps
-        conj = fix_fractions_in_conclusions(conj)       # (a/b) -> (a/b : ℚ)
-        conj = retarget_and_cast_conclusions(conj, keys)# type all integers & cast invariants if needed
-        lean_conjectures.append(conj)
-    return lean_conjectures
-
-# --- Core token handling ------------------------------------------------------
-
+# ─────────────────────────────────────────────────────────────────────────────
+# 5) Utility: ensure '... G' forms inside the conclusion before typing
+# ─────────────────────────────────────────────────────────────────────────────
 def _push_paren_G(expr: str, func_names: Iterable[str]) -> str:
-    """Turn '... <func>) G ...' into '... <func> G) ...' for each func in func_names."""
+    """Turn '... <fn>) G ...' → '... <fn> G) ...' for each fn in func_names."""
     for fn in func_names:
         expr = re.sub(rf"\b({re.escape(fn)})\s*\)\s*G\b", rf"\1 G)", expr)
     return expr
 
 def _ensure_G(expr: str, func_names: Iterable[str]) -> str:
-    """Ensure each listed function/invariant in expr is followed by ' G' unless already."""
+    """Ensure each listed function token is followed by ' G' unless already."""
     for fn in func_names:
         expr = re.sub(rf"\b({re.escape(fn)})\b(?!\s*G\b|\s*\()", rf"\1 G", expr)
     return expr
 
-def _normalize_comparator(s: str) -> str:
-    """Map ASCII comparators to Lean-friendly forms (keep unicode if present)."""
-    # keep ≤ ≥ if already there
-    s = s.replace("==", "=")
-    s = re.sub(r"(?<!<)<>", "≠", s)  # (rare) if you ever use <>
-    s = s.replace("<=", "≤").replace(">=", "≥")
-    return s
-
-# --- Parser for a single '<Conj (...) → (...)>' line -------------------------
-
-LINE_RE = re.compile(
-    r"^\s*<\s*Conj\s*\(\s*(?P<cond>.+?)\s*\)\s*→\s*\(\s*(?P<prop>[A-Za-z0-9_]+)\s*\)\s*>$"
-)
-
-def parse_sufficient_line(line: str):
-    m = LINE_RE.match(line)
-    if not m:
-        raise ValueError(f"Not a valid <Conj (...) → (... )> line: {line}")
-    return m.group("cond"), m.group("prop")
+def _prep_conclusion_invariants(lean_text: str, func_names: Iterable[str]) -> str:
+    # Operate only inside the conclusion slice
+    def edit(expr: str) -> str:
+        expr = _push_paren_G(expr, func_names)
+        expr = _ensure_G(expr, func_names)
+        return expr
+    return _edit_theorem_conclusions(lean_text, edit)
 
 
-
-
-
-
-# --- Public API ---------------------------------------------------------------
-
-def sufficient_conjs_to_lean(
-    lines: List[str],
+# ─────────────────────────────────────────────────────────────────────────────
+# 6) Public API: end-to-end translator for NECESSARY conjectures
+# ─────────────────────────────────────────────────────────────────────────────
+def necessary_conjecture_to_lean(
+    conjectures: List[Conjecture],
     func_names: Iterable[str],
-    start_index: int = 1,
-    theorem_prefix: str = "TxSufficient",
+    *,
+    name_prefix: str = "TxGraffitiBench",
 ) -> List[str]:
     """
-    Convert sufficient conjecture lines like
-        <Conj (independence_number < (1 + radius)) → (claw_free)>
-    into Lean4 theorems that assume the inequality and conclude the property.
+    Render a batch of necessary conjectures (hypothesis ⇒ numeric inequality)
+    into Lean theorems, fully typed.
 
     Parameters
     ----------
-    lines : list of str
-        Each a single-line conjecture in the angle-bracket format shown above.
-    func_names : iterable of str
-        All invariant / function identifiers that should apply to ' G'.
-        e.g. ['independence_number','radius','slater','size', ...].
-    start_index : int
-        Starting theorem index.
-    theorem_prefix : str
-        Base name for theorems, e.g. 'TxSufficient' -> 'theorem TxSufficient 1 ...'
+    conjectures : list[Conjecture]
+        TxGraffiti conjectures whose conclusions are `Inequality`s.
+    func_names : iterable[str]
+        Names of invariants/properties that must appear as '<fn> G' in Lean.
+        e.g., ["independence_number","matching_number","zero_forcing_number",...]
+    name_prefix : str
+        Prefix for theorem names (theorems are numbered 1..n).
 
     Returns
     -------
-    list of str
-        Lean4 theorem strings.
+    list[str] : Lean theorems with typed conclusions.
     """
-    out = []
-    k = start_index
-    for raw in lines:
-        cond, prop = parse_sufficient_line(raw)
+    outs: list[str] = []
+    for i, conj in enumerate(conjectures, 1):
+        t = conjecture_to_lean4(conj, f"{name_prefix}_{i}")
+        t = _fix_header_and_hyps(t, func_names)         # add connected/order if missing
+        t = _prep_conclusion_invariants(t, func_names)  # ensure '... G' in conclusion
+        t = fix_fractions_in_conclusions(t)             # (a/b) -> (a/b : ℚ)
+        t = retarget_and_cast_conclusions(t, func_names)# ints + invariant coercions
+        outs.append(t)
+    return outs
 
-        # Normalize comparator spelling first
-        cond = _normalize_comparator(cond)
 
-        # Push ') G' inside, then ensure each listed function token has ' G'
-        cond = _push_paren_G(cond, func_names)
-        cond = _ensure_G(cond, func_names)
+from fractions import Fraction
+from typing import Iterable, List, Dict, Tuple
 
-        # Build theorem text
-        thm = (
-f"""theorem {theorem_prefix} {k} (G : SimpleGraph V)
-    (h1 : connected G)
-    (h2 : order G >= 2)
-    (hcond : {cond}) :
-    {prop} G := by
-  sorry
-"""
+# ---- configuration -----------------------------------------------------------
+
+# Map invariant/property tokens (as they appear in __repr__) to Lean identifiers.
+LEAN_INV = {
+    'order': 'order',
+    'size': 'size',
+    'maximum_degree': 'maximum_degree',
+    'minimum_degree': 'minimum_degree',
+    'diameter': 'diameter',
+    'radius': 'radius',
+    'clique_number': 'clique_number',
+    'chromatic_number'  : 'chromatic_number',
+    'independence_number': 'independence_number',
+    'vertex_cover_number': 'vertex_cover_number',
+    'matching_number': 'matching_number',
+    'triameter': 'triameter',
+    'slater': 'slater',
+    'annihilation_number': 'annihilation_number',
+    'residue': 'residue',
+    'harmonic_index': 'harmonic_index',
+    'domination_number': 'domination_number',
+    'total_domination_number': 'total_domination_number',
+    'independent_domination_number': 'independent_domination_number',
+    'min_maximal_matching_number': 'min_maximal_matching_number',
+    'spectral_radius': 'spectral_radius',
+    'largest_laplacian_eigenvalue': 'largest_laplacian_eigenvalue',
+    'second_largest_adjacency_eigenvalue': 'second_largest_adjacency_eigenvalue',
+    'zero_forcing_number': 'zero_forcing_number',
+}
+
+
+LEAN_PROP = {
+    'connected': 'connected',
+    'bipartite': 'bipartite',
+    'chordal': 'chordal',
+    'cubic': 'cubic',
+    'eulerian': 'eulerian',
+    'planar': 'planar',
+    'regular': 'regular',
+    'subcubic': 'subcubic',
+    'tree': 'tree',
+    'K_4_free': 'K_4_free',
+    'triangle_free': 'triangle_free',
+    'claw_free': 'claw_free',
+    'cograph': 'cograph',
+}
+
+# ---- tiny parser utilities ---------------------------------------------------
+
+def _strip_outer_parens(s: str) -> str:
+    s = s.strip()
+    while s.startswith("(") and s.endswith(")"):
+        # quick balance check
+        depth = 0
+        ok = True
+        for i, ch in enumerate(s):
+            if ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+                if depth < 0:
+                    ok = False
+                    break
+            if i < len(s) - 1 and depth == 0:
+                ok = False  # outermost ) closes too early
+        if ok and depth == 0:
+            s = s[1:-1].strip()
+        else:
+            break
+    return s
+
+def _tokenize_sum(expr: str) -> List[Tuple[int, str]]:
+    """
+    Split a linear expression into signed terms at top level (no parentheses).
+    Returns list of (sign, term_without_sign).
+    """
+    e = _strip_outer_parens(expr.replace(" ", ""))
+    # remove inner parentheses entirely (we only support linear combos)
+    e = e.replace("(", "").replace(")", "")
+    if not e:
+        return []
+    if e[0] not in "+-":
+        e = "+" + e
+    terms: List[Tuple[int,str]] = []
+    i = 0
+    while i < len(e):
+        sign = +1
+        if e[i] == "+":
+            sign = +1; i += 1
+        elif e[i] == "-":
+            sign = -1; i += 1
+        j = i
+        while j < len(e) and e[j] not in "+-":
+            j += 1
+        term = e[i:j]
+        if term:  # skip empties
+            terms.append((sign, term))
+        i = j
+    return terms
+
+def _parse_linear_comb(expr: str, allowed_vars: Dict[str,str]) -> Tuple[Dict[str, Fraction], Fraction]:
+    """
+    Parse expressions like:
+      "5", "2+domination_number", "(-1/2*total_domination_number)+7", "-1*minimum_degree"
+    into (coeffs, const) with rational coefficients.
+
+    coeffs[var] is Fraction; const is Fraction.
+    """
+    coeffs: Dict[str, Fraction] = {}
+    const = Fraction(0)
+    for sign, raw in _tokenize_sum(expr):
+        term = raw
+        if "*" in term:
+            coef_str, var = term.split("*", 1)
+            coef = Fraction(coef_str)
+            var = var.strip()
+            if var not in allowed_vars:
+                raise ValueError(f"Unknown variable '{var}' in term '{raw}'")
+            coeffs[var] = coeffs.get(var, Fraction(0)) + sign * coef
+        else:
+            # either a bare variable or a constant
+            if term in allowed_vars:
+                coeffs[term] = coeffs.get(term, Fraction(0)) + sign * Fraction(1)
+            else:
+                const += sign * Fraction(term)
+    return coeffs, const
+
+def _lcm(a: int, b: int) -> int:
+    from math import gcd
+    return abs(a*b) // gcd(a, b) if a and b else abs(a or b)
+
+def _denom_lcm(fracs: Iterable[Fraction]) -> int:
+    d = 1
+    for f in fracs:
+        d = _lcm(d, f.denominator)
+    return d or 1
+
+def _lean_Z(n: int) -> str:
+    return f"({n} : ℤ)"
+
+def _lean_var(var: str) -> str:
+    return f"({LEAN_INV[var]} G : ℤ)"
+
+# ---- main API ----------------------------------------------------------------
+
+def conjectures_to_lean(
+    conjs: Iterable[object],
+    *,
+    name_prefix: str = "Conj"
+) -> List[str]:
+    """
+    Convert conjecture objects (whose __repr__ look like
+      "<Conj (property) → (lhs >= rhs)>")
+    into Lean4 theorem stubs with added hypotheses (connected G) and (order G ≥ 2).
+
+    Parameters
+    ----------
+    conjs : Iterable[object]
+        Iterable of conjecture objects. Each object's `repr(obj)` must return a string
+        like "<Conj (chordal) → (independence_number >= ((-1/2 * total_domination_number) + 7))>".
+    name_prefix : str, default "Conj"
+        Prefix for theorem names. Theorems are named `{name_prefix}_{i}` (1-based).
+
+    Returns
+    -------
+    List[str]
+        Lean4 theorem strings, each ending with `:=\nsorry\n`.
+
+    Notes
+    -----
+    • All numeric/invariant terms are interpreted as integers; fractional coefficients
+      are cleared by multiplying both sides by the LCM of denominators so the whole
+      inequality lives in `ℤ`.
+
+    • Adds hypotheses:
+        (h_conn : connected G)
+        (h_ord  : order G ≥ (2 : ℕ))
+      plus any property from the conjecture (e.g., tree/chordal/planar/subcubic/K_4_free),
+      avoiding duplication if the property is `connected`.
+
+    • LHS and RHS invariants are cast to `ℤ`, e.g. `(independence_number G : ℤ)`.
+    """
+    results: List[str] = []
+
+    for i, obj in enumerate(conjs, start=1):
+        s = repr(obj).strip()
+        # Expected shape: "<Conj (PROPERTY) → (LHS >= RHS)>"
+        try:
+            inner = s[s.index("<Conj ") + 6 : s.rindex(">")].strip()
+        except Exception:
+            raise ValueError(f"Unrecognized repr format: {s}")
+
+        # Split "(property) → (inequality)"
+        try:
+            hyp_part, ineq_part = inner.split("→")
+        except ValueError:
+            raise ValueError(f"Missing '→' in: {s}")
+
+        prop = _strip_outer_parens(hyp_part).strip()
+        if prop not in LEAN_PROP:
+            raise ValueError(f"Unknown property '{prop}' in: {s}")
+
+        ineq = _strip_outer_parens(ineq_part).strip()
+        # Expect "(lhs >= rhs)" after stripping
+        if ">=" not in ineq:
+            raise ValueError(f"Missing '>=' in inequality: {s}")
+        lhs_raw, rhs_raw = map(_strip_outer_parens, ineq.split(">=", 1))
+        lhs_raw, rhs_raw = lhs_raw.strip(), rhs_raw.strip()
+
+        # LHS is expected to be a single invariant name
+        if lhs_raw not in LEAN_INV:
+            raise ValueError(f"Unknown LHS invariant '{lhs_raw}' in: {s}")
+
+        # Parse RHS linear combination over allowed invariants + constants
+        coeffs, const = _parse_linear_comb(rhs_raw, LEAN_INV)
+
+        # Compute LCM of denominators across RHS coeffs, const, and (implicitly) LHS 1
+        denoms = [const] + list(coeffs.values()) + [Fraction(1)]
+        L = _denom_lcm(denoms)
+
+        # Build Lean left-hand side: possibly scaled by L
+        if L == 1:
+            lhs_lean = f"({LEAN_INV[lhs_raw]} G : ℤ)"
+        else:
+            lhs_lean = f"{_lean_Z(L)} * ({LEAN_INV[lhs_raw]} G : ℤ)"
+
+        # Build Lean right-hand side sum (all integers after scaling)
+        rhs_terms: List[str] = []
+        # variable terms
+        for var, q in coeffs.items():
+            k = int(q * L)  # integer
+            if k == 0:
+                continue
+            if k == 1:
+                rhs_terms.append(f"{_lean_var(var)}")
+            elif k == -1:
+                rhs_terms.append(f"(-1 : ℤ) * {_lean_var(var)}")
+            else:
+                rhs_terms.append(f"{_lean_Z(k)} * {_lean_var(var)}")
+        # constant term
+        k0 = int(const * L)
+        if k0 != 0 or not rhs_terms:
+            rhs_terms.append(_lean_Z(k0))
+
+        rhs_lean = " + ".join(rhs_terms)
+
+        # Hypotheses: connected/order plus property (if not 'connected')
+        hyp_lines = [
+            "    (h_conn : connected G)",
+            "    (h_ord  : order G ≥ (2 : ℕ))",
+        ]
+        if prop != "connected":
+            hyp_lines.append(f"    (h_{prop} : {LEAN_PROP[prop]} G)")
+
+        hyps_block = "\n".join(hyp_lines)
+
+        thm_name = f"{name_prefix}_{i}"
+        theorem = (
+            f"theorem {thm_name} (G : SimpleGraph V)\n"
+            f"{hyps_block} : {lhs_lean} ≥ {rhs_lean} :=\n"
+            f"sorry\n"
         )
-        out.append(thm)
-        k += 1
-    return out
+        results.append(theorem)
+
+    return results
