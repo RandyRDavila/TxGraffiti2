@@ -356,6 +356,25 @@ LEAN_INV = {
     'zero_forcing_number': 'zero_forcing_number',
 }
 
+# NEW: the native codomain of each invariant. Adjust as needed.
+# Defaults to ℕ-like counts unless flagged.
+LEAN_TYPE: Dict[str, str] = {
+    # naturals (counts)
+    'order': 'N', 'size': 'N', 'maximum_degree': 'N', 'minimum_degree': 'N',
+    'diameter': 'N', 'radius': 'N', 'clique_number': 'N', 'chromatic_number': 'N',
+    'independence_number': 'N', 'vertex_cover_number': 'N', 'matching_number': 'N',
+    'triameter': 'N', 'slater': 'N', 'annihilation_number': 'N', 'residue': 'N',
+    'domination_number': 'N', 'total_domination_number': 'N',
+    'independent_domination_number': 'N', 'min_maximal_matching_number': 'N',
+    'zero_forcing_number': 'N',
+    # reals
+    'harmonic_index': 'Q',
+    'spectral_radius': 'R',
+    'largest_laplacian_eigenvalue': 'R',
+    'second_largest_adjacency_eigenvalue': 'R',
+    # if you ever introduce ratios like "ratio_alpha", set them to 'Q' or 'R'
+    # 'ratio_alpha': 'Q',
+}
 
 LEAN_PROP = {
     'connected': 'connected',
@@ -375,7 +394,6 @@ LEAN_PROP = {
 
 # ---- tiny parser utilities ---------------------------------------------------
 
-# ---------- tiny helpers ----------
 def _strip_outer_parens(s: str) -> str:
     s = s.strip()
     while s.startswith("(") and s.endswith(")"):
@@ -439,23 +457,40 @@ def _denom_lcm(fracs) -> int:
     for f in fracs: d = _lcm(d, f.denominator)
     return d or 1
 
-def _lean_Z(n: int) -> str:
-    return f"({n} : ℤ)"
-
-def _lean_var(var: str) -> str:
-    return f"({LEAN_INV[var]} G : ℤ)"
-
 def _detect_ineq(lhs_rhs: str) -> Tuple[str, str, str]:
-    """Return (lhs, op, rhs). Supports >=, <=, ==, =, >, < ."""
-    s = lhs_rhs
     for op in [">=", "<=", "==", "=", ">", "<"]:
-        parts = s.split(op)
+        parts = lhs_rhs.split(op)
         if len(parts) == 2:
             return parts[0].strip(), op, parts[1].strip()
     raise ValueError("No inequality/equality operator found.")
 
 def _flip_op(op: str) -> str:
     return {">=":"<=", "<=":">=", ">":"<", "<":">", "=":"=", "==":"="}[op]
+
+# ---- NEW: type lattice + casts ----------------------------------------------
+
+_ORDER = {'N': 0, 'Z': 1, 'Q': 2, 'R': 3}
+_ALPHA = {'N': 'ℕ', 'Z': 'ℤ', 'Q': 'ℚ', 'R': 'ℝ'}
+
+def _join_types(types: Iterable[str]) -> str:
+    lvl = max((_ORDER[t] for t in types), default=1)
+    for k,v in _ORDER.items():
+        if v == lvl: return k
+    return 'Z'
+
+def _var_type(tok: str) -> str:
+    return LEAN_TYPE.get(tok, 'N')
+
+def _alpha_str(t: str) -> str:
+    return _ALPHA[t]
+
+def _lean_lit(n: int, target: str) -> str:
+    # literal n cast into α
+    return f"({n} : {_alpha_str(target)})"
+
+def _lean_var(var: str, target: str) -> str:
+    # (invariant G) cast/annotated into α
+    return f"({LEAN_INV[var]} G : {_alpha_str(target)})"
 
 # ---------- main ----------
 def conjectures_to_lean(
@@ -469,8 +504,9 @@ def conjectures_to_lean(
       "<Conj (tree) → (independence_number = 2 + residue)>"
       "<Conj (planar) → (independence_number <= (-1/2 * total_domination_number) + 7)>"
       "<Conj (subcubic) → (7 + residue <= independence_number)>"
-    and emits Lean4 theorems with added (connected G) and (order G ≥ 2).
-    Handles >=, <=, =/==, >, < and auto-flips sides if the invariant is on the right.
+    Emits Lean theorems with hypotheses (connected G) and (order G ≥ 2).
+    Handles >=, <=, =/==, >, <; auto-flips sides; and UPCASTS to a common α ∈ {ℕ, ℤ, ℚ, ℝ}.
+    Denominators are cleared by multiplying both sides by (L : α), L > 0.
     """
     results: List[str] = []
     for i, obj in enumerate(conjs, start=1):
@@ -495,38 +531,47 @@ def conjectures_to_lean(
 
         # If invariant is on the right (e.g., "… <= independence_number"), swap sides.
         def _is_bare_invariant(tok: str) -> bool:
-            t = tok.strip()
-            return t in LEAN_INV
+            return tok.strip() in LEAN_INV
 
         if not _is_bare_invariant(lhs_raw) and _is_bare_invariant(rhs_raw):
             lhs_raw, rhs_raw, op = rhs_raw, lhs_raw, _flip_op(op)
 
-        # Require the (now) LHS to be a single invariant
         if lhs_raw not in LEAN_INV:
             raise ValueError(f"LHS must be an invariant name; got '{lhs_raw}' in: {s}")
 
-        # Parse the RHS (arbitrary linear combo)
+        # Parse RHS linear combo (coefficients as Fractions)
         coeffs, const = _parse_linear_comb(rhs_raw, LEAN_INV)
+
+        # Compute the common target α by joining native types
+        rhs_var_types = [_var_type(v) for v in coeffs.keys()]
+        target = _join_types([_var_type(lhs_raw)] + rhs_var_types)
+        alpha = _alpha_str(target)
 
         # Denominator LCM across RHS and implicit LHS coefficient 1
         denoms = [const] + list(coeffs.values()) + [Fraction(1)]
-        L = _denom_lcm(denoms)
+        L = _denom_lcm(denoms)  # positive
 
-        # Build Lean LHS
-        lhs_lean = f"({LEAN_INV[lhs_raw]} G : ℤ)" if L == 1 else f"{_lean_Z(L)} * ({LEAN_INV[lhs_raw]} G : ℤ)"
+        # Scale sides by L and render in α with integer literals cast into α
+        lhs_lean = (
+            _lean_var(lhs_raw, target)
+            if L == 1 else
+            f"{_lean_lit(L, target)} * {_lean_var(lhs_raw, target)}"
+        )
 
-        # Build Lean RHS (scaled integers)
         rhs_terms: List[str] = []
         for var, q in coeffs.items():
             k = int(q * L)
             if k == 0: continue
-            if k == 1: rhs_terms.append(f"{_lean_var(var)}")
-            elif k == -1: rhs_terms.append(f"(-1 : ℤ) * {_lean_var(var)}")
-            else: rhs_terms.append(f"{_lean_Z(k)} * {_lean_var(var)}")
+            if k == 1:
+                rhs_terms.append(f"{_lean_var(var, target)}")
+            elif k == -1:
+                rhs_terms.append(f"-{_lean_var(var, target)}")
+            else:
+                rhs_terms.append(f"{_lean_lit(k, target)} * {_lean_var(var, target)}")
         k0 = int(const * L)
         if k0 != 0 or not rhs_terms:
-            rhs_terms.append(_lean_Z(k0))
-        rhs_lean = " + ".join(rhs_terms)
+            rhs_terms.append(_lean_lit(k0, target))
+        rhs_lean = " + ".join(rhs_terms).replace("+ -", "- ")
 
         # Hypotheses
         hyp_lines = [
@@ -537,15 +582,15 @@ def conjectures_to_lean(
             hyp_lines.append(f"    (h_{prop} : {LEAN_PROP[prop]} G)")
         hyps_block = "\n".join(hyp_lines)
 
-        # Normalize op to Lean token
         op_lean = {"==":"=", "=":"=", ">=":"≥", "<=":"≤", ">":">", "<":"<"}[op]
-
         thm_name = f"{name_prefix}_{i}"
+
         theorem = (
-            f"theorem {thm_name} (G : SimpleGraph V)\n"
-            f"{hyps_block} : {lhs_lean} {op_lean} {rhs_lean} :=\n"
-            f"sorry\n"
+f"theorem {thm_name} (G : SimpleGraph V)\n"
+f"{hyps_block} : {lhs_lean} {op_lean} {rhs_lean} :=\n"
+"sorry\n"
         )
         results.append(theorem)
 
     return results
+
