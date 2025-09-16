@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "txgraffiti"
-version = "0.3.14"
+version = "0.3.15"
 description = "A Python package for automated mathematical conjecturing"
 readme = "README.md"
 requires-python = ">=3.8"

@@ -492,24 +492,38 @@ def _lean_var(var: str, target: str) -> str:
     # (invariant G) cast/annotated into α
     return f"({LEAN_INV[var]} G : {_alpha_str(target)})"
 
-# ---------- main ----------
 def conjectures_to_lean(
     conjs: Iterable[object],
     *,
     name_prefix: str = "Conj"
 ) -> List[str]:
     """
-    Accepts repr strings like:
-      "<Conj (chordal) → (independence_number >= 5)>"
-      "<Conj (tree) → (independence_number = 2 + residue)>"
-      "<Conj (planar) → (independence_number <= (-1/2 * total_domination_number) + 7)>"
-      "<Conj (subcubic) → (7 + residue <= independence_number)>"
-    Emits Lean theorems with hypotheses (connected G) and (order G ≥ 2).
-    Handles >=, <=, =/==, >, <; auto-flips sides; and UPCASTS to a common α ∈ {ℕ, ℤ, ℚ, ℝ}.
-    Denominators are cleared by multiplying both sides by (L : α), L > 0.
+    Convert repr strings like
+        "<Conj (chordal) → (independence_number >= 5)>"
+        "<Conj (tree) → (independence_number = 2 + residue)>"
+        "<Conj (planar) → (independence_number <= (-1/2 * total_domination_number) + 7)>"
+        "<Conj (subcubic) → (7 + residue <= independence_number)>"
+    into Lean theorems with standard hypotheses and clean types.
+
+    Pipeline per conjecture:
+      1) Parse hypothesis 'prop' and inequality 'lhs op rhs'.
+      2) If the invariant is on the RHS and not on LHS, swap sides and flip op.
+      3) Parse RHS as a linear combination over allowed invariants with a rational constant.
+      4) Determine a common α ∈ {ℕ, ℤ, ℚ, ℝ} via the type join of LHS and all RHS vars.
+      5) Multiply both sides by positive integer L = lcm(denominators) to clear fractions.
+      6) **Normalize signs**: move all negative RHS terms (including negative constant) to LHS.
+         After this step, the RHS has only nonnegative coefficients (and possibly 0).
+      7) Render both sides in Lean with casts to α, preserving the original inequality operator.
+
+    Note:
+      - Because we only *add the same nonnegative expression to both sides* in step (6),
+        the inequality direction is preserved (no flipping after normalization).
+      - When α = ℕ, RHS being a sum of nonnegative terms avoids writing negative naturals.
     """
     results: List[str] = []
+
     for i, obj in enumerate(conjs, start=1):
+        # ---- unwrap and split on hypothesis/implication ----
         s = repr(obj).strip()
         try:
             inner = s[s.index("<Conj ") + 6 : s.rindex(">")].strip()
@@ -525,11 +539,12 @@ def conjectures_to_lean(
         if prop not in LEAN_PROP:
             raise ValueError(f"Unknown property '{prop}' in: {s}")
 
+        # ---- detect inequality ----
         ineq_body = _strip_outer_parens(ineq_part).strip()
         lhs_raw, op, rhs_raw = _detect_ineq(ineq_body)
         lhs_raw, rhs_raw = _strip_outer_parens(lhs_raw), _strip_outer_parens(rhs_raw)
 
-        # If invariant is on the right (e.g., "… <= independence_number"), swap sides.
+        # ---- if bare invariant is on RHS, swap sides ----
         def _is_bare_invariant(tok: str) -> bool:
             return tok.strip() in LEAN_INV
 
@@ -539,41 +554,64 @@ def conjectures_to_lean(
         if lhs_raw not in LEAN_INV:
             raise ValueError(f"LHS must be an invariant name; got '{lhs_raw}' in: {s}")
 
-        # Parse RHS linear combo (coefficients as Fractions)
-        coeffs, const = _parse_linear_comb(rhs_raw, LEAN_INV)
+        # ---- parse RHS linear combo as rationals ----
+        coeffs, const = _parse_linear_comb(rhs_raw, LEAN_INV)  # Dict[var] -> Fraction, const -> Fraction
 
-        # Compute the common target α by joining native types
+        # ---- choose α by joining native types (LHS var + RHS vars) ----
         rhs_var_types = [_var_type(v) for v in coeffs.keys()]
         target = _join_types([_var_type(lhs_raw)] + rhs_var_types)
         alpha = _alpha_str(target)
 
-        # Denominator LCM across RHS and implicit LHS coefficient 1
+        # ---- clear denominators with positive L ----
         denoms = [const] + list(coeffs.values()) + [Fraction(1)]
-        L = _denom_lcm(denoms)  # positive
+        L = _denom_lcm(denoms)  # positive integer
 
-        # Scale sides by L and render in α with integer literals cast into α
-        lhs_lean = (
+        # Left side base (possibly scaled by L)
+        lhs_base = (
             _lean_var(lhs_raw, target)
             if L == 1 else
             f"{_lean_lit(L, target)} * {_lean_var(lhs_raw, target)}"
         )
 
-        rhs_terms: List[str] = []
+        # ---- turn RHS rationals into integers (after * L) ----
+        int_coeffs: Dict[str, int] = {}
         for var, q in coeffs.items():
             k = int(q * L)
-            if k == 0: continue
-            if k == 1:
-                rhs_terms.append(f"{_lean_var(var, target)}")
-            elif k == -1:
-                rhs_terms.append(f"-{_lean_var(var, target)}")
-            else:
-                rhs_terms.append(f"{_lean_lit(k, target)} * {_lean_var(var, target)}")
-        k0 = int(const * L)
-        if k0 != 0 or not rhs_terms:
-            rhs_terms.append(_lean_lit(k0, target))
-        rhs_lean = " + ".join(rhs_terms).replace("+ -", "- ")
+            if k != 0:
+                int_coeffs[var] = int_coeffs.get(var, 0) + k
+        k0 = int(const * L)  # integer constant on RHS
 
-        # Hypotheses
+        # ---- SIGN NORMALIZATION: move all negatives on RHS to LHS ----
+        # Split variable terms by sign
+        pos_coeffs: Dict[str, int] = {v: k for v, k in int_coeffs.items() if k > 0}
+        neg_coeffs: Dict[str, int] = {v: -k for v, k in int_coeffs.items() if k < 0}  # magnitudes > 0
+
+        rhs_const_pos = k0 if k0 > 0 else 0
+        lhs_const_from_rhs = -k0 if k0 < 0 else 0  # if RHS const was negative, move its magnitude to LHS
+
+        # Build LHS = lhs_base + (moved negative var terms) + (moved negative const)
+        lhs_terms: List[str] = [lhs_base]
+        for var, mag in neg_coeffs.items():  # mag > 0
+            if mag == 1:
+                lhs_terms.append(_lean_var(var, target))
+            else:
+                lhs_terms.append(f"{_lean_lit(mag, target)} * {_lean_var(var, target)}")
+        if lhs_const_from_rhs > 0:
+            lhs_terms.append(_lean_lit(lhs_const_from_rhs, target))
+        lhs_lean = " + ".join(lhs_terms)
+
+        # Build RHS = (only nonnegative var terms) + (nonnegative const); ensure at least 0 literal
+        rhs_terms: List[str] = []
+        for var, mag in pos_coeffs.items():  # mag > 0
+            if mag == 1:
+                rhs_terms.append(_lean_var(var, target))
+            else:
+                rhs_terms.append(f"{_lean_lit(mag, target)} * {_lean_var(var, target)}")
+        if rhs_const_pos > 0 or not rhs_terms:
+            rhs_terms.append(_lean_lit(rhs_const_pos, target))
+        rhs_lean = " + ".join(rhs_terms)
+
+        # ---- hypotheses block ----
         hyp_lines = [
             "    (h_conn : connected G)",
             "    (h_ord  : order G ≥ (2 : ℕ))",
@@ -582,6 +620,7 @@ def conjectures_to_lean(
             hyp_lines.append(f"    (h_{prop} : {LEAN_PROP[prop]} G)")
         hyps_block = "\n".join(hyp_lines)
 
+        # ---- render theorem ----
         op_lean = {"==":"=", "=":"=", ">=":"≥", "<=":"≤", ">":">", "<":"<"}[op]
         thm_name = f"{name_prefix}_{i}"
 
@@ -594,3 +633,105 @@ f"{hyps_block} : {lhs_lean} {op_lean} {rhs_lean} :=\n"
 
     return results
 
+
+# # ---------- main ----------
+# def conjectures_to_lean(
+#     conjs: Iterable[object],
+#     *,
+#     name_prefix: str = "Conj"
+# ) -> List[str]:
+#     """
+#     Accepts repr strings like:
+#       "<Conj (chordal) → (independence_number >= 5)>"
+#       "<Conj (tree) → (independence_number = 2 + residue)>"
+#       "<Conj (planar) → (independence_number <= (-1/2 * total_domination_number) + 7)>"
+#       "<Conj (subcubic) → (7 + residue <= independence_number)>"
+#     Emits Lean theorems with hypotheses (connected G) and (order G ≥ 2).
+#     Handles >=, <=, =/==, >, <; auto-flips sides; and UPCASTS to a common α ∈ {ℕ, ℤ, ℚ, ℝ}.
+#     Denominators are cleared by multiplying both sides by (L : α), L > 0.
+#     """
+#     results: List[str] = []
+#     for i, obj in enumerate(conjs, start=1):
+#         s = repr(obj).strip()
+#         try:
+#             inner = s[s.index("<Conj ") + 6 : s.rindex(">")].strip()
+#         except Exception:
+#             raise ValueError(f"Unrecognized repr format: {s}")
+
+#         try:
+#             hyp_part, ineq_part = inner.split("→")
+#         except ValueError:
+#             raise ValueError(f"Missing '→' in: {s}")
+
+#         prop = _strip_outer_parens(hyp_part).strip()
+#         if prop not in LEAN_PROP:
+#             raise ValueError(f"Unknown property '{prop}' in: {s}")
+
+#         ineq_body = _strip_outer_parens(ineq_part).strip()
+#         lhs_raw, op, rhs_raw = _detect_ineq(ineq_body)
+#         lhs_raw, rhs_raw = _strip_outer_parens(lhs_raw), _strip_outer_parens(rhs_raw)
+
+#         # If invariant is on the right (e.g., "… <= independence_number"), swap sides.
+#         def _is_bare_invariant(tok: str) -> bool:
+#             return tok.strip() in LEAN_INV
+
+#         if not _is_bare_invariant(lhs_raw) and _is_bare_invariant(rhs_raw):
+#             lhs_raw, rhs_raw, op = rhs_raw, lhs_raw, _flip_op(op)
+
+#         if lhs_raw not in LEAN_INV:
+#             raise ValueError(f"LHS must be an invariant name; got '{lhs_raw}' in: {s}")
+
+#         # Parse RHS linear combo (coefficients as Fractions)
+#         coeffs, const = _parse_linear_comb(rhs_raw, LEAN_INV)
+
+#         # Compute the common target α by joining native types
+#         rhs_var_types = [_var_type(v) for v in coeffs.keys()]
+#         target = _join_types([_var_type(lhs_raw)] + rhs_var_types)
+#         alpha = _alpha_str(target)
+
+#         # Denominator LCM across RHS and implicit LHS coefficient 1
+#         denoms = [const] + list(coeffs.values()) + [Fraction(1)]
+#         L = _denom_lcm(denoms)  # positive
+
+#         # Scale sides by L and render in α with integer literals cast into α
+#         lhs_lean = (
+#             _lean_var(lhs_raw, target)
+#             if L == 1 else
+#             f"{_lean_lit(L, target)} * {_lean_var(lhs_raw, target)}"
+#         )
+
+#         rhs_terms: List[str] = []
+#         for var, q in coeffs.items():
+#             k = int(q * L)
+#             if k == 0: continue
+#             if k == 1:
+#                 rhs_terms.append(f"{_lean_var(var, target)}")
+#             elif k == -1:
+#                 rhs_terms.append(f"-{_lean_var(var, target)}")
+#             else:
+#                 rhs_terms.append(f"{_lean_lit(k, target)} * {_lean_var(var, target)}")
+#         k0 = int(const * L)
+#         if k0 != 0 or not rhs_terms:
+#             rhs_terms.append(_lean_lit(k0, target))
+#         rhs_lean = " + ".join(rhs_terms).replace("+ -", "- ")
+
+#         # Hypotheses
+#         hyp_lines = [
+#             "    (h_conn : connected G)",
+#             "    (h_ord  : order G ≥ (2 : ℕ))",
+#         ]
+#         if prop != "connected":
+#             hyp_lines.append(f"    (h_{prop} : {LEAN_PROP[prop]} G)")
+#         hyps_block = "\n".join(hyp_lines)
+
+#         op_lean = {"==":"=", "=":"=", ">=":"≥", "<=":"≤", ">":">", "<":"<"}[op]
+#         thm_name = f"{name_prefix}_{i}"
+
+#         theorem = (
+# f"theorem {thm_name} (G : SimpleGraph V)\n"
+# f"{hyps_block} : {lhs_lean} {op_lean} {rhs_lean} :=\n"
+# "sorry\n"
+#         )
+#         results.append(theorem)
+
+#     return results
