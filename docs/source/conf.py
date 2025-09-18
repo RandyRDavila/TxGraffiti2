@@ -9,7 +9,7 @@
 project = 'TxGraffiti'
 copyright = '2025, Randy Davila'
 author = 'Randy Davila'
-release = '0.3.15'
+release = '0.3.16'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

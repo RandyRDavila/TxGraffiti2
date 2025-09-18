@@ -10,6 +10,7 @@ def _load_csv(name: str) -> pd.DataFrame:
 graph_data = _load_csv("graph_data.csv")
 integer_data = _load_csv("integer_data.csv")
 nba_game_data = _load_csv("nba_game_data.csv")
+calabi_yau_data = _load_csv("calabi_yau_data.csv")
 
 
 # ---- Example graphs loader (zip-safe) ----
