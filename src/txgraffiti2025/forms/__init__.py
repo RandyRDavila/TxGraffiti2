@@ -1,3 +1,4 @@
+# src/txgraffiti2025/forms/__init__.py
 """
 Unified import layer for all conjecture forms (R₁–R₆).
 

@@ -1,3 +1,5 @@
+# src/txgraffiti2025/forms/linear.py
+
 """
 Linear conjecture builders (R2):
     a0 + Σ ai * col_i   (<=, >=, ==)   right
