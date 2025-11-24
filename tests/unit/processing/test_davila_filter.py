@@ -33,3 +33,26 @@ def test_filter_with_morgan_basic():
     assert c2 in accepted
     assert c3 in accepted
     assert c1 not in accepted
+
+def test_incomparable_hypotheses():
+    df = pd.DataFrame({
+        'alpha':     [1, 2, 3],
+        'beta':      [2, 3, 4],
+        'triangle_free': [True, True, False],
+        'regular':   [True, False, True],
+    })
+
+    P = Predicate('triangle_free', lambda df: df['triangle_free'])
+    Q = Predicate('regular', lambda df: df['regular'])
+    A = Property('alpha', lambda df: df['alpha'])
+    B = Property('beta',  lambda df: df['beta'])
+    
+    # c1 and c2 are incomparable hypotheses, and have the same conclusion
+    c1 = P >> (A < B)
+    c2 = Q >> (A < B)
+    
+    accepted = filter_with_morgan([c1, c2], df)
+    
+    assert c1 in accepted
+    assert c2 in accepted
+    
