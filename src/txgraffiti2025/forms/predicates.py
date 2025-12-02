@@ -1,225 +1,223 @@
 # src/txgraffiti2025/forms/predicates.py
-
 """
 DataFrame-agnostic predicates C(df) -> boolean masks.
 
-- Composable boolean logic: AND (&), OR (|), NOT (~)
-- Column/value comparisons via vectorized expressions (no graph assumptions)
-- Helpers for common forms: comparisons, between, in-set, is-integer, approx-eq
-- Also supports arbitrary vectorized functions df -> Series[bool] and row-wise fallbacks
-
-Examples
+Features
 --------
-Basic composition:
-
->>> import pandas as pd
->>> from txgraffiti2025.forms.predicates import Predicate, GEQ, LT0, IN
->>> df = pd.DataFrame({"connected": [True, False, True], "deg": [3, -1, 2]})
->>> P_conn = Predicate.from_column("connected")
->>> P_deg_ok = GEQ("deg", 0) & ~LT0("deg")
->>> m = (P_conn & P_deg_ok & IN("deg", {2, 3})).mask(df)
->>> m.tolist()
-[True, False, True]
+- Composable boolean logic: AND (&), OR (|), NOT (~)
+- Vectorized comparisons against columns/Expr/scalars/Series
+- Set membership, numeric ranges, and numeric property checks
+- Arbitrary vectorized and row-wise predicates (Where / RowWhere)
+- Safe handling of pandas nullable booleans (NA -> False)
+- Unicode-first pretty reprs (∧, ∨, ¬, ∈, ℤ, ≤, ≥, ∞, →)
 """
 
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, Iterable, Any, Union
+
 import numpy as np
 import pandas as pd
 
-from .utils import Expr, to_expr  # reuse numeric Expr system (columns, constants, ops)
+from .utils import Expr, to_expr, abs_
 
 __all__ = [
-    "Predicate",
-    "AndPred",
-    "OrPred",
-    "NotPred",
-    "Compare",
-    "LE",
-    "GE",
-    "LT",
-    "GT",
-    "EQ",
-    "NE",
-    "InSet",
-    "Between",
-    "IsInteger",
-    "IsNaN",
-    "IsFinite",
-    "Where",
-    "RowWhere",
-    "GEQ",
-    "LEQ",
-    "GT0",
-    "LT0",
-    "EQ0",
-    "BETWEEN",
-    "IN",
-    "IS_INT",
-    "IS_NAN",
-    "IS_FINITE",
+    # Core
+    "Predicate", "AndPred", "OrPred", "NotPred",
+    # Binary comparisons
+    "Compare", "LE", "GE", "LT", "GT", "EQ", "NE",
+    # Set/range
+    "InSet", "Between",
+    # Numeric properties
+    "IsInteger", "IsNaN", "IsFinite",
+    # Functional
+    "Where", "RowWhere",
+    # Quantifier-style predicates (semantic, optional symbol)
+    "ForallFinite", "ExistsDivergent",
+    # Shorthands / DSL
+    "GEQ", "LEQ", "GT0", "LT0", "EQ0", "BETWEEN", "IN", "IS_INT", "IS_NAN", "IS_FINITE",
 ]
 
 
-# =========================
+# =====================================================================
 # Internal helpers
-# =========================
+# =====================================================================
 
 def _as_bool_series(arr: Any, index: pd.Index) -> pd.Series:
     """
-    Normalize any array-like to a boolean Series aligned to a given index.
-
-    Parameters
-    ----------
-    arr : Any
-        Array-like input or pandas Series.
-    index : pd.Index
-        Target index for alignment.
-
-    Returns
-    -------
-    pd.Series
-        Boolean Series aligned to `index`.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import _as_bool_series
-    >>> _as_bool_series([1, 0, 2], pd.RangeIndex(3)).tolist()
-    [True, False, True]
+    Normalize any array-like to a boolean Series aligned to `index`.
+    NA values are treated as False.
     """
     if isinstance(arr, pd.Series):
-        if arr.dtype != bool:
-            arr = arr.astype(bool, copy=False)
-        return arr.reindex(index, fill_value=False)
-    return pd.Series(np.asarray(arr, dtype=bool), index=index)
+        s = arr.reindex(index)
+        return s.fillna(False).astype(bool, copy=False)
+
+    if np.isscalar(arr):
+        return pd.Series(bool(arr), index=index, dtype=bool)
+
+    a = np.asarray(arr)
+    if a.ndim != 1 or len(a) != len(index):
+        raise ValueError("Array-like must be 1D and match index length.")
+    if a.dtype != bool:
+        a = a.astype(bool, copy=False)
+    return pd.Series(a, index=index, dtype=bool).fillna(False)
 
 
-# =========================
+def _fmt_values(values: Iterable[Any]) -> str:
+    """
+    Format a small set/list of values as a compact comma list without quotes where possible.
+    Keeps input order when not sortable.
+    """
+    try:
+        seq = list(values)
+        # Attempt a safe sort that won't crash on mixed types
+        try:
+            seq = sorted(seq)
+        except Exception:
+            pass
+        parts = []
+        for v in seq:
+            if isinstance(v, str):
+                parts.append(v)
+            else:
+                parts.append(str(v))
+        return ", ".join(parts)
+    except Exception:
+        return ", ".join(map(str, values))
+
+
+def _operand_key_for_pred(op) -> tuple:
+    # Normalize common operand types into a stable, comparable key.
+    import numpy as _np
+    from .utils import to_expr
+
+    if isinstance(op, str):
+        return ("col", op)
+    if isinstance(op, (int, float, _np.integer, _np.floating)):
+        return ("const", float(op))
+    try:
+        # Covers Expr and anything convertible to Expr (including strings again).
+        return ("expr", repr(to_expr(op)))
+    except Exception:
+        # Series/arrays/functions: last-resort identity
+        return ("obj", repr(op))
+
+
+# =====================================================================
 # Base predicate + combinators
-# =========================
+# =====================================================================
 
 class Predicate:
     """
     Base class for DataFrame-agnostic predicates producing boolean masks.
 
-    Predicates are composable with bitwise operators:
-    - `&` (AND) yields :class:`AndPred`
-    - `|` (OR) yields :class:`OrPred`
-    - `~` (NOT) yields :class:`NotPred`
-
-    Methods
-    -------
-    mask(df) : pd.Series
-        Return a boolean Series aligned to `df.index`.
-
-    Notes
-    -----
-    - Rows where the mask is False are treated as outside the class when used
-      as conditions in :class:`~txgraffiti2025.forms.generic_conjecture.Conjecture`.
-
-    Examples
-    --------
-    From a boolean column:
-
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import Predicate
-    >>> df = pd.DataFrame({"connected": [True, False, True]})
-    >>> P_conn = Predicate.from_column("connected")
-    >>> P_conn.mask(df).tolist()
-    [True, False, True]
-
-    Using composition:
-
-    >>> from txgraffiti2025.forms.predicates import GEQ, LT0
-    >>> df = pd.DataFrame({"x": [0, 1, -2]})
-    >>> m = (GEQ("x", 0) & ~LT0("x")).mask(df)
-    >>> m.tolist()
-    [True, True, False]
+    Predicates are composable with `&` (AND), `|` (OR), and `~` (NOT).
     """
     name: str = "Predicate"
 
     def mask(self, df: pd.DataFrame) -> pd.Series:
-        """Return a boolean Series aligned to `df.index`. Subclasses must implement."""
+        """Return a boolean Series aligned to `df.index`."""
         raise NotImplementedError
 
     def __and__(self, other: "Predicate") -> "Predicate":
-        """Logical AND of two predicates."""
         return AndPred(self, other)
 
     def __or__(self, other: "Predicate") -> "Predicate":
-        """Logical OR of two predicates."""
         return OrPred(self, other)
 
     def __invert__(self) -> "Predicate":
-        """Logical NOT of the predicate."""
         return NotPred(self)
 
     def __repr__(self) -> str:
         return getattr(self, "name", self.__class__.__name__)
 
+    def __call__(self, df: pd.DataFrame) -> pd.Series:
+        return self.mask(df)
+
+    # --- structural identity ---
+    def cache_key(self) -> tuple:
+        return (self.__class__.__name__, repr(self))
+
+    def __hash__(self) -> int:
+        return hash(self.cache_key())
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Predicate) and self.cache_key() == other.cache_key()
+
+    def eval(self, df: pd.DataFrame) -> pd.Series:
+        return self.mask(df)
+
     @staticmethod
-    def from_column(col: Union[str, Expr], *, truthy_only: bool = False) -> "Predicate":
+    def from_column(col: Union[str, Expr], truthy_only: bool = False) -> "Predicate":
         """
-        Build a predicate directly from a column/Expr evaluated as booleans.
+        Build a predicate directly from a column or Expr evaluated as booleans.
+
+        Accepts positional or keyword for `truthy_only` to keep backward compatibility.
 
         Parameters
         ----------
         col : str or Expr
-            Column name or expression to evaluate.
-        truthy_only : bool, default False
-            If True, cast with `astype(bool)`; otherwise preserves boolean dtype if present.
-
-        Returns
-        -------
-        Predicate
-            A predicate whose mask is `to_expr(col).eval(df).astype(bool)` if needed.
-
-        Examples
-        --------
-        >>> import pandas as pd
-        >>> from txgraffiti2025.forms.predicates import Predicate
-        >>> df = pd.DataFrame({"flag": [1, 0, 3]})
-        >>> P = Predicate.from_column("flag", truthy_only=True)
-        >>> P.mask(df).tolist()
-        [True, False, True]
+            Column name or expression to read from the DataFrame.
+        truthy_only : bool, default=False
+            If True, any nonzero / non-null value counts as True, and NA values
+            are treated as False. This avoids conversion errors for nullable
+            booleans and 0/1 Int64 columns.
         """
         def _fn(df: pd.DataFrame) -> pd.Series:
             s = to_expr(col).eval(df)
-            return s.astype(bool) if truthy_only or s.dtype != bool else s
-        # give Where a readable label so __repr__ shows "(connected)" etc.
+
+            # Ensure Series
+            if not isinstance(s, pd.Series):
+                return pd.Series(bool(s), index=df.index, dtype=bool)
+
+            # Nullable boolean dtype
+            if pd.api.types.is_bool_dtype(s) or str(s.dtype).lower().startswith("boolean"):
+                return s.fillna(False).astype(bool, copy=False)
+
+            # Nullable integer dtype (e.g. Int64)
+            if pd.api.types.is_integer_dtype(s):
+                if truthy_only:
+                    return s.ne(0).fillna(False).astype(bool, copy=False)
+                # fallback for non-truthy_only integers: treat 0 as False
+                return s.fillna(0).ne(0).astype(bool, copy=False)
+
+            # Fallback for other numeric/object dtypes
+            if truthy_only:
+                return s.fillna(False).astype(bool, copy=False)
+
+            # Already boolean-like? keep as-is
+            if s.dtype == bool:
+                return s
+
+            # Last resort: conservative truthiness (NA → False)
+            return s.fillna(False).astype(bool, copy=False)
+
         label = f"({col})" if isinstance(col, str) else f"({repr(col)})"
         return Where(_fn, name=label)
 
+# @dataclass
+# class AndPred(Predicate):
+#     a: Predicate
+#     b: Predicate
+#     name: str = "C_and"
 
-@dataclass
+#     def mask(self, df: pd.DataFrame) -> pd.Series:
+#         return _as_bool_series(self.a.mask(df) & self.b.mask(df), df.index)
+
+#     def __repr__(self) -> str:
+#         return f"({self.a!r} ∧ {self.b!r})"
+
+@dataclass(eq=False)
 class AndPred(Predicate):
-    """
-    Logical conjunction (AND) of two predicates.
-
-    Parameters
-    ----------
-    a, b : Predicate
-        Left and right predicates.
-
-    Returns
-    -------
-    AndPred
-        Composite predicate evaluating `a.mask(df) & b.mask(df)`.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import Predicate, AndPred
-    >>> df = pd.DataFrame({"p": [True, False, True], "q": [True, True, False]})
-    >>> P = AndPred(Predicate.from_column("p"), Predicate.from_column("q"))
-    >>> P.mask(df).tolist()
-    [True, False, False]
-    """
     a: Predicate
     b: Predicate
     name: str = "C_and"
+
+    def cache_key(self) -> tuple:
+        ak, bk = self.a.cache_key(), self.b.cache_key()
+        # Order-independent: sort the two keys
+        pair = tuple(sorted((ak, bk)))
+        return ("AND", pair)
 
     def mask(self, df: pd.DataFrame) -> pd.Series:
         return _as_bool_series(self.a.mask(df) & self.b.mask(df), df.index)
@@ -227,33 +225,30 @@ class AndPred(Predicate):
     def __repr__(self) -> str:
         return f"({self.a!r} ∧ {self.b!r})"
 
-@dataclass
+
+# @dataclass
+# class OrPred(Predicate):
+#     a: Predicate
+#     b: Predicate
+#     name: str = "C_or"
+
+#     def mask(self, df: pd.DataFrame) -> pd.Series:
+#         return _as_bool_series(self.a.mask(df) | self.b.mask(df), df.index)
+
+#     def __repr__(self) -> str:
+#         return f"({self.a!r} ∨ {self.b!r})"
+
+
+@dataclass(eq=False)
 class OrPred(Predicate):
-    """
-    Logical disjunction (OR) of two predicates.
-
-    Parameters
-    ----------
-    a, b : Predicate
-        Left and right predicates.
-
-    Returns
-    -------
-    OrPred
-        Composite predicate evaluating `a.mask(df) | b.mask(df)`.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import Predicate, OrPred
-    >>> df = pd.DataFrame({"p": [True, False, True], "q": [True, True, False]})
-    >>> P = OrPred(Predicate.from_column("p"), Predicate.from_column("q"))
-    >>> P.mask(df).tolist()
-    [True, True, True]
-    """
     a: Predicate
     b: Predicate
     name: str = "C_or"
+
+    def cache_key(self) -> tuple:
+        ak, bk = self.a.cache_key(), self.b.cache_key()
+        pair = tuple(sorted((ak, bk)))
+        return ("OR", pair)
 
     def mask(self, df: pd.DataFrame) -> pd.Series:
         return _as_bool_series(self.a.mask(df) | self.b.mask(df), df.index)
@@ -261,277 +256,186 @@ class OrPred(Predicate):
     def __repr__(self) -> str:
         return f"({self.a!r} ∨ {self.b!r})"
 
-@dataclass
+# @dataclass
+# class NotPred(Predicate):
+#     a: Predicate
+#     name: str = "C_not"
+
+#     def mask(self, df: pd.DataFrame) -> pd.Series:
+#         return _as_bool_series(~self.a.mask(df), df.index)
+
+#     def __repr__(self) -> str:
+#         return f"(¬{self.a!r})"
+
+@dataclass(eq=False)
 class NotPred(Predicate):
-    """
-    Logical negation (NOT) of a predicate.
-
-    Parameters
-    ----------
-    a : Predicate
-        Predicate to negate.
-
-    Returns
-    -------
-    NotPred
-        Predicate evaluating `~a.mask(df)`.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import Predicate, NotPred
-    >>> df = pd.DataFrame({"p": [True, False, True]})
-    >>> P = NotPred(Predicate.from_column("p"))
-    >>> P.mask(df).tolist()
-    [False, True, False]
-    """
     a: Predicate
     name: str = "C_not"
+
+    def cache_key(self) -> tuple:
+        return ("NOT", self.a.cache_key())
 
     def mask(self, df: pd.DataFrame) -> pd.Series:
         return _as_bool_series(~self.a.mask(df), df.index)
 
     def __repr__(self) -> str:
-        return f"(~{self.a!r})"
+        return f"(¬{self.a!r})"
 
-# =========================
+
+# =====================================================================
 # Vectorized comparison predicates
-# =========================
+# =====================================================================
 
-@dataclass
 class Compare(Predicate):
     """
-    Vectorized comparison: ``left OP right`` evaluated per row.
-
-    Parameters
-    ----------
-    left, right : Expr or float or int or str
-        Expressions, scalars, or column names. Strings are parsed via :func:`to_expr`.
-    op : Callable[[Any, Any], Any]
-        Vectorized NumPy/pandas-compatible binary operator (e.g., `np.less_equal`).
-    name : str, default="Compare"
-        Display name.
-
-    Returns
-    -------
-    Compare
-        Predicate whose mask is `_as_bool_series(op(to_expr(left).eval(df), to_expr(right).eval(df)))`.
-
-    Examples
-    --------
-    >>> import numpy as np, pandas as pd
-    >>> from txgraffiti2025.forms.predicates import Compare
-    >>> df = pd.DataFrame({"a": [1, 2, 3], "b": [2, 1, 3]})
-    >>> P = Compare("a", "b", np.less_equal)  # a <= b
-    >>> P.mask(df).tolist()
-    [True, False, True]
+    Binary comparison predicate: left (op) right
+      - left/right: column name, Expr, numeric scalar, or pd.Series
+      - robust numeric coercion with alignment to df.index
     """
-    left: Union[Expr, float, int, str]
-    right: Union[Expr, float, int, str]
-    op: Callable[[Any, Any], Any]  # expects vectorized numpy/pandas-compatible op
-    name: str = "Compare"
+
+    def __init__(self, left: Any, right: Any, fn: Callable[[Any, Any], Any]):
+        self.left = left
+        self.right = right
+        self.fn = fn
+        self._symbol = (
+            "<"  if fn is np.less          else
+            ">"  if fn is np.greater       else
+            "<=" if fn is np.less_equal    else
+            ">=" if fn is np.greater_equal else
+            "==" if fn is np.equal         else
+            "!=" if fn is np.not_equal     else
+            getattr(fn, "__name__", "cmp")
+        )
+        self.name = f"({self._disp(self.left)} {self._symbol} {self._disp(self.right)})"
+
+    def _eval_operand(self, op: Any, df: pd.DataFrame) -> pd.Series:
+        # Prefer Expr pipeline (covers strings via to_expr)
+        try:
+            s = to_expr(op).eval(df)
+            return pd.to_numeric(s, errors="coerce")
+        except Exception:
+            if isinstance(op, pd.Series):
+                return pd.to_numeric(op.reindex(df.index), errors="coerce")
+            if np.isscalar(op):
+                return pd.Series(float(op), index=df.index, dtype=float)
+            a = np.asarray(op)
+            if a.ndim == 0:
+                return pd.Series(float(a), index=df.index, dtype=float)
+            if len(a) != len(df.index):
+                raise ValueError("Array-like operand length does not match DataFrame length.")
+            return pd.Series(pd.to_numeric(a, errors="coerce"), index=df.index)
+
+    def _disp(self, op: Any) -> str:
+        if isinstance(op, str):
+            return op
+        name = getattr(op, "name", None)
+        if isinstance(name, str):
+            return name
+        try:
+            return str(op)
+        except Exception:
+            return repr(op)
 
     def mask(self, df: pd.DataFrame) -> pd.Series:
-        l = to_expr(self.left).eval(df)
-        r = to_expr(self.right).eval(df)
-        out = self.op(l, r)
-        return _as_bool_series(out, df.index)
+        L = self._eval_operand(self.left, df)
+        R = self._eval_operand(self.right, df)
+        out = pd.Series(False, index=df.index, dtype=bool)
+        good = L.notna() & R.notna()
+        if good.any():
+            out.loc[good] = self.fn(L[good], R[good]).astype(bool)
+        return out
 
     def __repr__(self) -> str:
-        import numpy as np
-        op_sym = {
-            np.less_equal: "<=",
-            np.greater_equal: ">=",
-            np.less: "<",
-            np.greater: ">",
-            np.equal: "==",
-            np.not_equal: "!=",
-        }.get(self.op, getattr(self.op, "__name__", "op"))
-        return f"({self.left!r} {op_sym} {self.right!r})"
+        return self.name
+
+    def cache_key(self) -> tuple:
+        return ("CMP", self._symbol,
+                _operand_key_for_pred(self.left),
+                _operand_key_for_pred(self.right))
+
 
 # Convenience constructors
-
-def LE(left, right) -> Predicate:
-    """
-    ``left <= right``
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import LE
-    >>> df = pd.DataFrame({"x": [1, 2, 3], "y": [2, 1, 4]})
-    >>> LE("x", "y").mask(df).tolist()
-    [True, False, True]
-    """
-    return Compare(left, right, np.less_equal, name="LE")
+def LT(left, right) -> Predicate: return Compare(left, right, np.less)
+def LE(left, right) -> Predicate: return Compare(left, right, np.less_equal)
+def GT(left, right) -> Predicate: return Compare(left, right, np.greater)
+def GE(left, right) -> Predicate: return Compare(left, right, np.greater_equal)
+def EQ(left, right) -> Predicate: return Compare(left, right, np.equal)
+def NE(left, right) -> Predicate: return Compare(left, right, np.not_equal)
+def GT0(col_or_expr) -> Predicate: return GT(col_or_expr, 0)
+def LT0(col_or_expr) -> Predicate: return LT(col_or_expr, 0)
 
 
-def GE(left, right) -> Predicate:
-    """
-    ``left >= right``
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import GE
-    >>> df = pd.DataFrame({"x": [1, 2, 3], "y": [2, 1, 3]})
-    >>> GE("x", "y").mask(df).tolist()
-    [False, True, True]
-    """
-    return Compare(left, right, np.greater_equal, name="GE")
-
-
-def LT(left, right) -> Predicate:
-    """
-    ``left < right``
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import LT
-    >>> df = pd.DataFrame({"x": [1, 2, 3], "y": [2, 1, 3]})
-    >>> LT("x", "y").mask(df).tolist()
-    [True, False, False]
-    """
-    return Compare(left, right, np.less, name="LT")
-
-
-def GT(left, right) -> Predicate:
-    """
-    ``left > right``
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import GT
-    >>> df = pd.DataFrame({"x": [1, 2, 3], "y": [0, 2, 3]})
-    >>> GT("x", "y").mask(df).tolist()
-    [True, False, False]
-    """
-    return Compare(left, right, np.greater, name="GT")
-
-
-def EQ(left, right, tol: float = 0.0) -> Predicate:
-    """
-    ``left == right`` (or approximately equal if `tol > 0`).
-
-    Parameters
-    ----------
-    left, right : Expr or float or int or str
-    tol : float, default 0.0
-        Absolute tolerance. If positive, `np.isclose` is used.
-
-    Examples
-    --------
-    Exact:
-
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import EQ
-    >>> df = pd.DataFrame({"a": [1.0, 2.0, 3.0], "b": [1.0, 2.0, 4.0]})
-    >>> EQ("a", "b").mask(df).tolist()
-    [True, True, False]
-
-    Approximate:
-
-    >>> EQ("a", "b", tol=1e-9).mask(pd.DataFrame({"a":[1.0, 2.0], "b":[1.0+1e-12, 2.0-1e-12]})).tolist()
-    [True, True]
-    """
-    if tol == 0.0:
-        return Compare(left, right, np.equal, name="EQ")
-    # approx equal within tol
-    def _approx(l, r): return np.isclose(l, r, atol=tol)
-    return Compare(left, right, _approx, name=f"EQ≈(tol={tol})")
-
-
-def NE(left, right) -> Predicate:
-    """
-    ``left != right``
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import NE
-    >>> df = pd.DataFrame({"a": [1, 2, 3], "b": [1, 0, 3]})
-    >>> NE("a", "b").mask(df).tolist()
-    [False, True, False]
-    """
-    return Compare(left, right, np.not_equal, name="NE")
-
-
-# =========================
+# =====================================================================
 # Set membership / ranges
-# =========================
+# =====================================================================
 
-@dataclass
+# @dataclass
+# class InSet(Predicate):
+#     col: Union[Expr, str]
+#     values: Iterable[Any]
+#     name: str = "InSet"
+
+#     def mask(self, df: pd.DataFrame) -> pd.Series:
+#         s = to_expr(self.col).eval(df)
+#         out = pd.Series(s, index=df.index).isin(set(self.values))
+#         return _as_bool_series(out, df.index)
+
+#     def __repr__(self) -> str:
+#         col_txt = to_expr(self.col).__repr__()  # use Expr pretty (__repr__)
+#         return f"[{col_txt} ∈ {{{_fmt_values(self.values)}}}]"
+
+@dataclass(eq=False)
 class InSet(Predicate):
-    """
-    Membership predicate: value of `col` is in `values`.
-
-    Parameters
-    ----------
-    col : Expr or str
-        Column or expression to evaluate.
-    values : Iterable[Any]
-        Hashable values to test against.
-
-    Returns
-    -------
-    InSet
-        Predicate evaluating `to_expr(col).eval(df).isin(values)`.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import InSet
-    >>> df = pd.DataFrame({"k": [1, 2, 3, 4]})
-    >>> InSet("k", {2, 4}).mask(df).tolist()
-    [False, True, False, True]
-    """
     col: Union[Expr, str]
     values: Iterable[Any]
     name: str = "InSet"
 
+    def cache_key(self) -> tuple:
+        # Order-independent set of values
+        try:
+            # If values are hashable, use frozenset; else, tuple of reprs
+            fs = frozenset(self.values)
+        except TypeError:
+            fs = tuple(sorted(map(repr, self.values)))
+        return ("IN", _operand_key_for_pred(self.col), fs)
+
+    # def mask(self, df: pd.DataFrame) -> pd.Series:
+    #     s = to_expr(self.col).eval(df)
+    #     out = pd.Series(s, index=df.index).isin(set(self.values))
+    #     return _as_bool_series(out, df.index)
     def mask(self, df: pd.DataFrame) -> pd.Series:
         s = to_expr(self.col).eval(df)
-        out = pd.Series(s).isin(set(self.values))
+        out = pd.Series(s, index=df.index).isin(list(self.values))
         return _as_bool_series(out, df.index)
 
-    def __repr__(self) -> str:
-        vals = list(self.values)
-        preview = vals if len(vals) <= 5 else vals[:5] + ["…"]
-        return f"InSet({self.col!r} in {preview})"
+# @dataclass
+# class Between(Predicate):
+#     x: Union[Expr, str, float, int]
+#     low: Union[Expr, str, float, int]
+#     high: Union[Expr, str, float, int]
+#     inclusive_low: bool = True
+#     inclusive_high: bool = True
+#     name: str = "Between"
 
-@dataclass
+#     def mask(self, df: pd.DataFrame) -> pd.Series:
+#         xv = pd.to_numeric(to_expr(self.x).eval(df), errors="coerce")
+#         lv = pd.to_numeric(to_expr(self.low).eval(df), errors="coerce")
+#         hv = pd.to_numeric(to_expr(self.high).eval(df), errors="coerce")
+#         left_ok  = (xv >= lv) if self.inclusive_low  else (xv >  lv)
+#         right_ok = (xv <= hv) if self.inclusive_high else (xv <  hv)
+#         return _as_bool_series(left_ok & right_ok, df.index)
+
+#     def __repr__(self) -> str:
+#         x_txt = to_expr(self.x).__repr__()
+#         lo_txt = to_expr(self.low).__repr__()
+#         hi_txt = to_expr(self.high).__repr__()
+#         # choose symbols per bound
+#         lo_sym = "≤" if self.inclusive_low  else "<"
+#         hi_sym = "≤" if self.inclusive_high else "<"
+#         return f"[{lo_txt} {lo_sym} {x_txt} {hi_sym} {hi_txt}]"
+
+@dataclass(eq=False)
 class Between(Predicate):
-    """
-    Range predicate: `low <= x <= high` (bounds optionally strict).
-
-    Parameters
-    ----------
-    x : Expr or str or float or int
-        Value/column to test.
-    low, high : Expr or str or float or int
-        Range bounds.
-    inclusive_low : bool, default True
-        If True, test `x >= low`, else `x > low`.
-    inclusive_high : bool, default True
-        If True, test `x <= high`, else `x < high`.
-
-    Returns
-    -------
-    Between
-        Predicate for interval membership.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import Between
-    >>> df = pd.DataFrame({"x": [0, 1, 2, 3]})
-    >>> Between("x", 1, 2).mask(df).tolist()
-    [False, True, True, False]
-    >>> Between("x", 1, 2, inclusive_low=False).mask(df).tolist()
-    [False, False, True, False]
-    """
     x: Union[Expr, str, float, int]
     low: Union[Expr, str, float, int]
     high: Union[Expr, str, float, int]
@@ -539,84 +443,57 @@ class Between(Predicate):
     inclusive_high: bool = True
     name: str = "Between"
 
+    def cache_key(self) -> tuple:
+        return ("BETWEEN",
+                _operand_key_for_pred(self.x),
+                _operand_key_for_pred(self.low),
+                _operand_key_for_pred(self.high),
+                bool(self.inclusive_low),
+                bool(self.inclusive_high))
+
     def mask(self, df: pd.DataFrame) -> pd.Series:
-        xv = to_expr(self.x).eval(df)
-        lv = to_expr(self.low).eval(df)
-        hv = to_expr(self.high).eval(df)
-        left_ok = (xv >= lv) if self.inclusive_low else (xv > lv)
-        right_ok = (xv <= hv) if self.inclusive_high else (xv < hv)
+        xv = pd.to_numeric(to_expr(self.x).eval(df), errors="coerce")
+        lv = pd.to_numeric(to_expr(self.low).eval(df), errors="coerce")
+        hv = pd.to_numeric(to_expr(self.high).eval(df), errors="coerce")
+        left_ok  = (xv >= lv) if self.inclusive_low  else (xv >  lv)
+        right_ok = (xv <= hv) if self.inclusive_high else (xv <  hv)
         return _as_bool_series(left_ok & right_ok, df.index)
 
     def __repr__(self) -> str:
-        lo = "[" if self.inclusive_low else "("
-        hi = "]" if self.inclusive_high else ")"
-        return f"Between({lo}{self.low!r}, {self.high!r}{hi}) on {self.x!r}"
+        x_txt = to_expr(self.x).__repr__()
+        lo_txt = to_expr(self.low).__repr__()
+        hi_txt = to_expr(self.high).__repr__()
+        # choose symbols per bound
+        lo_sym = "≤" if self.inclusive_low  else "<"
+        hi_sym = "≤" if self.inclusive_high else "<"
+        return f"[{lo_txt} {lo_sym} {x_txt} {hi_sym} {hi_txt}]"
 
-# =========================
+# =====================================================================
 # Numeric property checks
-# =========================
+# =====================================================================
 
-@dataclass
+@dataclass(eq=False)
 class IsInteger(Predicate):
-    """
-    Integer-valued check within tolerance.
-
-    Parameters
-    ----------
-    x : Expr or str or float or int
-        Value/column to test.
-    tol : float, default 1e-9
-        Absolute tolerance on the fractional part.
-
-    Returns
-    -------
-    IsInteger
-        Predicate testing `isclose(x mod 1, 0, atol=tol)`.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import IsInteger
-    >>> df = pd.DataFrame({"x": [1.0, 2.5, 3.0000000001]})
-    >>> IsInteger("x").mask(df).tolist()
-    [True, False, True]
-    """
     x: Union[Expr, str, float, int]
     tol: float = 1e-9
     name: str = "IsInteger"
 
     def mask(self, df: pd.DataFrame) -> pd.Series:
-        xv = to_expr(self.x).eval(df)
+        xv = pd.to_numeric(to_expr(self.x).eval(df), errors="coerce")
         frac = np.mod(np.asarray(xv, dtype=float), 1.0)
         out = np.isclose(frac, 0.0, atol=self.tol)
         return _as_bool_series(out, df.index)
 
     def __repr__(self) -> str:
-        return f"IsInteger({self.x!r}, tol={self.tol})"
+        x_txt = to_expr(self.x).__repr__()
+        return f"[{x_txt} ∈ ℤ]"
+
+    def cache_key(self) -> tuple:
+        return ("IS_INT", _operand_key_for_pred(self.x), float(self.tol))
 
 
-@dataclass
+@dataclass(eq=False)
 class IsNaN(Predicate):
-    """
-    NaN check for a column/expression.
-
-    Parameters
-    ----------
-    x : Expr or str or float or int
-
-    Returns
-    -------
-    IsNaN
-        Predicate evaluating `pd.isna(x)`.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import IsNaN
-    >>> df = pd.DataFrame({"x": [1.0, float("nan"), 2.0]})
-    >>> IsNaN("x").mask(df).tolist()
-    [False, True, False]
-    """
     x: Union[Expr, str, float, int]
     name: str = "IsNaN"
 
@@ -625,119 +502,100 @@ class IsNaN(Predicate):
         return _as_bool_series(pd.isna(xv), df.index)
 
     def __repr__(self) -> str:
-        return f"IsNaN({self.x!r})"
+        x_txt = to_expr(self.x).__repr__()
+        return f"[isnan({x_txt})]"
 
-@dataclass
+    def cache_key(self) -> tuple:
+        return ("IS_NAN", _operand_key_for_pred(self.x))
+
+@dataclass(eq=False)
 class IsFinite(Predicate):
-    """
-    Finite (non-inf, non-NaN) check for a column/expression.
-
-    Parameters
-    ----------
-    x : Expr or str or float or int
-
-    Returns
-    -------
-    IsFinite
-        Predicate evaluating `np.isfinite(x)`.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import IsFinite
-    >>> df = pd.DataFrame({"x": [1.0, float("inf"), float("-inf"), float("nan")]})
-    >>> IsFinite("x").mask(df).tolist()
-    [True, False, False, False]
-    """
     x: Union[Expr, str, float, int]
     name: str = "IsFinite"
 
     def mask(self, df: pd.DataFrame) -> pd.Series:
-        xv = to_expr(self.x).eval(df)
+        xv = pd.to_numeric(to_expr(self.x).eval(df), errors="coerce")
         out = np.isfinite(np.asarray(xv, dtype=float))
         return _as_bool_series(out, df.index)
 
     def __repr__(self) -> str:
-        return f"IsFinite({self.x!r})"
+        x_txt = to_expr(self.x).__repr__()
+        return f"[|{x_txt}| < ∞]"
 
-# =========================
+    def cache_key(self) -> tuple:
+        return ("IS_FINITE", _operand_key_for_pred(self.x))
+
+
+# =====================================================================
+# Quantifier-style pretty predicates (semantic sugar)
+# =====================================================================
+@dataclass(eq=False)
+class ForallFinite(Predicate):
+    """Universal finiteness: ∀ objects (or optional symbol) have finite expr."""
+    def __init__(self, expr: Expr, symbol: str | None = None):
+        self.expr = expr
+        self.symbol = symbol
+
+    def mask(self, df: pd.DataFrame) -> pd.Series:
+        # Semantically: "finite for all rows" is equivalent to IsFinite(expr) mask
+        return IsFinite(self.expr).mask(df)
+
+    def __repr__(self) -> str:
+        sym = f" {self.symbol}" if self.symbol else ""
+        return f"(∀{sym} : |{self.expr!r}| < ∞)"
+
+@dataclass(eq=False)
+class ExistsDivergent(Predicate):
+    """Existential divergence: ∃ object (or optional symbol) such that expr → ∞."""
+    def __init__(self, expr: Expr, symbol: str | None = None):
+        self.expr = expr
+        self.symbol = symbol
+
+    def mask(self, df: pd.DataFrame) -> pd.Series:
+        # There exists a divergence row-wise ≈ not isfinite somewhere.
+        return _as_bool_series(~IsFinite(self.expr).mask(df), df.index)
+
+    def __repr__(self) -> str:
+        sym = f" {self.symbol}" if self.symbol else ""
+        return f"(∃{sym} : {self.expr!r} → ∞)"
+
+
+# =====================================================================
 # Functional predicates
-# =========================
+# =====================================================================
 
-@dataclass
+@dataclass(eq=False)
 class Where(Predicate):
-    """
-    Vectorized predicate from a function `fn(df) -> Series[bool]`.
-
-    Parameters
-    ----------
-    fn : Callable[[pd.DataFrame], pd.Series]
-        Must return a boolean Series aligned (or alignable) to `df.index`.
-    name : str, default "Where"
-        Display name.
-
-    Returns
-    -------
-    Where
-        Predicate that defers to `fn`.
-
-    Raises
-    ------
-    ValueError
-        If `fn` does not return a boolean Series.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import Where
-    >>> df = pd.DataFrame({"x": [1, 2, 3]})
-    >>> P = Where(lambda d: (d["x"] % 2 == 1))
-    >>> P.mask(df).tolist()
-    [True, False, True]
-    """
-    fn: Callable[[pd.DataFrame], pd.Series]
+    fn: Callable[[pd.DataFrame], Any]
     name: str = "Where"
 
     def mask(self, df: pd.DataFrame) -> pd.Series:
         m = self.fn(df)
-        if not isinstance(m, pd.Series) or m.dtype != bool:
-            raise ValueError("Where(fn) must return a boolean pandas Series.")
-        return m.reindex(df.index, fill_value=False)
+        if not isinstance(m, (pd.Series, np.ndarray, list, tuple, bool, np.bool_)):
+            raise ValueError("Where(fn) must return a boolean array-like/Series.")
+        return _as_bool_series(m, df.index)
 
     def __repr__(self) -> str:
-        # Prefer descriptive name if customized (e.g., from_column(col))
         if self.name and self.name != "Where":
             return self.name
         fn = getattr(self.fn, "__name__", "fn")
         return f"Where({fn})"
 
-@dataclass
+    def cache_key(self) -> tuple:
+        # Prefer explicit name; else use qualname+filename+firstlineno if possible
+        if self.name and self.name != "Where":
+            return ("WHERE", self.name)
+        f = self.fn
+        qn = getattr(f, "__qualname__", getattr(f, "__name__", "fn"))
+        co = getattr(f, "__code__", None)
+        if co is not None:
+            sig = (co.co_filename, co.co_firstlineno, co.co_argcount, co.co_varnames)
+        else:
+            sig = (repr(f),)
+        return ("WHERE", qn, sig)
+
+@dataclass(eq=False)
 class RowWhere(Predicate):
-    """
-    Row-wise fallback predicate from `fn(row) -> bool`.
-
-    Slower than :class:`Where` but universal when vectorization is awkward.
-
-    Parameters
-    ----------
-    fn : Callable[[pd.Series], bool]
-        Returns True/False for a single row.
-    name : str, default "RowWhere"
-
-    Returns
-    -------
-    RowWhere
-        Predicate applying `fn` to each row.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.predicates import RowWhere
-    >>> df = pd.DataFrame({"x": [1, 2, 3]})
-    >>> P = RowWhere(lambda row: row["x"] > 1)
-    >>> P.mask(df).tolist()
-    [False, True, True]
-    """
     fn: Callable[[pd.Series], bool]
     name: str = "RowWhere"
 
@@ -749,46 +607,45 @@ class RowWhere(Predicate):
         fn = getattr(self.fn, "__name__", "fn")
         return f"RowWhere({fn})"
 
-# =========================
-# Handy shorthands (readable DSL)
-# =========================
+    def cache_key(self) -> tuple:
+        if self.name and self.name != "RowWhere":
+            return ("ROWW", self.name)
+        f = self.fn
+        qn = getattr(f, "__qualname__", getattr(f, "__name__", "fn"))
+        co = getattr(f, "__code__", None)
+        if co is not None:
+            sig = (co.co_filename, co.co_firstlineno, co.co_argcount, co.co_varnames)
+        else:
+            sig = (repr(f),)
+        return ("ROWW", qn, sig)
 
-def GEQ(col_or_expr, val) -> Predicate:
-    """Alias for :func:`GE` — ``col_or_expr >= val``."""
+# =====================================================================
+# Handy shorthands (readable DSL)
+# =====================================================================
+
+def GEQ(col_or_expr, val) -> Predicate:  # alias for GE
     return GE(col_or_expr, val)
 
-def LEQ(col_or_expr, val) -> Predicate:
-    """Alias for :func:`LE` — ``col_or_expr <= val``."""
+def LEQ(col_or_expr, val) -> Predicate:  # alias for LE
     return LE(col_or_expr, val)
 
-def GT0(col_or_expr) -> Predicate:
-    """``col_or_expr > 0``."""
-    return GT(col_or_expr, 0)
-
-def LT0(col_or_expr) -> Predicate:
-    """``col_or_expr < 0``."""
-    return LT(col_or_expr, 0)
-
 def EQ0(col_or_expr, tol: float = 0.0) -> Predicate:
-    """``col_or_expr == 0`` (approximate if `tol > 0`)."""
-    return EQ(col_or_expr, 0, tol=tol)
+    """|x| <= tol if tol>0, else x == 0."""
+    if tol and tol > 0:
+        return LE(abs_(to_expr(col_or_expr)), tol)
+    return EQ(col_or_expr, 0)
 
 def BETWEEN(col_or_expr, lo, hi, inc_lo=True, inc_hi=True) -> Predicate:
-    """Shorthand for :class:`Between`."""
     return Between(col_or_expr, lo, hi, inc_lo, inc_hi)
 
 def IN(col, values: Iterable[Any]) -> Predicate:
-    """Shorthand for :class:`InSet`."""
     return InSet(col, values)
 
 def IS_INT(col_or_expr, tol: float = 1e-9) -> Predicate:
-    """Shorthand for :class:`IsInteger`."""
     return IsInteger(col_or_expr, tol)
 
 def IS_NAN(col_or_expr) -> Predicate:
-    """Shorthand for :class:`IsNaN`."""
     return IsNaN(col_or_expr)
 
 def IS_FINITE(col_or_expr) -> Predicate:
-    """Shorthand for :class:`IsFinite`."""
     return IsFinite(col_or_expr)

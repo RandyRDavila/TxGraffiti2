@@ -3,5 +3,7 @@ from .generalize import *
 from .hazel import *
 from .morgan import *
 from .utils import *
-
-__all__ = []
+from .sophie import *
+from .constant_ratios import find_constant_ratios_for_conjecture
+from .nlr_post import *
+# __all__ = []

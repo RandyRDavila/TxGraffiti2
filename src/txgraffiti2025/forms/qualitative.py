@@ -1,53 +1,36 @@
 # src/txgraffiti2025/forms/qualitative.py
-
-"""
-Qualitative / monotone relations (R6) over a dataset.
-
-Checks whether a response column `y` tends to increase or decrease with a
-predictor column `x`, optionally restricted to a class mask `C`. Two
-correlation methods are supported:
-
-- ``"spearman"``  (rank correlation; robust to monotone nonlinear trends)
-- ``"pearson"``   (linear correlation)
-
-NaNs and constant sequences are handled gracefully; undefined correlations are
-treated as 0.0. You can also require a minimum absolute correlation magnitude
-via ``min_abs_rho``.
-
-Examples
---------
-Basic usage:
-
->>> import pandas as pd
->>> from txgraffiti2025.forms.qualitative import MonotoneRelation
->>> df = pd.DataFrame({"x": [1, 2, 3, 4], "y": [2, 4, 5, 8]})
->>> rel = MonotoneRelation("x", "y", direction="increasing", method="spearman", min_abs_rho=0.5)
->>> rel.evaluate_global(df)["ok"]
-True
-
-Restrict to a class mask (e.g., only rows where `flag` is True):
-
->>> from txgraffiti2025.forms.predicates import Predicate
->>> df = pd.DataFrame({"x": [1, 2, 3, 4], "y": [8, 6, 4, 2], "flag": [True, False, True, True]})
->>> mask = Predicate.from_column("flag").mask(df)
->>> MonotoneRelation("x", "y", direction="decreasing").evaluate_global(df, mask=mask)["ok"]
-True
-"""
-
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Optional, Literal, Dict, Any
+from typing import Optional, Literal, Dict, Any, Union
+
 import numpy as np
 import pandas as pd
+
+from .predicates import Predicate
+# NEW: import the Relation base so we can adapt to DSL
+from .generic_conjecture import Relation
+
+__all__ = ["MonotoneRelation", "R6MonotoneRelation"]
 
 Direction = Literal["increasing", "decreasing"]
 Method = Literal["spearman", "pearson"]
 
 
+def _coerce_mask(mask: Optional[Union[pd.Series, Predicate]], df: pd.DataFrame) -> Optional[pd.Series]:
+    """Accept a Predicate or boolean Series; return aligned boolean Series or None."""
+    if mask is None:
+        return None
+    if isinstance(mask, Predicate):
+        m = mask.mask(df)
+    else:
+        m = pd.Series(mask, index=df.index)
+    return m.reindex(df.index, fill_value=False).astype(bool, copy=False)
+
+
 @dataclass
 class MonotoneRelation:
     """
-    Test whether ``y`` is (weakly) monotone in ``x`` over a DataFrame.
+    Test whether `y` is (weakly) monotone in `x` over a DataFrame.
 
     Parameters
     ----------
@@ -56,146 +39,82 @@ class MonotoneRelation:
     y : str
         Name of the response column.
     direction : {"increasing", "decreasing"}, default "increasing"
-        Expected monotone tendency.
+        Expected monotone tendency (sign of correlation).
     method : {"spearman", "pearson"}, default "spearman"
         Correlation to use: rank-based (Spearman) or linear (Pearson).
     min_abs_rho : float, default 0.0
         Minimum absolute correlation magnitude required to declare success.
+    min_n : int, default 2
+        Minimum number of valid (x,y) pairs required to attempt correlation.
     name : str, default "Monotone"
         Display name.
-
-    Attributes
-    ----------
-    x : str
-    y : str
-    direction : {"increasing", "decreasing"}
-    method : {"spearman", "pearson"}
-    min_abs_rho : float
-    name : str
-
-    Notes
-    -----
-    - Constant or NaN-only inputs yield a correlation of ``0.0`` by design.
-    - Spearman uses average ties via pandas ranking to avoid spurious ±1.
-    - This implements an **R6 qualitative form** (trend-style statement),
-      complementing the algebraic R2–R5 modules.
-
-    Examples
-    --------
-    Increasing trend (Spearman):
-
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.qualitative import MonotoneRelation
-    >>> df = pd.DataFrame({"x": [0, 1, 2, 3], "y": [0, 1, 1.5, 3]})
-    >>> MonotoneRelation("x", "y", "increasing", "spearman", 0.7).evaluate_global(df)["ok"]
-    True
-
-    Non-monotone case:
-
-    >>> df2 = pd.DataFrame({"x":[0,1,2,3], "y":[0,2,1,3]})
-    >>> MonotoneRelation("x","y","increasing","spearman",0.8).evaluate_global(df2)["ok"]
-    False
     """
     x: str
     y: str
-    direction: Direction = "increasing"   # or "decreasing"
-    method: Method = "spearman"           # 'spearman' | 'pearson'
-    min_abs_rho: float = 0.0              # require at least this magnitude
+    direction: Direction = "increasing"
+    method: Method = "spearman"
+    min_abs_rho: float = 0.0
+    min_n: int = 2
     name: str = "Monotone"
 
+    # -----------------------------
+    # Pretty / identity
+    # -----------------------------
+    def pretty(self, *, unicode_ops: bool = True, show_threshold: bool = True) -> str:
+        up = "↑" if unicode_ops else "up"
+        down = "↓" if unicode_ops else "down"
+        arrow = up if self.direction == "increasing" else down
+
+        if unicode_ops:
+            rho_tag = "ρₛ" if self.method == "spearman" else "ρₚ"
+            ge = "≥"
+            abs_open, abs_close = "|", "|"
+        else:
+            rho_tag = "rho_s" if self.method == "spearman" else "rho_p"
+            ge = ">="
+            abs_open, abs_close = "|", "|"
+
+        tail = f" ({rho_tag}"
+        if show_threshold and float(self.min_abs_rho) > 0.0:
+            tail += f", {abs_open}ρ{abs_close} {ge} {self.min_abs_rho:g}"
+        tail += ")"
+        return f"{self.y} {arrow} {self.x}{tail}"
+
+    def signature(self) -> str:
+        return self.pretty(unicode_ops=True, show_threshold=True)
+
+    def __repr__(self) -> str:
+        return (f"Monotone({self.x}→{self.y}, dir={self.direction}, "
+                f"method={self.method}, min|rho|={self.min_abs_rho}, min_n={self.min_n})")
+
+    # -----------------------------
+    # Core correlation
+    # -----------------------------
     def _corr(self, xs: np.ndarray, ys: np.ndarray) -> float:
-        """
-        Compute correlation per selected method, returning a finite float.
-
-        Parameters
-        ----------
-        xs, ys : np.ndarray
-            Numeric vectors (aligned, NaNs removed upstream).
-
-        Returns
-        -------
-        float
-            Correlation coefficient. Returns ``0.0`` when undefined.
-
-        Notes
-        -----
-        - Spearman is computed by ranking with average ties, then Pearson on ranks.
-        - For either method, if a side is constant or the result is non-finite,
-          the value is coerced to ``0.0``.
-        """
         if self.method == "spearman":
-            # Tied ranks via pandas (average method) to avoid spurious ±1 on constants
             rx = pd.Series(xs).rank(method="average").to_numpy()
             ry = pd.Series(ys).rank(method="average").to_numpy()
-            # If either side is constant after ranking, correlation undefined -> 0.0
             if np.std(rx) == 0.0 or np.std(ry) == 0.0:
                 return 0.0
             rho = float(np.corrcoef(rx, ry)[0, 1])
-        else:  # pearson
-            # If either side is constant, Pearson correlation undefined -> 0.0
+        else:
             if np.std(xs) == 0.0 or np.std(ys) == 0.0:
                 return 0.0
             rho = float(np.corrcoef(xs, ys)[0, 1])
+        return rho if np.isfinite(rho) else 0.0
 
-        if not np.isfinite(rho):
-            rho = 0.0
-        return rho
-
+    # -----------------------------
+    # Public evaluation API
+    # -----------------------------
     def evaluate_global(
         self,
         df: pd.DataFrame,
-        mask: Optional[pd.Series] = None,
+        mask: Optional[Union[pd.Series, Predicate]] = None,
     ) -> Dict[str, Any]:
-        """
-        Evaluate the monotonic tendency of ``y`` vs ``x`` on the DataFrame.
+        m = _coerce_mask(mask, df)
+        if m is not None:
+            df = df.loc[m]
 
-        Parameters
-        ----------
-        df : pd.DataFrame
-            DataFrame containing columns `x` and `y`. Non-numeric entries are
-            coerced via ``pd.to_numeric(..., errors="coerce")``.
-        mask : pd.Series of bool, optional
-            Optional class restriction aligned to ``df.index``. If provided,
-            rows with ``mask == True`` are used; others are ignored.
-
-        Returns
-        -------
-        dict
-            Dictionary with keys:
-                - ``ok`` : bool
-                - ``rho`` : float (correlation used)
-                - ``direction`` : {"increasing", "decreasing"}
-                - ``method`` : {"spearman", "pearson"}
-                - ``n`` : int (number of valid rows after filtering & NaN drop)
-                - ``x`` : str
-                - ``y`` : str
-
-        Notes
-        -----
-        Success criteria:
-        - Directional check: sign(rho) ≥ 0 for ``"increasing"``, ≤ 0 for ``"decreasing"``.
-        - Magnitude check: ``abs(rho) >= min_abs_rho``.
-
-        Examples
-        --------
-        With a mask:
-
-        >>> import pandas as pd
-        >>> from txgraffiti2025.forms.predicates import Predicate
-        >>> from txgraffiti2025.forms.qualitative import MonotoneRelation
-        >>> df = pd.DataFrame({
-        ...     "x": [1, 2, 3, 4, 5],
-        ...     "y": [5, 4, 3, 2, 1],
-        ...     "use": [True, True, False, True, True],
-        ... })
-        >>> m = Predicate.from_column("use").mask(df)
-        >>> MonotoneRelation("x", "y", "decreasing", "spearman", 0.8).evaluate_global(df, mask=m)["ok"]
-        True
-        """
-        if mask is not None:
-            df = df.loc[mask.fillna(False)]
-
-        # Pull vectors and drop rows with NaN in either column
         xs = pd.to_numeric(df[self.x], errors="coerce")
         ys = pd.to_numeric(df[self.y], errors="coerce")
         valid = xs.notna() & ys.notna()
@@ -203,25 +122,17 @@ class MonotoneRelation:
         ys = ys[valid].to_numpy()
         n = xs.size
 
-        # Not enough data to judge monotonic trend
-        if n < 2:
+        if n < int(self.min_n):
             return {
-                "ok": False,
-                "rho": 0.0,
-                "direction": self.direction,
-                "method": self.method,
-                "n": int(n),
-                "x": self.x,
-                "y": self.y,
+                "ok": False, "rho": 0.0, "direction": self.direction, "method": self.method,
+                "n": int(n), "x": self.x, "y": self.y,
             }
 
-        # Short-circuit: if either series is constant, correlation is undefined -> set to 0.0
         if pd.Series(xs).nunique(dropna=True) <= 1 or pd.Series(ys).nunique(dropna=True) <= 1:
             rho = 0.0
         else:
             rho = self._corr(xs, ys)
 
-        # Directional check (+ for increasing, − for decreasing) plus magnitude threshold
         dir_ok = (rho >= 0.0) if self.direction == "increasing" else (rho <= 0.0)
         mag_ok = abs(rho) >= float(self.min_abs_rho)
         ok = bool(dir_ok and mag_ok)
@@ -236,7 +147,64 @@ class MonotoneRelation:
             "y": self.y,
         }
 
-    def __repr__(self) -> str:
-        return (f"Monotone({self.x}→{self.y}, dir={self.direction}, "
-                f"method={self.method}, min|rho|={self.min_abs_rho})")
 
+# ─────────────────────────────────────────────────────────────────────
+# NEW: Adapter so R6 qualitative behaves like a Relation in the DSL
+# ─────────────────────────────────────────────────────────────────────
+
+@dataclass
+class R6MonotoneRelation(Relation):
+    """
+    Row-wise Relation adapter for qualitative monotonicity (R6).
+
+    It evaluates the dataset-level monotone test and broadcasts the result:
+      - evaluate(df): boolean Series
+          True on rows inside `condition` if the monotone test passes;
+          vacuously True outside `condition`.
+      - slack(df): float Series
+          On rows in `condition`:  signed_rho - min_abs_rho
+              where signed_rho = rho  (increasing) or -rho (decreasing).
+          Elsewhere: 0.0.
+
+    Note: This makes R6 usable in Conjecture(...) and with GraffitiBase utilities.
+    """
+    mono: MonotoneRelation
+    # Optional: keep a display name consistent with other Relations
+    name: str = "R6Monotone"
+
+    def _result(self, df: pd.DataFrame, condition: Optional[Predicate] = None) -> Dict[str, Any]:
+        return self.mono.evaluate_global(df, mask=condition)
+
+    def evaluate(self, df: pd.DataFrame, condition: Optional[Predicate] = None) -> pd.Series:
+        # If a Conjecture wraps us, it supplies the condition; for standalone use, pass None.
+        res = self._result(df, condition)
+        if condition is None:
+            applicable = pd.Series(True, index=df.index, dtype=bool)
+        else:
+            applicable = condition.mask(df).reindex(df.index, fill_value=False).astype(bool)
+        ok = bool(res["ok"])
+        out = pd.Series(True, index=df.index, dtype=bool)
+        out.loc[applicable] = ok
+        return out
+
+    def slack(self, df: pd.DataFrame, condition: Optional[Predicate] = None) -> pd.Series:
+        res = self._result(df, condition)
+        rho = float(res["rho"])
+        signed = rho if self.mono.direction == "increasing" else -rho
+        margin = signed - float(self.mono.min_abs_rho)
+
+        if condition is None:
+            applicable = pd.Series(True, index=df.index, dtype=bool)
+        else:
+            applicable = condition.mask(df).reindex(df.index, fill_value=False).astype(bool)
+
+        s = pd.Series(0.0, index=df.index, dtype=float)
+        s.loc[applicable] = margin
+        return s
+
+    # Pretty mirrors the dataset-level description
+    def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+        return self.mono.pretty(unicode_ops=unicode_ops, show_threshold=True)
+
+    def __repr__(self) -> str:
+        return f"{self.pretty(unicode_ops=True)}"

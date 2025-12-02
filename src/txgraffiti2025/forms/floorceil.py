@@ -3,63 +3,38 @@
 """
 Floor/Ceiling wrappers (R3): discrete rounding forms to compose with any expression.
 
-These helpers wrap numeric expressions in integer rounding, enabling conjecture
-forms that frequently appear as sharp bounds in the survey (R3):
+These helpers wrap numeric expressions in ⌊·⌋ / ⌈·⌉ so you can build sharp
+integer bounds like “⌊f(x)⌋ ≤ g(x)” or “h(x) ≤ ⌈k(x)⌉”. They return Expr nodes
+that evaluate to float Series (integer-valued, but dtype float for alignment).
 
-- ``floor(f(x)) <= g(x)``
-- ``h(x) <= ceil(k(x))``
-
-They interoperate with any :class:`Expr` produced by your expression system
-(e.g., arithmetic on columns via :func:`to_expr`, linear builders, etc.), and
-can be passed directly to relations like :class:`~txgraffiti2025.forms.generic_conjecture.Le`
-and :class:`~txgraffiti2025.forms.generic_conjecture.Ge`.
-
-Notes
------
-R3 (floor/ceil) forms are common in “interesting” conjectures—rounding tightens
-otherwise fractional linear/nonlinear bounds. See the attached survey’s
-discussion of integer rounding in sharp inequalities.
+They interoperate seamlessly with the Expr system (see utils.py) and plug into
+relations (Le/Ge/Eq) and Conjecture as usual.
 
 Examples
 --------
-Wrap a column expression and evaluate:
-
 >>> import pandas as pd
 >>> from txgraffiti2025.forms.floorceil import with_floor, with_ceil
->>> from txgraffiti2025.forms.utils import to_expr
->>> df = pd.DataFrame({"n": [1, 2, 3, 4], "x": [0.4, 1.0, 1.6, 2.1]})
->>> e_floor = with_floor(to_expr("x") + 0.5)
->>> e_ceil  = with_ceil(to_expr("x") / 2)
->>> e_floor.eval(df).tolist()
-[0.0, 1.0, 2.0, 2.0]
->>> e_ceil.eval(df).tolist()
-[1.0, 1.0, 1.0, 2.0]
+>>> df = pd.DataFrame({"x": [0.4, 1.0, 1.6, 2.1]})
+>>> with_floor("x").eval(df).tolist()
+[0.0, 1.0, 1.0, 2.0]
+>>> with_ceil("x").eval(df).tolist()
+[1.0, 1.0, 2.0, 3.0]
 
-Use inside a relation / conjecture:
-
->>> from txgraffiti2025.forms.generic_conjecture import Le, Conjecture
->>> # Example bound: alpha <= ceil(size / 2)
->>> df = pd.DataFrame({"alpha": [1, 2, 3], "size": [1, 3, 5]})
->>> r = Le("alpha", with_ceil(to_expr("size") / 2))
->>> r.evaluate(df).tolist()
-[True, True, False]
->>> r.slack(df).tolist()   # right - left
-[0.0, -0.5, -0.5]
->>> conj = Conjecture(r)   # global conjecture (no class condition)
->>> _, holds, failures = conj.check(df)
->>> holds.tolist()
-[True, True, False]
->>> list(failures.index)
-[2]
+Inside a relation:
+>>> from txgraffiti2025.forms.generic_conjecture import Le
+>>> Le("alpha", with_ceil("size") / 2).pretty()
+'(alpha ≤ ⌈size⌉ / 2)'
 """
 
 from __future__ import annotations
 from typing import Union
-from .utils import floor, ceil, to_expr, Expr
+
+from .utils import Expr, to_expr, floor, ceil, Const
 
 __all__ = [
     "with_floor",
     "with_ceil",
+    "is_one",
 ]
 
 NumLike = Union[Expr, float, int, str]
@@ -67,51 +42,45 @@ NumLike = Union[Expr, float, int, str]
 
 def with_floor(expr: NumLike) -> Expr:
     """
-    Wrap an expression with the integer floor operator.
+    Wrap an expression with the floor operator: ⌊expr⌋.
 
     Parameters
     ----------
-    expr : Expr or float or int or str
-        Any numeric expression or column name. Strings are parsed via :func:`to_expr`.
+    expr : Expr | float | int | str
+        Expression or column name (strings are parsed via to_expr).
 
     Returns
     -------
     Expr
-        An expression representing ``floor(expr)`` (as a real-valued :class:`Expr`).
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.floorceil import with_floor
-    >>> from txgraffiti2025.forms.utils import to_expr
-    >>> df = pd.DataFrame({"x": [0.9, 1.0, 1.1]})
-    >>> with_floor(to_expr("x")).eval(df).tolist()
-    [0.0, 1.0, 1.0]
+        Node representing ⌊expr⌋ (printed as `⌊…⌋` by Expr.pretty()).
     """
     return floor(to_expr(expr))
 
 
 def with_ceil(expr: NumLike) -> Expr:
     """
-    Wrap an expression with the integer ceiling operator.
+    Wrap an expression with the ceiling operator: ⌈expr⌉.
 
     Parameters
     ----------
-    expr : Expr or float or int or str
-        Any numeric expression or column name. Strings are parsed via :func:`to_expr`.
+    expr : Expr | float | int | str
+        Expression or column name (strings are parsed via to_expr).
 
     Returns
     -------
     Expr
-        An expression representing ``ceil(expr)`` (as a real-valued :class:`Expr`).
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.floorceil import with_ceil
-    >>> from txgraffiti2025.forms.utils import to_expr
-    >>> df = pd.DataFrame({"x": [0.0, 0.1, 0.9, 1.0]})
-    >>> with_ceil(to_expr("x")).eval(df).tolist()
-    [0.0, 1.0, 1.0, 1.0]
+        Node representing ⌈expr⌉ (printed as `⌈…⌉` by Expr.pretty()).
     """
     return ceil(to_expr(expr))
+
+
+def is_one(expr: object) -> bool:
+    """
+    Lightweight check: True iff `expr` is exactly the constant 1.
+
+    Notes
+    -----
+    This is intentionally strict and only recognizes a literal Const(1).
+    It does not attempt algebraic normalization (e.g., 2/2, 1*alpha/alpha).
+    """
+    return isinstance(expr, Const) and float(expr.value) == 1.0

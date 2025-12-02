@@ -1,3 +1,4 @@
+# src/txgraffiti2025/processing/post/generalize.py
 """
 Generalize post-processor for affine upper bounds:
 
@@ -16,7 +17,7 @@ Design:
 
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple, Sequence
 import numpy as np
 import pandas as pd
 
@@ -25,6 +26,19 @@ from txgraffiti2025.forms.utils import Expr, Const, ColumnTerm, BinOp, to_expr
 from txgraffiti2025.forms.predicates import Predicate, AndPred
 from txgraffiti2025.processing.utils import log_event
 
+from txgraffiti2025.forms.generic_conjecture import Conjecture
+from txgraffiti2025.forms.predicates import Predicate
+from txgraffiti2025.processing.pre.constants_cache import ConstantsCache
+from txgraffiti2025.processing.post.generalize_from_constants import (
+    propose_generalizations_from_constants, Generalization as GConst,
+)
+from txgraffiti2025.processing.post.reciprocal_generalizer import (
+    propose_generalizations_from_reciprocals,
+)
+from txgraffiti2025.processing.post.intercept_generalizer import (
+    propose_generalizations_from_intercept,
+)
+from txgraffiti2025.processing.post.morgan import morgan_filter
 
 # -------------------------
 # Pattern matching: target <= m*other + b
@@ -298,3 +312,85 @@ def generalize(conjectures: Iterable[Conjecture], df: pd.DataFrame, *, tol_match
             log_event(f"Generalize error on {getattr(c,'name','?')}: {e}")
             out.append(c)
     return out
+
+
+
+
+def _unwrap(gs: List) -> List[Conjecture]:
+    return [g.new_conjecture for g in gs]
+
+def propose_joint_generalizations(
+    df: pd.DataFrame,
+    conj: Conjecture,
+    *,
+    cache: Optional[ConstantsCache] = None,
+    candidate_hypotheses: Sequence[Optional[Predicate]],
+    # intercept extras (optional):
+    candidate_intercepts=None,
+    relaxers_Z=None,
+    require_superset: bool = True,
+    atol: float = 1e-9,
+) -> List[Conjecture]:
+    """
+    Try to generalize BOTH coefficient and intercept on the same conjecture.
+    Strategy:
+      - Path A: slope (constants) → intercept; slope (reciprocals) → intercept
+      - Path B: intercept → slope (constants); intercept → slope (reciprocals)
+    Keep only conjectures that hold on their hypotheses and dedupe by Morgan.
+    """
+    proposals: List[Conjecture] = []
+
+    # --- Path A: slope first, then intercept ---
+    if cache is not None:
+        g1 = propose_generalizations_from_constants(
+            df, conj, cache, candidate_hypotheses=candidate_hypotheses, atol=atol
+        )
+        for g in g1:
+            g2 = propose_generalizations_from_intercept(
+                df, g.new_conjecture, cache,
+                candidate_hypotheses=candidate_hypotheses,
+                candidate_intercepts=candidate_intercepts,
+                relaxers_Z=relaxers_Z,
+                require_superset=require_superset,
+            )
+            proposals.extend(_unwrap(g2))
+
+    g1r = propose_generalizations_from_reciprocals(
+        df, conj, candidate_hypotheses=candidate_hypotheses
+    )
+    for c1 in g1r:
+        g2 = propose_generalizations_from_intercept(
+            df, c1, cache,
+            candidate_hypotheses=candidate_hypotheses,
+            candidate_intercepts=candidate_intercepts,
+            relaxers_Z=relaxers_Z,
+            require_superset=require_superset,
+        )
+        proposals.extend(_unwrap(g2))
+
+    # --- Path B: intercept first, then slope ---
+    gI = propose_generalizations_from_intercept(
+        df, conj, cache,
+        candidate_hypotheses=candidate_hypotheses,
+        candidate_intercepts=candidate_intercepts,
+        relaxers_Z=relaxers_Z,
+        require_superset=require_superset,
+    )
+    for g in gI:
+        if cache is not None:
+            gS = propose_generalizations_from_constants(
+                df, g.new_conjecture, cache,
+                candidate_hypotheses=candidate_hypotheses, atol=atol
+            )
+            proposals.extend(_unwrap(gS))
+        gSr = propose_generalizations_from_reciprocals(
+            df, g.new_conjecture, candidate_hypotheses=candidate_hypotheses
+        )
+        proposals.extend(gSr)
+
+    # Deduplicate & prefer most-general hypotheses per identical conclusion
+    if proposals:
+        from txgraffiti2025.processing.post.morgan import morgan_filter
+        res = morgan_filter(df, proposals)
+        return res.kept
+    return []

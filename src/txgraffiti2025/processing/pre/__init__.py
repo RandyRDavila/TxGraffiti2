@@ -1,3 +1,5 @@
+# src/txgraffiti2025/processing/pre/__init__.py
+
 from .auto import *
 from .dalmatian import *
 from .hazel import *

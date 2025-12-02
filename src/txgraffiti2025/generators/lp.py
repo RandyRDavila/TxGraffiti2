@@ -12,7 +12,7 @@ Returns Conjecture objects of the form:
     H ⇒ target ≥ (Σ_j a_j·feat_j) + b
     H ⇒ target ≤ (Σ_j a_j·feat_j) + b
 
-Features/target are DataFrame column names (strings).
+Features may be DataFrame column names (strings) **or** Expr objects.
 Hypotheses are txgraffiti2025 Predicates.
 
 Requires a MILP/LP solver on PATH (CBC or GLPK).
@@ -21,8 +21,9 @@ Requires a MILP/LP solver on PATH (CBC or GLPK).
 from __future__ import annotations
 from dataclasses import dataclass
 from fractions import Fraction
-from typing import Iterator, List, Optional, Sequence, Tuple
+from typing import Iterator, Optional, Sequence, Tuple, Union
 
+import math
 import numpy as np
 import pandas as pd
 import pulp
@@ -89,8 +90,13 @@ def _solve_sum_slack_lp(X: np.ndarray, y: np.ndarray, *, sense: str) -> Tuple[np
     if pulp.LpStatus[status] != "Optimal":
         raise RuntimeError(f"LP did not solve optimally: {pulp.LpStatus[status]}")
 
-    a_sol = np.array([v.value() for v in a], dtype=float)
-    b_sol = float(b.value())
+    # Some solvers can return None for variables in degenerate cases.
+    def _val(v):
+        vv = v.value()
+        return float(vv) if vv is not None else float("nan")
+
+    a_sol = np.array([_val(v) for v in a], dtype=float)
+    b_sol = _val(b)
     return a_sol, b_sol
 
 
@@ -100,46 +106,92 @@ def _solve_sum_slack_lp(X: np.ndarray, y: np.ndarray, *, sense: str) -> Tuple[np
 
 @dataclass
 class LPConfig:
-    features: Sequence[str]
-    target: str
+    # Features can be raw column names or Exprs (e.g., sqrt(x), ln(x), x**2)
+    features: Sequence[Union[str, Expr]]
+    target: Union[str, Expr]
     direction: str = "both"        # "both" | "upper" | "lower"
     max_denominator: int = 50      # nice-looking rationals for printing
     tol: float = 1e-9              # drop |coef| < tol
     min_support: int = 3           # need this many valid rows under hypothesis
 
+
 def _numify(s: pd.Series) -> pd.Series:
     return pd.to_numeric(s, errors="coerce")
 
+
+def _as_expr(x: Union[str, Expr]) -> Expr:
+    return to_expr(x)
+
+
 def _prepare_arrays(
-    df: pd.DataFrame, features: Sequence[str], target: str, mask: pd.Series
-) -> Tuple[np.ndarray, np.ndarray, pd.Index]:
+    df: pd.DataFrame,
+    features: Sequence[Union[str, Expr]],
+    target: Union[str, Expr],
+    mask: pd.Series,
+) -> Tuple[np.ndarray, np.ndarray, pd.Index, Sequence[Expr]]:
+    """
+    Evaluate each feature (string->column, Expr->eval) under the mask to build X and y.
+    Returns:
+        X (n×k), y (n,), valid_idx, features_exprs (the evaluated Expr objects)
+    """
     sub = df.loc[mask]
-    cols = [c for c in features if c in sub.columns]
-    X_df = pd.concat([_numify(sub[c]) for c in cols], axis=1)
-    y_s = _numify(sub[target]) if target in sub.columns else pd.Series(np.nan, index=sub.index)
+    if len(sub) == 0:
+        return np.empty((0, 0), dtype=float), np.empty((0,), dtype=float), sub.index[:0], []
+
+    feat_exprs: list[Expr] = []
+    cols: list[pd.Series] = []
+
+    for f in features:
+        ex = _as_expr(f)
+        try:
+            s = _numify(ex.eval(sub))
+        except KeyError:
+            # Feature references missing columns: skip
+            continue
+        cols.append(s)
+        feat_exprs.append(ex)
+
+    if not cols:
+        return np.empty((0, 0), dtype=float), np.empty((0,), dtype=float), sub.index[:0], []
+
+    X_df = pd.concat(cols, axis=1)
+    y_s = _numify(_as_expr(target).eval(sub))
+
     valid = (~X_df.isna().any(axis=1)) & y_s.notna()
     X = X_df.loc[valid].to_numpy(dtype=float)
     y = y_s.loc[valid].to_numpy(dtype=float)
-    return X, y, sub.index[valid]
+    return X, y, sub.index[valid], feat_exprs
+
 
 def _rhs_expr_from_linear(
     coefs: np.ndarray,
     intercept: float,
-    features: Sequence[str],
+    features_exprs: Sequence[Expr],
     *,
     max_denominator: int,
     tol: float,
-) -> Expr:
+) -> Optional[Expr]:
     """
     Build an Expr for  (Σ_j a_j * feature_j) + b,
     with pretty Fractions for readability.
+
+    Returns None if there is no usable term (all coefs non-finite/tiny and intercept ~ 0).
     """
-    # start with intercept
-    rhs: Expr = Const(Fraction(intercept).limit_denominator(max_denominator))
-    for a, col in zip(coefs, features):
-        if abs(a) < tol:
+    # sanitize intercept
+    b = 0.0 if (intercept is None or not math.isfinite(intercept)) else float(intercept)
+    rhs: Expr = Const(Fraction(b).limit_denominator(max_denominator))
+
+    used_any = False
+    for a, ex in zip(coefs, features_exprs):
+        # drop non-finite or tiny coefficients
+        if a is None or not math.isfinite(a) or abs(a) < tol:
             continue
-        rhs = rhs + (Const(Fraction(a).limit_denominator(max_denominator)) * to_expr(col))
+        frac = Fraction(float(a)).limit_denominator(max_denominator)
+        rhs = rhs + (Const(frac) * ex)
+        used_any = True
+
+    if not used_any and abs(b) < tol:
+        return None
     return rhs
 
 
@@ -166,8 +218,7 @@ def lp_bounds(
         Class restriction H. If None, applies to all rows.
 
     config : LPConfig
-        features, target, direction ('both' | 'upper' | 'lower'),
-        max_denominator (for pretty Fractions), tol, min_support.
+        features (str|Expr), target (str|Expr), direction, max_denominator, tol, min_support.
 
     Yields
     ------
@@ -175,23 +226,12 @@ def lp_bounds(
         One or two Conjectures of the form:
             H ⇒ target ≥ Σ a_j·feat_j + b      (lower)
             H ⇒ target ≤ Σ a_j·feat_j + b      (upper)
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti.example_data import graph_data as df
-    >>> from txgraffiti2025.processing.pre.hypotheses import detect_base_hypothesis
-    >>> base = detect_base_hypothesis(df)
-    >>> from txgraffiti2025.generators.lp import lp_bounds, LPConfig
-    >>> cfg = LPConfig(features=["order", "matching_number"], target="domination_number", direction="both")
-    >>> list(lp_bounds(df, hypothesis=base, config=cfg))[:2]  # doctest: +ELLIPSIS
-    [Conjecture(...), Conjecture(...)]
     """
     # build mask
     mask = (hypothesis.mask(df) if hypothesis is not None else pd.Series(True, index=df.index)).astype(bool)
-    X, y, valid_idx = _prepare_arrays(df, config.features, config.target, mask)
 
-    if len(valid_idx) < config.min_support:
+    X, y, valid_idx, feat_exprs = _prepare_arrays(df, config.features, config.target, mask)
+    if len(valid_idx) < config.min_support or X.size == 0:
         return
 
     # Which directions?
@@ -203,19 +243,32 @@ def lp_bounds(
     if not directions:
         return
 
+    lhs_expr = _as_expr(config.target)
+
     for sense in directions:
         a_sol, b_sol = _solve_sum_slack_lp(X, y, sense=sense)
+
+        # sanitize solver outputs
+        a_sol = np.array([
+            0.0 if (aj is None or not math.isfinite(aj)) else float(aj)
+            for aj in a_sol
+        ], dtype=float)
+        b_sol = 0.0 if (b_sol is None or not math.isfinite(b_sol)) else float(b_sol)
+
         rhs_expr = _rhs_expr_from_linear(
-            a_sol, b_sol, config.features,
+            a_sol, b_sol, feat_exprs,
             max_denominator=config.max_denominator, tol=config.tol
         )
-        lhs_expr = to_expr(config.target)
+        if rhs_expr is None:
+            continue
 
         if sense == "upper":
             rel = Le(lhs_expr, rhs_expr)
-            name = f"lp_upper_{config.target}_vs_{'_'.join(config.features)}"
+            name = "lp_upper"
         else:
             rel = Ge(lhs_expr, rhs_expr)
-            name = f"lp_lower_{config.target}_vs_{'_'.join(config.features)}"
+            name = "lp_lower"
 
-        yield Conjecture(relation=rel, condition=hypothesis, name=name)
+        # Slightly more descriptive name
+        feat_names = "_".join(repr(e) for e in feat_exprs)
+        yield Conjecture(relation=rel, condition=hypothesis, name=f"{name}_{repr(lhs_expr)}_vs_{feat_names}")

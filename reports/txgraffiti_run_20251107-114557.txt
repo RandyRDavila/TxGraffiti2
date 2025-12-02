@@ -1,0 +1,115 @@
+────────────────────────────────────────────────────────────────────────────────
+TxGraffiti • Full Program Run Report
+────────────────────────────────────────────────────────────────────────────────
+Started: 2025-11-07 11:45:57
+Working dir: /Users/randydavila/Documents/automated-conjecturing/txgraffiti2
+Python: 3.13.2
+────────────────────────────────────────────────────────────────────────────────
+
+--------------------------------------------------------------------------------
+QUALITATIVE RELATIONS (TOP 12)
+--------------------------------------------------------------------------------
+
+=== Qualitative Relations (top 12) ===
+• [((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (triangle_free))]  independence_number ↑ annihilation_number  (rho=1.000, n=21/21, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (claw_free))]  independence_number ↑ annihilation_number  (rho=1.000, n=19/19, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (regular))]  independence_number ↑ order  (rho=1.000, n=15/15, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (regular))]  independence_number ↑ matching_number  (rho=1.000, n=15/15, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (regular))]  independence_number ↑ annihilation_number  (rho=1.000, n=15/15, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (regular))]  independence_number ↑ harmonic_index  (rho=1.000, n=15/15, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (eulerian))]  independence_number ↑ diameter  (rho=1.000, n=12/12, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (eulerian))]  independence_number ↑ residue  (rho=1.000, n=12/12, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (tree))]  independence_number ↑ annihilation_number  (rho=1.000, n=16/16, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (regular))]  independence_number ↑ independent_domination_number  (rho=0.998, n=12/12, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (tree))]  independence_number ↑ order  (rho=0.991, n=16/16, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (tree))]  independence_number ↑ size  (rho=0.991, n=16/16, method=spearman)
+
+--------------------------------------------------------------------------------
+ASYMPTOTIC LIMITS (QUALITATIVE → DEFINITE)
+--------------------------------------------------------------------------------
+
+[ASYMPTOTIC] total=680
+
+• (((connected) ∧ (nontrivial))) ⇒ lim_{matching_number→∞} (independence_number / order) = (10/23)
+• ((((connected) ∧ (nontrivial)) ∧ (K_4_free))) ⇒ lim_{chromatic_number→∞} (independence_number / order) = (7/17)
+• ((((connected) ∧ (nontrivial)) ∧ (K_4_free))) ⇒ lim_{matching_number→∞} (independence_number / order) = (16/37)
+• ((((connected) ∧ (nontrivial)) ∧ (subcubic))) ⇒ lim_{size→∞} (independence_number / order) = (18/43)
+• ((((connected) ∧ (nontrivial)) ∧ (subcubic))) ⇒ lim_{minimum_degree→∞} (independence_number / order) = (7/17)
+• ((((connected) ∧ (nontrivial)) ∧ (subcubic))) ⇒ lim_{minimum_degree→∞} (independence_number / size) = (11/40)
+• ((((connected) ∧ (nontrivial)) ∧ (subcubic))) ⇒ lim_{chromatic_number→∞} (independence_number / order) = (9/22)
+• ((((connected) ∧ (nontrivial)) ∧ (subcubic))) ⇒ lim_{chromatic_number→∞} (independence_number / size) = (2/7)
+• ((((connected) ∧ (nontrivial)) ∧ (subcubic))) ⇒ lim_{matching_number→∞} (independence_number / order) = (14/33)
+• ((((connected) ∧ (nontrivial)) ∧ (subcubic))) ⇒ lim_{harmonic_index→∞} (independence_number / order) = (21/50)
+
+--------------------------------------------------------------------------------
+GRAFFITICLASSRELATIONS SUMMARY
+--------------------------------------------------------------------------------
+
+Boolean columns: ['connected', 'bipartite', 'chordal', 'cubic', 'eulerian', 'planar', 'regular', 'subcubic', 'tree', 'K_4_free', 'triangle_free', 'claw_free', 'nontrivial']
+Expr columns: ['order', 'size', 'maximum_degree', 'minimum_degree', 'diameter', 'radius', 'clique_number', 'chromatic_number', 'independence_number', 'matching_number', 'triameter', 'slater', 'annihilation_number', 'residue', 'harmonic_index', 'domination_number', 'total_domination_number', 'independent_domination_number', 'min_maximal_matching_number', 'spectral_radius', 'largest_laplacian_eigenvalue', 'second_largest_adjacency_eigenvalue', 'zero_forcing_number']
+Base hypothesis: connected ∧ nontrivial
+
+Nonredundant conjunctions:
+  connected ∧ nontrivial ∧ K_4_free
+  connected ∧ nontrivial ∧ bipartite
+  connected ∧ nontrivial ∧ chordal
+  connected ∧ nontrivial ∧ claw_free
+  connected ∧ nontrivial ∧ cubic
+  connected ∧ nontrivial ∧ eulerian
+  connected ∧ nontrivial ∧ planar
+  connected ∧ nontrivial ∧ regular
+
+Example atomic conjectures:
+
+  (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ clique_number = 2
+
+  (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ chromatic_number = 2
+
+  (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ maximum_degree = 3
+
+  (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ minimum_degree = 3
+
+  (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ minimum_degree = 1
+
+=== Class Equivalences ===
+  (clique_number = 2 ∧ chromatic_number = 2) ≡ (((connected) ∧ (nontrivial)) ∧ (bipartite))
+  (maximum_degree = 3 ∧ minimum_degree = 3) ≡ (((connected) ∧ (nontrivial)) ∧ (cubic))
+  (clique_number = 2) ≡ (((connected) ∧ (nontrivial)) ∧ (triangle_free))
+  (maximum_degree = 3 ∧ minimum_degree = 3 ∧ clique_number = 2 ∧ chromatic_number = 2) ≡ ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (cubic))
+  (order = 4 ∧ size = 6 ∧ maximum_degree = 3 ∧ minimum_degree = 3 ∧ diameter = 1 ∧ radius = 1 ∧ clique_number = 4 ∧ chromatic_number = 4 ∧ independence_number = 1 ∧ matching_number = 2 ∧ triameter = 3 ∧ slater = 1 ∧ annihilation_number = 2 ∧ residue = 1 ∧ harmonic_index = 2 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1 ∧ min_maximal_matching_number = 2 ∧ spectral_radius = 3 ∧ largest_laplacian_eigenvalue = 4 ∧ second_largest_adjacency_eigenvalue = -1 ∧ zero_forcing_number = 3) ≡ ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (cubic))
+  (diameter = 1 ∧ radius = 1 ∧ independence_number = 1 ∧ slater = 1 ∧ residue = 1 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1 ∧ second_largest_adjacency_eigenvalue = -1) ≡ ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (regular))
+  (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2 ∧ zero_forcing_number = 1) ≡ ((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (tree))
+  (maximum_degree = 3 ∧ minimum_degree = 3 ∧ clique_number = 2) ≡ ((((connected) ∧ (nontrivial)) ∧ (cubic)) ∧ (triangle_free))
+  (maximum_degree = 2 ∧ minimum_degree = 2 ∧ clique_number = 2 ∧ zero_forcing_number = 2) ≡ ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (subcubic))
+  (order = 2 ∧ size = 1 ∧ maximum_degree = 1 ∧ minimum_degree = 1 ∧ diameter = 1 ∧ radius = 1 ∧ clique_number = 2 ∧ chromatic_number = 2 ∧ independence_number = 1 ∧ matching_number = 1 ∧ triameter = 0 ∧ slater = 1 ∧ annihilation_number = 1 ∧ residue = 1 ∧ harmonic_index = 1 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1 ∧ min_maximal_matching_number = 1 ∧ spectral_radius = 1 ∧ largest_laplacian_eigenvalue = 2 ∧ second_largest_adjacency_eigenvalue = -1 ∧ zero_forcing_number = 1) ≡ ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (tree))
+
+=== Inclusions (equalities ⇒ class) ===
+
+=== Inclusions (class ⇒ equalities) ===
+  (((connected) ∧ (nontrivial)) ∧ (tree)) ⊆ (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⊆ (maximum_degree = 3 ∧ minimum_degree = 3)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (chordal)) ⊆ (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (claw_free)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (eulerian)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (regular)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⊆ (radius = 1 ∧ slater = 1 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1)
+  ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (triangle_free)) ⊆ (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (cubic)) ⊆ (maximum_degree = 3 ∧ minimum_degree = 3)
+  ((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (cubic)) ∧ (planar)) ⊆ (maximum_degree = 3 ∧ minimum_degree = 3)
+  ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (tree)) ⊆ (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS
+--------------------------------------------------------------------------------
+
+────────────────────────────────────────────────────────────────────────────────
+END OF REPORT
+Finished: 2025-11-07 11:46:00
+────────────────────────────────────────────────────────────────────────────────

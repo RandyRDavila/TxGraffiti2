@@ -4,6 +4,15 @@ from typing import Iterable, Set
 import numpy as np
 from txgraffiti2025.forms.utils import Expr, BinOp, UnaryOp, ColumnTerm, to_expr, Const
 
+__all__ = [
+    "expr_depends_on",
+    "cancel_feature_in_product",
+    "simplify_coeff_times_feature",
+    "structurally_equal",
+    "is_one",
+]
+
+
 def expr_depends_on(expr: Expr, columns: Iterable[str] | str) -> bool:
     if isinstance(columns, str):
         cols: Set[str] = {columns}
@@ -32,3 +41,12 @@ def simplify_coeff_times_feature(coeff: Expr, feature: str) -> Expr:
 
 def structurally_equal(a: Expr, b: Expr) -> bool:
     return repr(a) == repr(b)
+
+def is_one(expr) -> bool:
+    try:
+        from txgraffiti2025.forms.utils import Const
+        if isinstance(expr, Const):
+            return float(expr.value) == 1.0
+    except Exception:
+        pass
+    return False

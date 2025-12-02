@@ -1,3 +1,5 @@
+# src/txgraffiti2025/processing/pre/auto.py
+
 """
 Auto-base wrappers for conjectures and relation-logic.
 

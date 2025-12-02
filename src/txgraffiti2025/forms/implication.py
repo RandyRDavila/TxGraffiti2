@@ -1,278 +1,227 @@
 # src/txgraffiti2025/forms/implication.py
-
 """
 Implications and equivalences between relations (logical R₄ forms).
 
 This module expresses logical relationships among **relations** (not classes),
-optionally restricted to a class condition `C`:
+optionally restricted by a class predicate `C`:
 
-- Implication:  ``R1 ⇒ R2`` (within `C` if provided)
-- Equivalence:  ``R1 ⇔ R2``  (i.e., `(R1 ⇒ R2) ∧ (R2 ⇒ R1)`)
+- Implication:  R₁ ⇒ R₂     (within C if provided)
+- Equivalence:  R₁ ⇔ R₂     (i.e., (R₁ ⇒ R₂) ∧ (R₂ ⇒ R₁))
 
-These operate row-wise over a DataFrame, just like ordinary relations.
-If a class condition is supplied, rows outside the class **vacuously satisfy**
-the statement (i.e., counted as holds = True).
+Semantics are row-wise over a DataFrame. If a condition `C` is supplied, rows
+outside `C` **vacuously satisfy** the statement (counted as holds=True).
 
-Examples
---------
->>> import pandas as pd
->>> from txgraffiti2025.forms.generic_conjecture import Le, Ge
->>> from txgraffiti2025.forms.predicates import Predicate
->>> from txgraffiti2025.forms.implication import Implication, Equivalence
->>>
->>> df = pd.DataFrame({
-...     "a": [1, 2, 3, 4],
-...     "b": [2, 1, 3, 5],
-...     "connected": [True, False, True, True],
-... })
->>>
->>> R1 = Le("a", "b")   # a <= b
->>> R2 = Ge("b", "a")   # b >= a
->>> C  = Predicate.from_column("connected")
->>>
->>> # Implication under a class: (a<=b) ⇒ (b>=a) | connected
->>> impl = Implication(R1, R2, condition=C)
->>> applicable, holds, failures = impl.check(df)
->>> applicable.tolist()
-[True, False, True, True]
->>> holds.tolist()    # rows outside C vacuously True; inside C we test implication
-[True, True, True, True]
->>> failures.empty
-True
->>>
->>> # Equivalence (a<=b) ⇔ (b>=a) globally
->>> eqv = Equivalence(R1, R2)
->>> applicable, holds, failures = eqv.check(df)
->>> applicable.all(), holds.all(), failures.empty
-(True, True, True)
+Returns from .check(df):
+    applicable : boolean mask where C holds (or all True if C is None)
+    holds      : boolean mask for the statement’s truth under C
+    failures   : df rows that violate the statement under C, with "__slack__"
+                 attached to help rank counterexamples (see notes for each).
+
+Notes
+-----
+Implication R₁ ⇒ R₂ (under C)
+    holds := (~C) OR (~R₁) OR (R₁ AND R₂)
+    failures := C & R₁ & ~R₂, with "__slack__" from R₂.slack(df)
+
+Equivalence R₁ ⇔ R₂ (under C)
+    holds := (~C) OR (R₁ == R₂)
+    failures := C & (R₁ != R₂); includes "__lhs__"=R₁, "__rhs__"=R₂ masks for clarity
 """
 
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, Tuple
+
 import pandas as pd
 
 from .generic_conjecture import Relation
 from .predicates import Predicate
 
-__all__ = [
-    "Implication",
-    "Equivalence",
-]
+__all__ = ["Implication", "Equivalence"]
 
+
+# =====================================================================
+# Implication
+# =====================================================================
 
 @dataclass
 class Implication:
     """
-    Row-wise implication between relations: ``premise ⇒ conclusion`` (optionally under `condition`).
+    Row-wise implication between relations: premise ⇒ conclusion  (optionally under `condition`).
 
-    Parameters
-    ----------
-    premise : Relation
-        The antecedent relation `R1` to test per row.
-    conclusion : Relation
-        The consequent relation `R2` required to hold whenever `premise` holds.
-    condition : Predicate, optional
-        Class predicate `C`. If provided, only rows where `C.mask(df)` is True
-        are considered applicable; rows outside `C` vacuously satisfy the implication.
-    name : str, default "Implication"
-        Display name.
-
-    Attributes
-    ----------
-    premise : Relation
-    conclusion : Relation
-    condition : Predicate or None
-    name : str
-
-    Returns
-    -------
-    Implication
-        Object exposing :meth:`check` to evaluate satisfaction and collect violations.
-
-    Notes
-    -----
-    Semantics per row:
-    ``(~applicable) OR (~premise) OR (premise AND conclusion)``.
-
-    The `failures` DataFrame (if non-empty) includes a column ``"__slack__"``
-    inherited from the **conclusion** relation’s `slack(df)`, evaluated on the
-    failing rows (useful for ranking counterexamples by severity).
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.generic_conjecture import Le, Ge
-    >>> from txgraffiti2025.forms.implication import Implication
-    >>> df = pd.DataFrame({"x": [1, 2, 3], "y": [2, 1, 4]})
-    >>> R1 = Le("x", "y")          # premise:  x <= y
-    >>> R2 = Ge("y", "x")          # conclude: y >= x
-    >>> impl = Implication(R1, R2)  # global implication
-    >>> applicable, holds, failures = impl.check(df)
-    >>> applicable.tolist()
-    [True, True, True]
-    >>> holds.tolist()
-    [True, False, True]
-    >>> failures.index.tolist()     # row 1 violates: x<=y is False there, so implication fails?
-    [1]
+    - failures carry "__slack__" from `conclusion.slack(df)` on failing rows.
+    - `touch_count(df)`: counts applicable rows where premise holds and
+      `conclusion.slack(df) == 0` (tight conclusion).
     """
     premise: Relation
     conclusion: Relation
     condition: Optional[Predicate] = None
     name: str = "Implication"
 
+    # --------------------------- core API ---------------------------
+
     def check(self, df: pd.DataFrame) -> Tuple[pd.Series, pd.Series, pd.DataFrame]:
+        """Evaluate the implication on a DataFrame.
+
+        Returns:
+            applicable, holds, failures
         """
-        Evaluate the implication on a DataFrame.
+        if self.condition is None:
+            applicable = pd.Series(True, index=df.index, dtype=bool)
+        else:
+            applicable = self.condition.mask(df).reindex(df.index, fill_value=False).astype(bool)
 
-        Parameters
-        ----------
-        df : pd.DataFrame
-            Table of objects with all columns needed by `premise`, `conclusion`,
-            and (if provided) `condition`.
+        p = self.premise.evaluate(df).reindex(df.index).astype(bool)
+        q = self.conclusion.evaluate(df).reindex(df.index).astype(bool)
 
-        Returns
-        -------
-        applicable : pd.Series
-            Boolean mask where `condition` holds; all True if `condition is None`.
-        holds : pd.Series
-            Boolean mask indicating the implication's satisfaction per row:
-            ``(~applicable) | (~premise) | (premise & conclusion)``.
-        failures : pd.DataFrame
-            Rows with `applicable & premise & ~conclusion`. Includes a
-            ``"__slack__"`` column from `conclusion.slack(df)` on those rows.
-
-        Examples
-        --------
-        >>> import pandas as pd
-        >>> from txgraffiti2025.forms.generic_conjecture import Le, Ge
-        >>> from txgraffiti2025.forms.predicates import Predicate
-        >>> from txgraffiti2025.forms.implication import Implication
-        >>> df = pd.DataFrame({"a":[1,2,3], "b":[2,1,3], "flag":[True, False, True]})
-        >>> impl = Implication(Le("a","b"), Ge("b","a"), condition=Predicate.from_column("flag"))
-        >>> applicable, holds, failures = impl.check(df)
-        >>> applicable.tolist()
-        [True, False, True]
-        >>> holds.tolist()
-        [True, True, True]
-        >>> failures.empty
-        True
-        """
-        applicable = (self.condition.mask(df) if self.condition
-                      else pd.Series(True, index=df.index)).reindex(df.index, fill_value=False)
-        p = self.premise.evaluate(df).reindex(df.index)
-        q = self.conclusion.evaluate(df).reindex(df.index)
-
-        # Holds if: not applicable OR not premise OR (premise and conclusion)
+        # (~C) OR (~P) OR (P & Q)
         holds = (~applicable) | (~p) | (p & q)
 
-        failing = applicable & p & ~q
+        failing = (applicable & p & ~q)
         failures = df.loc[failing].copy()
-        if len(failures):
-            failures["__slack__"] = self.conclusion.slack(df).loc[failing]
-        return applicable.astype(bool), holds.astype(bool), failures
+        if failing.any():
+            s = self.conclusion.slack(df).reindex(df.index)
+            failures["__slack__"] = s.loc[failing]
+
+        return applicable, holds, failures
+
+    def violation_count(self, df: pd.DataFrame) -> int:
+        applicable, holds, _ = self.check(df)
+        return int((applicable & ~holds).sum())
+
+    def touch_count(self, df: pd.DataFrame) -> int:
+        """Count applicable rows where premise holds and the conclusion is tight."""
+        if self.condition is None:
+            applicable = pd.Series(True, index=df.index, dtype=bool)
+        else:
+            applicable = self.condition.mask(df).reindex(df.index, fill_value=False).astype(bool)
+
+        p = self.premise.evaluate(df).reindex(df.index).astype(bool)
+        s = self.conclusion.slack(df).reindex(df.index)
+        return int((applicable & p & (s == 0)).sum())
+
+    # --------------------------- pretty / repr ---------------------------
+
+    def pretty(self, *, unicode_ops: bool = True, arrow: Optional[str] = None, show_condition: bool = True) -> str:
+        """Human-friendly text, e.g. '(planar ∧ regular) ⇒ alpha ≤ mu'."""
+        # prefer relation-specific pretty() if available
+        def fmt_rel(r: Relation) -> str:
+            if hasattr(r, "pretty"):
+                return r.pretty(unicode_ops=unicode_ops)  # type: ignore[call-arg]
+            return repr(r)
+
+        body = f"{fmt_rel(self.premise)} {'⇒' if (unicode_ops and arrow is None) else (arrow or '->')} {fmt_rel(self.conclusion)}"
+        if not show_condition or self.condition is None:
+            return body
+        cond = repr(self.condition)
+        # omit explicit TRUE
+        if cond.strip().upper() == "TRUE":
+            return body
+        return f"{cond} {'⇒' if (unicode_ops and arrow is None) else (arrow or '->')} {body}"
+
+    def signature(self) -> str:
+        """Stable textual signature (good for logs)."""
+        return self.pretty(unicode_ops=True, arrow="⇒", show_condition=True)
 
     def __repr__(self) -> str:
         c = "" if self.condition is None else f" | {self.condition!r}"
         return f"({self.premise!r} ⇒ {self.conclusion!r}{c})"
 
+
+# =====================================================================
+# Equivalence
+# =====================================================================
+
 @dataclass
 class Equivalence:
     """
-    Row-wise equivalence between relations: ``a ⇔ b`` (optionally under `condition`).
+    Row-wise equivalence between relations: a ⇔ b  (optionally under `condition`).
 
-    Parameters
-    ----------
-    a, b : Relation
-        Relations to compare per row.
-    condition : Predicate, optional
-        Class predicate `C`. If provided, only rows where `C` holds are
-        applicable; other rows vacuously satisfy the equivalence.
-    name : str, default "Equivalence"
-        Display name.
-
-    Attributes
-    ----------
-    a : Relation
-    b : Relation
-    condition : Predicate or None
-    name : str
-
-    Returns
-    -------
-    Equivalence
-        Object exposing :meth:`check` for satisfaction and mismatch extraction.
-
-    Notes
-    -----
-    Semantics per row:
-    ``(~applicable) OR (a == b)``.
-
-    `failures` collects the symmetric difference of the two relation masks
-    over the applicable subset.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.generic_conjecture import Le, Ge
-    >>> from txgraffiti2025.forms.implication import Equivalence
-    >>> df = pd.DataFrame({"x": [1, 2, 3], "y": [1, 3, 2]})
-    >>> eqv = Equivalence(Le("x","y"), Ge("y","x"))
-    >>> applicable, holds, failures = eqv.check(df)
-    >>> applicable.tolist()
-    [True, True, True]
-    >>> holds.tolist()
-    [True, True, False]
-    >>> failures.index.tolist()
-    [2]
+    - failures are the symmetric difference where masks differ under C.
+    - For debugging, failures include boolean columns "__lhs__" and "__rhs__".
     """
     a: Relation
     b: Relation
     condition: Optional[Predicate] = None
     name: str = "Equivalence"
 
+    # --------------------------- core API ---------------------------
+
     def check(self, df: pd.DataFrame) -> Tuple[pd.Series, pd.Series, pd.DataFrame]:
+        """Evaluate the equivalence on a DataFrame.
+
+        Returns:
+            applicable, holds, failures
         """
-        Evaluate the equivalence on a DataFrame.
+        if self.condition is None:
+            applicable = pd.Series(True, index=df.index, dtype=bool)
+        else:
+            applicable = self.condition.mask(df).reindex(df.index, fill_value=False).astype(bool)
 
-        Parameters
-        ----------
-        df : pd.DataFrame
-
-        Returns
-        -------
-        applicable : pd.Series
-            Boolean mask where `condition` holds; all True if `condition is None`.
-        holds : pd.Series
-            Boolean mask where either `~applicable` or `a.evaluate(df) == b.evaluate(df)`.
-        failures : pd.DataFrame
-            Rows in the applicable subset where the two relation masks differ.
-
-        Examples
-        --------
-        >>> import pandas as pd
-        >>> from txgraffiti2025.forms.generic_conjecture import Le, Ge
-        >>> from txgraffiti2025.forms.predicates import Predicate
-        >>> from txgraffiti2025.forms.implication import Equivalence
-        >>> df = pd.DataFrame({"a":[1,2,3], "b":[1,3,2], "flag":[True,True,False]})
-        >>> eqv = Equivalence(Le("a","b"), Ge("b","a"), condition=Predicate.from_column("flag"))
-        >>> applicable, holds, failures = eqv.check(df)
-        >>> applicable.tolist()
-        [True, True, False]
-        >>> holds.tolist()
-        [True, True, True]
-        >>> failures.empty
-        True
-        """
-        applicable = (self.condition.mask(df) if self.condition
-                      else pd.Series(True, index=df.index)).reindex(df.index, fill_value=False)
-        pa = self.a.evaluate(df).reindex(df.index)
-        pb = self.b.evaluate(df).reindex(df.index)
+        pa = self.a.evaluate(df).reindex(df.index).astype(bool)
+        pb = self.b.evaluate(df).reindex(df.index).astype(bool)
 
         holds = (~applicable) | (pa == pb)
-        failing = applicable & (pa != pb)
+        failing = (applicable & (pa != pb))
+
         failures = df.loc[failing].copy()
-        return applicable.astype(bool), holds.astype(bool), failures
+        if failing.any():
+            failures["__lhs__"] = pa.loc[failing]
+            failures["__rhs__"] = pb.loc[failing]
+
+        return applicable, holds, failures
+
+    def violation_count(self, df: pd.DataFrame) -> int:
+        applicable, holds, _ = self.check(df)
+        return int((applicable & ~holds).sum())
+
+    def touch_count(self, df: pd.DataFrame) -> int:
+        """
+        Count applicable rows that are 'tight' in an equivalence sense:
+        We interpret 'tight' as both relations holding and at least one is tight
+        (i.e., min(slack_a, slack_b) == 0 where both evaluate True), if slacks exist.
+        If either relation lacks .slack, we return 0 conservatively.
+        """
+        try:
+            if self.condition is None:
+                applicable = pd.Series(True, index=df.index, dtype=bool)
+            else:
+                applicable = self.condition.mask(df).reindex(df.index, fill_value=False).astype(bool)
+
+            pa = self.a.evaluate(df).reindex(df.index).astype(bool)
+            pb = self.b.evaluate(df).reindex(df.index).astype(bool)
+
+            sa = self.a.slack(df).reindex(df.index)
+            sb = self.b.slack(df).reindex(df.index)
+
+            both = (applicable & pa & pb)
+            if not both.any():
+                return 0
+            tight = (sa.loc[both].combine(sb.loc[both], min) == 0)
+            return int(tight.sum())
+        except Exception:
+            return 0
+
+    # --------------------------- pretty / repr ---------------------------
+
+    def pretty(self, *, unicode_ops: bool = True, show_condition: bool = True) -> str:
+        """Human-friendly text, e.g. '(planar) ⇒ (alpha ≤ mu ⇔ size = order−1)'."""
+        def fmt_rel(r: Relation) -> str:
+            if hasattr(r, "pretty"):
+                return r.pretty(unicode_ops=unicode_ops)  # type: ignore[call-arg]
+            return repr(r)
+
+        body = f"{fmt_rel(self.a)} {'⇔' if unicode_ops else '<=>'} {fmt_rel(self.b)}"
+        if not show_condition or self.condition is None:
+            return body
+        cond = repr(self.condition)
+        if cond.strip().upper() == "TRUE":
+            return body
+        return f"{cond} {'⇒' if unicode_ops else '->'} {body}"
+
+    def signature(self) -> str:
+        """Stable textual signature (good for logs)."""
+        return self.pretty(unicode_ops=True, show_condition=True)
 
     def __repr__(self) -> str:
         c = "" if self.condition is None else f" | {self.condition!r}"

@@ -1,23 +1,39 @@
 # src/txgraffiti2025/forms/generic_conjecture.py
-
-"""
-Generic, dataframe-agnostic forms:
-
-- Relation types R: Eq, Le, Ge, AllOf, AnyOf
-- Conjecture: (R | C) meaning "for all rows in class C, relation R holds"
-
-Other form-specific helpers live in:
-- linear.py, nonlinear.py, floorceil.py, logexp.py (algebraic)
-- qualitative.py (R6)
-- implication.py (R between relations)
-- predicates.py (class conditions C)
-"""
-
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Iterable, Optional, Tuple, Union
+
+"""
+Generic, DataFrame-agnostic conjecture primitives.
+
+- Relation types (row-wise on a DataFrame): Eq, Le, Ge, AllOf, AnyOf
+- Conjecture: (R | C) meaning “for all rows in class C, relation R holds”
+
+Conventions
+-----------
+- Relation.evaluate(df) -> boolean Series aligned to df.index.
+- Relation.slack(df) -> float Series aligned to df.index where >= 0 means satisfied.
+  Le:  slack = rhs - lhs
+  Ge:  slack = lhs - rhs
+  Eq:  slack = tol - |lhs - rhs|
+  AllOf: min(child slacks)
+  AnyOf: max(child slacks)
+
+- Conjecture.check(df) returns:
+    applicable : mask where the condition holds,
+    holds      : mask indicating satisfaction of (R | C),
+    failures   : df rows with applicable & ~evaluate, plus "__slack__".
+
+User-facing display
+-------------------
+Conjecture.pretty() yields math-style strings like:
+    (planar ∧ regular) ⇒ (alpha ≤ mu) ∧ (alpha ≥ ⌊order/3⌋)
+"""
+
+from dataclasses import dataclass, field
+from typing import Iterable, Optional, Tuple, Union, List
+
 import numpy as np
 import pandas as pd
+from pandas.api.types import is_bool_dtype
 
 from .utils import Expr, to_expr
 from .predicates import Predicate, Where, AndPred
@@ -33,106 +49,79 @@ __all__ = [
     "TRUE",
 ]
 
+# =========================================================
+# TRUE predicate (universal class)
+# =========================================================
 
 class TRUE_Predicate(Predicate):
-    """A predicate that always returns True for all rows of any DataFrame."""
     name: str = "TRUE"
-
     def mask(self, df: pd.DataFrame) -> pd.Series:
-        return pd.Series(True, index=df.index)
-
-    def __repr__(self):
+        return pd.Series(True, index=df.index, dtype=bool)
+    def __repr__(self) -> str:
         return "TRUE"
 
-# export constant
 TRUE = TRUE_Predicate()
 
+# =========================================================
+# Small pretty helpers
+# =========================================================
+
+def _strip_outer_parens(s: str) -> str:
+    s = s.strip()
+    if len(s) >= 2 and s[0] == "(" and s[-1] == ")":
+        return s[1:-1].strip()
+    return s
+
+def _pretty_predicate(cond: Predicate, *, unicode_ops: bool = True) -> str:
+    """
+    Render predicates compactly: strip one outer () if present, then wrap in ().
+    """
+    s = repr(cond)
+    s = _strip_outer_parens(s)
+    return f"({s})"
 
 # =========================================================
-# Relations R (evaluate to a boolean Series on a DataFrame)
+# Relations
 # =========================================================
 
 class Relation:
-    """
-    Abstract base class for row-wise relations over a DataFrame of invariants.
-
-    A `Relation` evaluates to a boolean mask aligned to the input DataFrame
-    and exposes an optional real-valued `slack` that quantifies margin/tightness.
-
-    Methods
-    -------
-    evaluate(df) : pd.Series
-        Boolean Series (index-aligned) where the relation holds.
-    slack(df) : pd.Series
-        Real-valued margin used by post-processing (e.g., touch counting).
-        Convention depends on the concrete subclass; see Notes.
-
-    Notes
-    -----
-    Slack conventions in this module:
-      - `Le`: slack = (rhs - lhs)          (>= 0 iff satisfied)
-      - `Ge`: slack = (lhs - rhs)          (>= 0 iff satisfied)
-      - `Eq`: slack = -abs(lhs - rhs)      (0 best; negative if violated)
-      - `AllOf`: min of child slacks       (tightest term dominates)
-      - `AnyOf`: max of child slacks       (any satisfied term can dominate)
-
-    Examples
-    --------
-    These classes are abstract; see concrete subclasses like :class:`Le`
-    and :class:`Eq` for runnable examples.
-    """
+    """Abstract base: row-wise boolean relation + slack margin."""
     name: str = "Relation"
 
+    # --- core API ---
     def evaluate(self, df: pd.DataFrame) -> pd.Series:
-        """Return a boolean Series indexed like `df`: True where the relation holds."""
         raise NotImplementedError
 
     def slack(self, df: pd.DataFrame) -> pd.Series:
-        """
-        Return a real-valued margin (positive is “more satisfied”).
-
-        The exact convention is relation-specific; see class docstring Notes.
-        """
         raise NotImplementedError
+
+    # --- helpers and sugar ---
+    def is_tight(self, df: pd.DataFrame, *, atol: float = 1e-12) -> pd.Series:
+        """
+        Rows where the relation is satisfied at equality (boundary), robust to FP error.
+        For Le/Ge/Eq this corresponds to slack ≈ 0.
+        """
+        s = self.slack(df).reindex(df.index)
+        return pd.Series(np.isclose(s.values, 0.0, atol=atol), index=s.index, dtype=bool)
+
+    # composition: R1 & R2, R1 | R2
+    def __and__(self, other: "Relation") -> "AllOf":
+        return AllOf([self, other])
+
+    def __or__(self, other: "Relation") -> "AnyOf":
+        return AnyOf([self, other])
+
+    # unified pretty signature (subclasses may override)
+    def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+        return repr(self)
+
+    def __repr__(self) -> str:
+        return f"{self.name}()"
 
 
 @dataclass
 class Eq(Relation):
-    """
-    Equality relation: ``left == right`` within an absolute tolerance.
-
-    Parameters
-    ----------
-    left, right : Union[Expr, float, int, str]
-        Expressions or literals. Strings are parsed via :func:`to_expr`.
-    tol : float, default=1e-9
-        Absolute tolerance used by `numpy.isclose`.
-    name : str, default="Equality"
-        Display name.
-
-    Returns
-    -------
-    Eq
-        A relation object usable in :class:`Conjecture` or directly.
-
-    Notes
-    -----
-    The slack is ``-abs(left - right)`` so that equality has slack 0 and
-    deviations are negative (keeps the “larger is better” convention aligned
-    with inequalities when used in `AllOf`/`AnyOf`).
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.generic_conjecture import Eq
-    >>> from txgraffiti2025.forms.utils import to_expr
-    >>> df = pd.DataFrame({"a": [1, 2, 3], "b": [1, 2.000000001, 4]})
-    >>> r = Eq("a", "b", tol=1e-6)
-    >>> r.evaluate(df).tolist()
-    [True, True, False]
-    >>> list(round(x, 6) for x in r.slack(df).tolist())
-    [-0.0, -0.0, -1.0]
-    """
+    """Equality with absolute tolerance: left == right (within tol)."""
     left: Union[Expr, float, int, str]
     right: Union[Expr, float, int, str]
     tol: float = 1e-9
@@ -144,45 +133,61 @@ class Eq(Relation):
 
     def evaluate(self, df: pd.DataFrame) -> pd.Series:
         l = self.left.eval(df); r = self.right.eval(df)
-        return pd.Series(np.isclose(l, r, atol=self.tol), index=df.index)
+        m = np.isclose(l.values, r.values, atol=self.tol)
+        return pd.Series(m, index=df.index, dtype=bool)
 
     def slack(self, df: pd.DataFrame) -> pd.Series:
         l = self.left.eval(df); r = self.right.eval(df)
-        # negative absolute error so "larger is better" convention remains (0 best)
-        return pd.Series(-np.abs(l - r), index=df.index)
+        return pd.Series(self.tol - np.abs(l - r), index=df.index, dtype=float)
+
+    def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+        eq = "=" if unicode_ops else "=="
+        lhs = repr(self.left)
+        rhs = repr(self.right)
+        if show_tol:
+            pm = "±" if unicode_ops else "+/-"
+            return f"{lhs} {eq} {rhs} {pm} {self.tol:g}"
+        return f"{lhs} {eq} {rhs}"
 
     def __repr__(self) -> str:
-        return f"Eq({self.left!r} == {self.right!r}, tol={self.tol})"
+        # Pretty by default (unicode), include tol only when nonzero and helpful
+        pm = f" ± {self.tol:g}" if self.tol else ""
+        return f"{repr(self.left)} = {repr(self.right)}{pm}"
 
+class Lt(Relation):
+    """
+    Strict less-than: lhs < rhs - tol.
+    If tol==0, this is a pointwise strict <.
+    """
+    def __init__(self, lhs: Expr, rhs: Union[Expr, float, int], *, tol: float = 0.0, name: Optional[str] = None):
+        self.lhs = to_expr(lhs)
+        self.rhs = to_expr(rhs)
+        self.tol = float(tol)
+        self._name = name
+
+    def pretty(self) -> str:
+        L = self.lhs.pretty() if hasattr(self.lhs, "pretty") else repr(self.lhs)
+        R = self.rhs.pretty() if hasattr(self.rhs, "pretty") else repr(self.rhs)
+        if self.tol > 0.0:
+            return self._name or f"{L} < {R} - {self.tol:g}"
+        return self._name or f"{L} < {R}"
+
+    def evaluate(self, df: pd.DataFrame, condition: Optional["Predicate"] = None) -> pd.Series:
+        a = self.lhs.eval(df).astype(float, copy=False)
+        b = self.rhs.eval(df).astype(float, copy=False)
+        mask = a < (b - self.tol)
+        # Ensure boolean series aligned to df; drop NaNs as False
+        if hasattr(mask, "fillna"):
+            mask = mask.fillna(False)
+        mask = mask.astype(bool, copy=False)
+        if condition is not None:
+            C = condition.mask(df).astype(bool, copy=False)
+            mask = mask & C
+        return mask
 
 @dataclass
 class Le(Relation):
-    """
-    Inequality relation: ``left <= right``.
-
-    Parameters
-    ----------
-    left, right : Union[Expr, float, int, str]
-        Expressions or literals. Strings are parsed via :func:`to_expr`.
-    name : str, default="Inequality(<=)"
-        Display name.
-
-    Returns
-    -------
-    Le
-        A relation object usable in :class:`Conjecture` or directly.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.generic_conjecture import Le
-    >>> df = pd.DataFrame({"alpha": [2, 3, 4], "mu": [2, 5, 3]})
-    >>> r = Le("alpha", "mu")
-    >>> r.evaluate(df).tolist()
-    [True, True, False]
-    >>> r.slack(df).tolist()
-    [0, 2, -1]
-    """
+    """Inequality: left <= right ; slack = (right - left)."""
     left: Union[Expr, float, int, str]
     right: Union[Expr, float, int, str]
     name: str = "Inequality(<=)"
@@ -193,43 +198,53 @@ class Le(Relation):
 
     def evaluate(self, df: pd.DataFrame) -> pd.Series:
         l = self.left.eval(df); r = self.right.eval(df)
-        return pd.Series(l <= r, index=df.index)
+        return pd.Series((l <= r).values, index=df.index, dtype=bool)
 
     def slack(self, df: pd.DataFrame) -> pd.Series:
         l = self.left.eval(df); r = self.right.eval(df)
-        return pd.Series(r - l, index=df.index)
+        return pd.Series((r - l).values, index=df.index, dtype=float)
+
+    def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+        sym = "≤" if unicode_ops else "<="
+        return f"{repr(self.left)} {sym} {repr(self.right)}"
 
     def __repr__(self) -> str:
-        return f"Le({self.left!r} <= {self.right!r})"
+        # Pretty by default (unicode)
+        return f"{repr(self.left)} ≤ {repr(self.right)}"
+
+class Gt(Relation):
+    """
+    Strict greater-than: lhs > rhs + tol.
+    If tol==0, this is a pointwise strict >.
+    """
+    def __init__(self, lhs: Expr, rhs: Union[Expr, float, int], *, tol: float = 0.0, name: Optional[str] = None):
+        self.lhs = to_expr(lhs)
+        self.rhs = to_expr(rhs)
+        self.tol = float(tol)
+        self._name = name
+
+    def pretty(self) -> str:
+        L = self.lhs.pretty() if hasattr(self.lhs, "pretty") else repr(self.lhs)
+        R = self.rhs.pretty() if hasattr(self.rhs, "pretty") else repr(self.rhs)
+        if self.tol > 0.0:
+            return self._name or f"{L} > {R} + {self.tol:g}"
+        return self._name or f"{L} > {R}"
+
+    def evaluate(self, df: pd.DataFrame, condition: Optional["Predicate"] = None) -> pd.Series:
+        a = self.lhs.eval(df).astype(float, copy=False)
+        b = self.rhs.eval(df).astype(float, copy=False)
+        mask = a > (b + self.tol)
+        if hasattr(mask, "fillna"):
+            mask = mask.fillna(False)
+        mask = mask.astype(bool, copy=False)
+        if condition is not None:
+            C = condition.mask(df).astype(bool, copy=False)
+            mask = mask & C
+        return mask
 
 @dataclass
 class Ge(Relation):
-    """
-    Inequality relation: ``left >= right``.
-
-    Parameters
-    ----------
-    left, right : Union[Expr, float, int, str]
-        Expressions or literals. Strings are parsed via :func:`to_expr`.
-    name : str, default="Inequality(>=)"
-        Display name.
-
-    Returns
-    -------
-    Ge
-        A relation object usable in :class:`Conjecture` or directly.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.generic_conjecture import Ge
-    >>> df = pd.DataFrame({"alpha": [2, 3, 4], "residue": [1, 5, 4]})
-    >>> r = Ge("alpha", "residue")
-    >>> r.evaluate(df).tolist()
-    [True, False, True]
-    >>> r.slack(df).tolist()
-    [1, -2, 0]
-    """
+    """Inequality: left >= right ; slack = (left - right)."""
     left: Union[Expr, float, int, str]
     right: Union[Expr, float, int, str]
     name: str = "Inequality(>=)"
@@ -240,194 +255,139 @@ class Ge(Relation):
 
     def evaluate(self, df: pd.DataFrame) -> pd.Series:
         l = self.left.eval(df); r = self.right.eval(df)
-        return pd.Series(l >= r, index=df.index)
+        return pd.Series((l >= r).values, index=df.index, dtype=bool)
 
     def slack(self, df: pd.DataFrame) -> pd.Series:
         l = self.left.eval(df); r = self.right.eval(df)
-        return pd.Series(l - r, index=df.index)
+        return pd.Series((l - r).values, index=df.index, dtype=float)
+
+    def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+        sym = "≥" if unicode_ops else ">="
+        return f"{repr(self.left)} {sym} {repr(self.right)}"
 
     def __repr__(self) -> str:
-        return f"Ge({self.left!r} >= {self.right!r})"
+        # Pretty by default (unicode)
+        return f"{repr(self.left)} ≥ {repr(self.right)}"
+
 
 @dataclass
 class AllOf(Relation):
-    """
-    Logical conjunction (AND) of relations: ``R1 ∧ R2 ∧ ...``.
-
-    Parameters
-    ----------
-    parts : Iterable[Relation]
-        Child relations to be AND-ed.
-    name : str, default="AllOf"
-
-    Returns
-    -------
-    AllOf
-        Composite relation whose slack is the elementwise minimum of parts.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.generic_conjecture import Le, Ge, AllOf
-    >>> df = pd.DataFrame({"a": [1, 2, 3], "b": [2, 1, 3], "c": [0, 0, 2]})
-    >>> r = AllOf([Le("a", "b"), Ge("b", "c")])
-    >>> r.evaluate(df).tolist()   # a<=b AND b>=c
-    [True, False, True]
-    >>> r.slack(df).tolist()      # min( (b-a), (b-c) )
-    [1, -1, 1]
-    """
+    """Conjunction of relations: R1 ∧ R2 ∧ ... ; slack = min(child slacks)."""
     parts: Iterable[Relation]
     name: str = "AllOf"
 
     def evaluate(self, df: pd.DataFrame) -> pd.Series:
-        out = pd.Series(True, index=df.index)
+        out = pd.Series(True, index=df.index, dtype=bool)
         for r in self.parts:
-            out &= r.evaluate(df)
+            out &= r.evaluate(df).reindex(df.index).astype(bool)
         return out
 
     def slack(self, df: pd.DataFrame) -> pd.Series:
-        slacks = [r.slack(df) for r in self.parts]
+        slacks: List[pd.Series] = [r.slack(df).reindex(df.index) for r in self.parts]
         if not slacks:
-            return pd.Series(0.0, index=df.index)
+            return pd.Series(0.0, index=df.index, dtype=float)
         return pd.concat(slacks, axis=1).min(axis=1)
 
+    def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+        glue = " ∧ " if unicode_ops else " & "
+        items: List[str] = []
+        for p in self.parts:
+            if hasattr(p, "pretty"):
+                items.append(p.pretty(unicode_ops=unicode_ops, show_tol=show_tol))  # type: ignore[call-arg]
+            else:
+                items.append(repr(p))
+        return glue.join(items)
+
     def __repr__(self) -> str:
-        parts = " ∧ ".join(repr(p) for p in self.parts)
-        return f"AllOf({parts})"
+        # Use each part's __repr__ (already pretty) and join with ∧
+        return " ∧ ".join(repr(p) for p in self.parts)
+
 
 @dataclass
 class AnyOf(Relation):
-    """
-    Logical disjunction (OR) of relations: ``R1 ∨ R2 ∨ ...``.
-
-    Parameters
-    ----------
-    parts : Iterable[Relation]
-        Child relations to be OR-ed.
-    name : str, default="AnyOf"
-
-    Returns
-    -------
-    AnyOf
-        Composite relation whose slack is the elementwise maximum of parts.
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.generic_conjecture import Le, Ge, AnyOf
-    >>> df = pd.DataFrame({"a": [1, 2, 3], "b": [2, 1, 3], "c": [0, 3, 2]})
-    >>> r = AnyOf([Le("a", "b"), Ge("b", "c")])
-    >>> r.evaluate(df).tolist()   # a<=b OR b>=c
-    [True, True, True]
-    >>> r.slack(df).tolist()      # max( (b-a), (b-c) )
-    [1, 0, 1]
-    """
+    """Disjunction of relations: R1 ∨ R2 ∨ ... ; slack = max(child slacks)."""
     parts: Iterable[Relation]
     name: str = "AnyOf"
 
     def evaluate(self, df: pd.DataFrame) -> pd.Series:
-        out = pd.Series(False, index=df.index)
+        out = pd.Series(False, index=df.index, dtype=bool)
         for r in self.parts:
-            out |= r.evaluate(df)
+            out |= r.evaluate(df).reindex(df.index).astype(bool)
         return out
 
     def slack(self, df: pd.DataFrame) -> pd.Series:
-        slacks = [r.slack(df) for r in self.parts]
+        slacks: List[pd.Series] = [r.slack(df).reindex(df.index) for r in self.parts]
         if not slacks:
-            return pd.Series(0.0, index=df.index)
+            return pd.Series(0.0, index=df.index, dtype=float)
         return pd.concat(slacks, axis=1).max(axis=1)
 
+    def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+        glue = " ∨ " if unicode_ops else " | "
+        items: List[str] = []
+        for p in self.parts:
+            if hasattr(p, "pretty"):
+                items.append(p.pretty(unicode_ops=unicode_ops, show_tol=show_tol))  # type: ignore[call-arg]
+            else:
+                items.append(repr(p))
+        return glue.join(items)
+
     def __repr__(self) -> str:
-        parts = " ∨ ".join(repr(p) for p in self.parts)
-        return f"AnyOf({parts})"
+        # Use each part's __repr__ (already pretty) and join with ∨
+        return " ∨ ".join(repr(p) for p in self.parts)
 
 
 # =========================================================
 # Conjecture: (R | C)
 # =========================================================
+
 @dataclass
 class Conjecture:
     """
     General form: For any object in class C, relation R holds.  (R | C)
 
-    Parameters
-    ----------
-    relation : Relation
-        The relation `R` to check row-wise.
-    condition : Predicate, optional
-        Class predicate `C`. If None and `auto_base=True` in :meth:`check`,
-        a base predicate is auto-detected from the DataFrame; otherwise the
-        universal `TRUE` is used.
-    name : str, default "Conjecture"
-        Display name.
-
-    Notes
-    -----
-    **Auto base detection (when `condition is None` and `auto_base=True`):**
-    - If one or more boolean columns are True for all rows, they define the base.
-      - One column -> `(col)`
-      - Multiple -> `((col1) ∧ (col2) ∧ ...)`
-    - If none, uses `TRUE` (all rows applicable).
-
-    Examples
-    --------
-    Auto base picks `(connected)` when that column is all True:
-
-    >>> import pandas as pd
-    >>> from txgraffiti2025.forms.generic_conjecture import Conjecture, Le
-    >>> df = pd.DataFrame({"a":[1,2,3], "b":[2,2,4], "connected":[True,True,True]})
-    >>> C = Conjecture(Le("a","b"))              # no condition provided
-    >>> applicable, holds, _ = C.check(df)       # auto_base=True by default
-    >>> C  # doctest: +ELLIPSIS
-    Conjecture(Le('a' <= 'b') | (connected))
-
-    Turn off auto base (treat as global):
-
-    >>> C2 = Conjecture(Le("a","b"))
-    >>> _, holds2, _ = C2.check(df, auto_base=False)
-    >>> holds2.all()
-    True
+    .check(df, auto_base=True) returns:
+      - applicable: mask where C holds,
+      - holds:      mask for (R | C),
+      - failures:   rows of df with applicable & ~evaluate + "__slack__".
     """
     relation: Relation
     condition: Optional[Predicate] = None
     name: str = "Conjecture"
+    coefficient_pairs = None
+    intercept = None
+
+    # cached for nicer repr/pretty if condition is None and auto_base=True was used
+    _resolved_condition: Optional[Predicate] = field(default=None, init=False, repr=False)
+
+    # --------------------------- internals ---------------------------
 
     def _auto_base(self, df: pd.DataFrame) -> Predicate:
         """
         Detect a base predicate from boolean always-True columns.
-        Returns a Where/AndPred with nice names like `(connected)` or
-        `((connected) ∧ (simple))`; falls back to TRUE.
+        Supports both bool and pandas' nullable BooleanDtype.
         """
-        # Local import to avoid cycles if TRUE lives here
-        try:
-            TRUE_obj = TRUE  # type: ignore[name-defined]
-        except NameError:
-            # Define an inline TRUE if not available for some reason
-            class _TRUE(Predicate):
-                name = "TRUE"
-                def mask(self, df: pd.DataFrame) -> pd.Series:
-                    return pd.Series(True, index=df.index)
-            TRUE_obj = _TRUE()
-
         if df is None or df.empty:
-            return TRUE_obj
+            return TRUE
 
-        always_true_cols = [
-            col for col in df.columns
-            if df[col].dtype == bool and bool(df[col].all())
-        ]
+        always_true_cols: List[str] = []
+        for col in df.columns:
+            s = df[col]
+            if is_bool_dtype(s):
+                # treat NaN as False for this test
+                if bool(pd.Series(s).fillna(False).all()):
+                    always_true_cols.append(col)
+
         if not always_true_cols:
-            return TRUE_obj
+            return TRUE
 
-        preds = [Where(lambda d, c=col: d[c], name=f"({col})") for col in always_true_cols]
-        if len(preds) == 1:
-            return preds[0]
-
-        base = preds[0]
+        preds = [Where(lambda d, c=col: d[c], name=f"{col}") for col in always_true_cols]
+        base: Predicate = preds[0]
         for p in preds[1:]:
             base = AndPred(base, p)
-        base.name = "(" + " ∧ ".join(f"({c})" for c in always_true_cols) + ")"
+        base.name = " ∧ ".join(f"{c}" for c in always_true_cols)
         return base
+
+    # --------------------------- public API ---------------------------
 
     def check(
         self,
@@ -438,58 +398,104 @@ class Conjecture:
         """
         Evaluate the conjecture on a DataFrame.
 
-        Parameters
-        ----------
-        df : pd.DataFrame
-            The dataset of objects.
-        auto_base : bool, default True
-            If `condition is None` and `auto_base=True`, a base predicate is
-            auto-detected from `df` as described in the class notes. If False,
-            uses the universal TRUE instead.
-
-        Returns
-        -------
-        applicable : pd.Series
-            Boolean mask where the class condition holds.
-        holds : pd.Series
-            Boolean mask indicating `(R | C)` satisfaction per row.
-        failures : pd.DataFrame
-            Applicable rows failing the relation; includes a ``"__slack__"`` column
-            when provided by the relation.
+        Returns:
+            applicable, holds, failures
         """
+        # resolve condition
         if self.condition is not None:
             cond = self.condition
         else:
-            if auto_base:
-                cond = self._auto_base(df)
-            else:
-                try:
-                    cond = TRUE  # type: ignore[name-defined]
-                except NameError:
-                    class _TRUE(Predicate):
-                        name = "TRUE"
-                        def mask(self, df: pd.DataFrame) -> pd.Series:
-                            return pd.Series(True, index=df.index)
-                    cond = _TRUE()
+            cond = self._auto_base(df) if auto_base else TRUE
 
-        applicable = cond.mask(df).reindex(df.index, fill_value=False)
-        eval_mask = self.relation.evaluate(df).reindex(df.index)
+        applicable = cond.mask(df).reindex(df.index, fill_value=False).astype(bool)
+        eval_mask = self.relation.evaluate(df).reindex(df.index).astype(bool)
         holds = (~applicable) | (applicable & eval_mask)
 
-        failing = applicable & ~eval_mask
+        failing = (applicable & ~eval_mask)
         failures = df.loc[failing].copy()
-        if len(failures):
-            failures["__slack__"] = self.relation.slack(df).loc[failing]
-        return applicable.astype(bool), holds.astype(bool), failures
+        if failing.any():
+            s = self.relation.slack(df).reindex(df.index)
+            failures["__slack__"] = s.loc[failing]
+
+        # cache for nicer __repr__/pretty
+        self._resolved_condition = cond
+        return applicable, holds, failures
 
     def is_true(self, df: pd.DataFrame, *, auto_base: bool = True) -> bool:
-        """Return True iff the conjecture holds on all applicable rows."""
         applicable, holds, _ = self.check(df, auto_base=auto_base)
         return bool(holds[applicable].all())
 
-    def __repr__(self) -> str:
-        c = "True" if self.condition is None else repr(self.condition)
-        # If auto base is used later, __repr__ will still show "True" here.
-        # For better UX, users typically print after calling .check(), or set condition explicitly.
-        return f"Conjecture({self.relation!r} | {c})"
+    # def touch_count(self, df: pd.DataFrame, *, auto_base: bool = True, atol: float = 1e-12) -> int:
+    #     applicable, _, _ = self.check(df, auto_base=auto_base)
+    #     tight = self.relation.is_tight(df, atol=atol).reindex(df.index)
+    #     self.touch = int((applicable & tight).sum())
+    #     return self.touch
+    def touch_count(self, df: pd.DataFrame, *, auto_base: bool = True, atol: float = 1e-12) -> int:
+        applicable, _, _ = self.check(df, auto_base=auto_base)
+        tight = self.relation.is_tight(df, atol=atol).reindex(df.index)
+        val = int((applicable & tight).sum())
+        # keep both for backward compatibility
+        setattr(self, "touch", val)
+        setattr(self, "touch_count", val)
+        return val
 
+    def violation_count(self, df: pd.DataFrame, *, auto_base: bool = True) -> int:
+        applicable, holds, _ = self.check(df, auto_base=auto_base)
+        return int((applicable & ~holds).sum())
+
+    def pretty(
+        self,
+        arrow: Optional[str] = None,
+        *,
+        unicode_ops: bool = True,
+        show_tol: bool = False,
+    ) -> str:
+        """
+        Human-facing rendering:
+            (cond) ⇒ (lhs ≤ rhs) ∧ (lhs ≥ rhs)  ...
+        If the condition is TRUE, returns just the relation string.
+
+        Parameters
+        ----------
+        arrow : Optional[str]
+            Force the arrow symbol. Defaults to '⇒' if unicode_ops else '->'.
+        unicode_ops : bool
+            Use unicode math symbols.
+        show_tol : bool
+            If True, show ±tol for Eq relations.
+        """
+        cond = self.condition or self._resolved_condition or TRUE
+
+        if hasattr(self.relation, "pretty"):
+            rel_str = self.relation.pretty(unicode_ops=unicode_ops, show_tol=show_tol)  # type: ignore[call-arg]
+        else:
+            rel_str = repr(self.relation)
+
+        # If TRUE, omit condition.
+        if isinstance(cond, TRUE_Predicate):
+            return rel_str
+
+        cond_str = _pretty_predicate(cond, unicode_ops=unicode_ops)
+        arr = ("⇒" if unicode_ops else "->") if arrow is None else arrow
+        return f"{cond_str} {arr} {rel_str}"
+
+    def signature(self) -> str:
+        """Canonical-ish string signature for deduplication (mirrors pretty())."""
+        return self.pretty(unicode_ops=True, show_tol=False)
+
+    def __repr__(self) -> str:
+        # Keep a compact debug form that is still pretty—same as pretty() w/o arrow
+        cond = self.condition or self._resolved_condition or TRUE
+        if isinstance(cond, TRUE_Predicate):
+            return f"{repr(self.relation)}"
+        return f"Conjecture({repr(self.relation)} | {repr(cond)})"
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Conjecture):
+            return False
+        # Use the canonical signature (pretty + normalized condition)
+        return self.signature() == other.signature()
+
+    def __hash__(self) -> int:
+        # Avoid recursion; hash a stable, human-readable signature
+        return hash(self.signature())

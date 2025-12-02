@@ -4,5 +4,6 @@ from .utils import *
 
 from .pre import *
 from .post import *
+from .pipeline import *
 
-__all__ = []
+

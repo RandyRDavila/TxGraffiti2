@@ -1,0 +1,693 @@
+────────────────────────────────────────────────────────────────────────────────
+TxGraffiti • Full Program Run Report
+────────────────────────────────────────────────────────────────────────────────
+Started: 2025-11-06 21:13:28
+Working dir: /Users/randydavila/Documents/automated-conjecturing/txgraffiti2
+Python: 3.13.2
+────────────────────────────────────────────────────────────────────────────────
+
+--------------------------------------------------------------------------------
+QUALITATIVE RELATIONS (TOP 12)
+--------------------------------------------------------------------------------
+
+=== Qualitative Relations (top 12) ===
+• [(((connected) ∧ (nontrivial)) ∧ (K_4_free))]  matching_number ↑ harmonic_index  (rho=0.972, n=318/318, method=spearman)
+• [((connected) ∧ (nontrivial))]  matching_number ↑ harmonic_index  (rho=0.971, n=340/340, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar))]  matching_number ↑ harmonic_index  (rho=0.965, n=245/245, method=spearman)
+• [(((connected) ∧ (nontrivial)) ∧ (planar))]  matching_number ↑ harmonic_index  (rho=0.964, n=263/263, method=spearman)
+• [(((connected) ∧ (nontrivial)) ∧ (eulerian))]  matching_number ↑ harmonic_index  (rho=0.956, n=24/24, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian))]  matching_number ↑ harmonic_index  (rho=0.953, n=21/21, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar))]  matching_number ↑ order  (rho=0.946, n=19/19, method=spearman)
+• [(((connected) ∧ (nontrivial)) ∧ (eulerian))]  matching_number ↑ order  (rho=0.943, n=24/24, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar))]  matching_number ↑ harmonic_index  (rho=0.943, n=19/19, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian))]  matching_number ↑ order  (rho=0.942, n=21/21, method=spearman)
+• [(((connected) ∧ (nontrivial)) ∧ (eulerian))]  matching_number ↑ min_maximal_matching_number  (rho=0.936, n=24/24, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian))]  matching_number ↑ min_maximal_matching_number  (rho=0.934, n=21/21, method=spearman)
+
+--------------------------------------------------------------------------------
+ASYMPTOTIC LIMITS (QUALITATIVE → DEFINITE)
+--------------------------------------------------------------------------------
+
+[ASYMPTOTIC] total=100
+
+• (((connected) ∧ (nontrivial))) ⇒ lim_{minimum_degree→∞} (matching_number / order) = (22/45)
+• (((connected) ∧ (nontrivial))) ⇒ lim_{minimum_degree→∞} (matching_number / harmonic_index) = (49/50)
+• (((connected) ∧ (nontrivial))) ⇒ lim_{clique_number→∞} (matching_number / order) = (21/44)
+• (((connected) ∧ (nontrivial))) ⇒ lim_{chromatic_number→∞} (matching_number / order) = (23/48)
+• (((connected) ∧ (nontrivial))) ⇒ lim_{harmonic_index→∞} (matching_number / order) = (1/2)
+• (((connected) ∧ (nontrivial))) ⇒ lim_{domination_number→∞} (matching_number / order) = (12/25)
+• (((connected) ∧ (nontrivial))) ⇒ lim_{total_domination_number→∞} (matching_number / order) = (11/23)
+• (((connected) ∧ (nontrivial))) ⇒ lim_{min_maximal_matching_number→∞} (matching_number / order) = (24/49)
+• (((connected) ∧ (nontrivial))) ⇒ lim_{second_largest_adjacency_eigenvalue→∞} (matching_number / order) = (15/31)
+• (((connected) ∧ (nontrivial))) ⇒ lim_{second_largest_adjacency_eigenvalue→∞} (matching_number / harmonic_index) = (49/50)
+
+--------------------------------------------------------------------------------
+GRAFFITICLASSRELATIONS SUMMARY
+--------------------------------------------------------------------------------
+
+Boolean columns: ['connected', 'chordal', 'eulerian', 'planar', 'K_4_free', 'nontrivial']
+Expr columns: ['order', 'maximum_degree', 'minimum_degree', 'diameter', 'radius', 'clique_number', 'chromatic_number', 'independence_number', 'matching_number', 'harmonic_index', 'domination_number', 'total_domination_number', 'independent_domination_number', 'min_maximal_matching_number', 'spectral_radius', 'largest_laplacian_eigenvalue', 'second_largest_adjacency_eigenvalue', 'zero_forcing_number']
+Base hypothesis: connected ∧ nontrivial
+
+Nonredundant conjunctions:
+  connected ∧ nontrivial ∧ K_4_free
+  connected ∧ nontrivial ∧ chordal
+  connected ∧ nontrivial ∧ eulerian
+  connected ∧ nontrivial ∧ planar
+  connected ∧ nontrivial ∧ K_4_free ∧ chordal
+  connected ∧ nontrivial ∧ K_4_free ∧ eulerian
+  connected ∧ nontrivial ∧ K_4_free ∧ planar
+  connected ∧ nontrivial ∧ chordal ∧ eulerian
+
+Example atomic conjectures:
+
+  ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ radius = 1 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1
+
+=== Class Equivalences ===
+
+=== Inclusions (equalities ⇒ class) ===
+
+=== Inclusions (class ⇒ equalities) ===
+  ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⊆ (radius = 1 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1)
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS
+--------------------------------------------------------------------------------
+
+[LOWER] total=1
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (1 · matching_number)
+    touches=340, support=340
+
+[UPPER] total=1
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ (1 · matching_number)
+    touches=340, support=340
+
+[EQUAL] total=1
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number = (1 · matching_number)
+    touches=340, support=340
+
+
+--------------------------------------------------------------------------------
+K2 AFFINE BOUNDS GENERATION
+--------------------------------------------------------------------------------
+
+[LOWER] total=264
+
+• (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ ((-1 · |(maximum_degree - domination_number)|) + (1 · maximum_degree))
+    touches=88, support=163
+
+• ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ ((-1 · |(maximum_degree - domination_number)|) + (1 · maximum_degree))
+    touches=7, support=21
+
+• (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ ((-1 · |(maximum_degree - radius)|) + (1 · maximum_degree))
+    touches=68, support=163
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (((((-1/2) · |(maximum_degree - radius)|) + ((1/2) · |(maximum_degree - domination_number)|)) + ((1/2) · |(minimum_degree - diameter)|)) + (1/2))
+    touches=44, support=340
+
+• (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (((((-1/2) · |(maximum_degree - radius)|) + ((1/2) · |(minimum_degree - diameter)|)) + ((1/2) · |(maximum_degree - domination_number)|)) + (1/2))
+    touches=42, support=318
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (((((-1/4) · |(maximum_degree - independent_domination_number)|) + ((1/4) · |(maximum_degree - domination_number)|)) + ((1/2) · |(minimum_degree - diameter)|)) + (1/2))
+    touches=40, support=340
+
+[UPPER] total=198
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ ((1 · order) + (-1 · independence_number))
+    touches=175, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ ((1/2) · order)
+    touches=170, support=340
+
+• (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≤ ((((1/2) · order) + ((3/4) · |(maximum_degree - independent_domination_number)|)) + ((-3/4) · |(maximum_degree - domination_number)|))
+    touches=95, support=263
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ ((((1/2) · |(maximum_degree - radius)|) + (1 · |(maximum_degree - domination_number)|)) + 6)
+    touches=45, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ (((((1/2) · |(maximum_degree - radius)|) + ((9/4) · |(maximum_degree - independent_domination_number)|)) + ((-5/4) · |(maximum_degree - domination_number)|)) + 6)
+    touches=45, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ ((((1/2) · |(maximum_degree - radius)|) + (1 · |(maximum_degree - independent_domination_number)|)) + 6)
+    touches=44, support=340
+
+[EQUAL] total=12
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number = (((1/2) · order) + (-1/2))
+    touches=8, support=8
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number = ((1/2) · maximum_degree)
+    touches=8, support=8
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number = (((1/2) · |(maximum_degree - radius)|) + (1/2))
+    touches=8, support=8
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number = (((1/2) · |(maximum_degree - domination_number)|) + (1/2))
+    touches=8, support=8
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number = (((1/2) · |(maximum_degree - total_domination_number)|) + 1)
+    touches=8, support=8
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number = (((1/2) · |(maximum_degree - independent_domination_number)|) + (1/2))
+    touches=8, support=8
+
+
+--------------------------------------------------------------------------------
+INTEGER-AWARE LIFTING
+--------------------------------------------------------------------------------
+
+Before vs After (lowers): 264 → 264
+Before vs After (uppers): 198 → 198
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((-1/2) · |(maximum_degree - radius)|) + ((1/2) · |(maximum_degree - domination_number)|)) + ((1/2) · |(minimum_degree - diameter)|)) + (1/2))⌉ + 0) | touches=81
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((-1/2) · |(maximum_degree - radius)|) + ((1/2) · |(minimum_degree - diameter)|)) + ((1/2) · |(maximum_degree - domination_number)|)) + (1/2))⌉ + 0) | touches=78
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((-1/4) · |(maximum_degree - independent_domination_number)|) + ((1/4) · |(maximum_degree - domination_number)|)) + ((1/2) · |(minimum_degree - diameter)|)) + (1/2))⌉ + 0) | touches=90
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((-1 · |(diameter - largest_laplacian_eigenvalue)|) + (1 · |(total_domination_number - largest_laplacian_eigenvalue)|)) + 1)⌉ + 0) | touches=42
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((1/2) · |(minimum_degree - diameter)|) + (1/2))⌉ + 0) | touches=85
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((1/2) · |(minimum_degree - diameter)|) + ((1/2) · independence_number)) + ((-1/2) · |(clique_number - independence_number)|)) + (-1/2))⌉ + 0) | touches=81
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((1/2) · |(minimum_degree - diameter)|) + ((-1/4) · |(maximum_degree - independent_domination_number)|)) + ((1/4) · |(maximum_degree - domination_number)|)) + (1/2))⌉ + 0) | touches=87
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((1/2) · order) + ((-1/2) · |(minimum_degree - diameter)|)) + ((-1/2) · |(diameter - zero_forcing_number)|)) + (-1/2))⌉ + 0) | touches=62
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((-2 · |(maximum_degree - radius)|) + ((-1/2) · |(maximum_degree - independent_domination_number)|)) + ((5/2) · |(maximum_degree - domination_number)|)) + 1)⌉ + 0) | touches=35
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((1/2) · order) + ((-1/2) · |(clique_number - independence_number)|)) + (-1/2))⌉ + 0) | touches=76
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((1/4) · order) + ((-1/4) · |(diameter - zero_forcing_number)|))⌉ + 0) | touches=50
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((1/4) · order) + ((-1/4) · |(diameter - zero_forcing_number)|))⌉ + 0) | touches=50
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((1/4) · order) + ((-1/4) · |(diameter - zero_forcing_number)|))⌉ + 0) | touches=47
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((5/4) · |(maximum_degree - radius)|) + ((-1/2) · |(maximum_degree - independent_domination_number)|)) + ((-3/4) · |(maximum_degree - domination_number)|)) + 1)⌉ + 0) | touches=55
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((1/2) · |(maximum_degree - radius)|) + ((-1/2) · |(maximum_degree - independent_domination_number)|)) + 1)⌉ + 0) | touches=23
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((5/4) · |(maximum_degree - radius)|) + ((-5/4) · |(maximum_degree - domination_number)|)) + 1)⌉ + 0) | touches=49
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((-1/2) · |(maximum_degree - independent_domination_number)|) + ((1/2) · |(maximum_degree - domination_number)|)) + 1)⌉ + 0) | touches=23
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈((((1/4) · order) + ((-1/4) · maximum_degree)) + (3/4))⌉ + 0) | touches=54
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((-1/2) · |(maximum_degree - independent_domination_number)|) + ((-3/4) · |(maximum_degree - domination_number)|)) + ((5/4) · |(maximum_degree - radius)|)) + 1)⌉ + 0) | touches=49
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((-1/4) · |(maximum_degree - independent_domination_number)|) + ((1/2) · |(maximum_degree - diameter)|)) + ((-1/4) · |(maximum_degree - total_domination_number)|)) + (5/4))⌉ + 0) | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((-1/4) · |(maximum_degree - domination_number)|) + ((1/2) · |(maximum_degree - diameter)|)) + ((-1/4) · |(maximum_degree - total_domination_number)|)) + (5/4))⌉ + 0) | touches=31
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((1/2) · |(maximum_degree - diameter)|) + ((-1/4) · |(maximum_degree - radius)|)) + ((-1/4) · |(maximum_degree - total_domination_number)|)) + (5/4))⌉ + 0) | touches=29
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((1/2) · |(maximum_degree - diameter)|) + ((-1/4) · |(maximum_degree - domination_number)|)) + ((-1/4) · |(maximum_degree - total_domination_number)|)) + (5/4))⌉ + 0) | touches=29
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((1/2) · |(maximum_degree - diameter)|) + ((-1/4) · |(maximum_degree - independent_domination_number)|)) + ((-1/4) · |(maximum_degree - total_domination_number)|)) + (5/4))⌉ + 0) | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈((((-1/2) · |(maximum_degree - independent_domination_number)|) + ((1/2) · |(maximum_degree - radius)|)) + 1)⌉ + 0) | touches=22
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈((((-5/4) · |(maximum_degree - domination_number)|) + ((5/4) · |(maximum_degree - radius)|)) + 1)⌉ + 0) | touches=43
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ matching_number ≥ (⌈((((-4/3) · |(maximum_degree - domination_number)|) + ((4/3) · |(maximum_degree - radius)|)) + 1)⌉ + 0) | touches=42
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((1/6) · order) + ((-1/6) · |(maximum_degree - diameter)|)) + (1/2))⌉ + 0) | touches=53
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((-1/6) · |(maximum_degree - independent_domination_number)|) + ((-1/18) · |(maximum_degree - domination_number)|)) + ((2/9) · independence_number)) + (7/9))⌉ + 0) | touches=62
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((-1/5) · |(maximum_degree - diameter)|) + ((-4/5) · |(clique_number - independence_number)|)) + (1 · independence_number)) + -1)⌉ + 0) | touches=45
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ matching_number ≥ (⌈((((-1/6) · |(maximum_degree - diameter)|) + ((1/6) · order)) + (1/2))⌉ + 0) | touches=43
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((-1/5) · |(maximum_degree - diameter)|) + (1 · independence_number)) + ((-4/5) · |(clique_number - independence_number)|)) + -1)⌉ + 0) | touches=45
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((-1/3) · |(diameter - zero_forcing_number)|) + ((1/3) · independence_number))⌉ + 0) | touches=39
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((-1/3) · |(diameter - zero_forcing_number)|) + (-1 · |(clique_number - independence_number)|)) + ((4/3) · independence_number)) + -2)⌉ + 0) | touches=42
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((2/9) · order) + ((-1/9) · |(maximum_degree - independent_domination_number)|)) + ((-1/9) · maximum_degree)) + (2/3))⌉ + 0) | touches=70
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((1/5) · order) + ((1/5) · |(maximum_degree - diameter)|)) + ((-2/5) · |(maximum_degree - total_domination_number)|)) + (2/5))⌉ + 0) | touches=58
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((-1/9) · |(maximum_degree - independent_domination_number)|) + ((2/9) · order)) + ((-1/9) · maximum_degree)) + (2/3))⌉ + 0) | touches=70
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((1/5) · |(maximum_degree - diameter)|) + ((1/5) · order)) + ((-2/5) · |(maximum_degree - total_domination_number)|)) + (2/5))⌉ + 0) | touches=55
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((-3/14) · |(maximum_degree - radius)|) + ((3/14) · independence_number)) + (11/14))⌉ + 0) | touches=58
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((-2/5) · |(maximum_degree - radius)|) + ((1/5) · |(minimum_degree - diameter)|)) + ((1/5) · independence_number)) + (4/5))⌉ + 0) | touches=66
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((1/7) · order) + ((-1/7) · |(maximum_degree - domination_number)|)) + ((1/7) · |(minimum_degree - diameter)|)) + (4/7))⌉ + 0) | touches=88
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((-2/7) · |(maximum_degree - independent_domination_number)|) + ((2/7) · |(minimum_degree - diameter)|)) + ((1/7) · independence_number)) + (5/7))⌉ + 0) | touches=82
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((-6/19) · |(maximum_degree - domination_number)|) + ((5/19) · |(minimum_degree - diameter)|)) + ((3/19) · independence_number)) + (14/19))⌉ + 0) | touches=82
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈((((-1/3) · |(maximum_degree - independent_domination_number)|) + ((1/3) · maximum_degree)) + (2/3))⌉ + 0) | touches=42
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈((1 · |(maximum_degree - radius)|) + ((-1/2) · |(maximum_degree - total_domination_number)|))⌉ + 0) | touches=10
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((-1/2) · |(maximum_degree - domination_number)|) + ((3/2) · |(maximum_degree - radius)|)) + ((-1/2) · maximum_degree)) + 1)⌉ + 0) | touches=10
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((-1/6) · |(maximum_degree - independent_domination_number)|) + ((-1/18) · |(diameter - largest_laplacian_eigenvalue)|)) + ((2/9) · independence_number)) + (7/9))⌉ + 0) | touches=62
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≥ (⌈((((1/6) · order) + ((-1/6) · |(maximum_degree - independent_domination_number)|)) + (2/3))⌉ + 0) | touches=66
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈((((1/6) · order) + ((-1/6) · |(maximum_degree - independent_domination_number)|)) + (2/3))⌉ + 0) | touches=55
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((-1/18) · |(diameter - largest_laplacian_eigenvalue)|) + ((-1/6) · |(maximum_degree - independent_domination_number)|)) + ((2/9) · independence_number)) + (7/9))⌉ + 0) | touches=62
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ matching_number ≥ (⌈((((-1/6) · |(maximum_degree - independent_domination_number)|) + ((1/6) · order)) + (2/3))⌉ + 0) | touches=55
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((1 · |(maximum_degree - independent_domination_number)|) + ((-5/2) · |(maximum_degree - total_domination_number)|)) + (2 · |(maximum_degree - diameter)|))⌉ + 0) | touches=9
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((1 · |(maximum_degree - domination_number)|) + ((-5/2) · |(maximum_degree - total_domination_number)|)) + (2 · |(maximum_degree - diameter)|))⌉ + 0) | touches=9
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((1/6) · order) + ((-1/6) · |(maximum_degree - domination_number)|)) + (2/3))⌉ + 0) | touches=62
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((-1/2) · |(maximum_degree - independent_domination_number)|) + ((-5/6) · |(maximum_degree - domination_number)|)) + ((4/3) · |(maximum_degree - radius)|)) + 1)⌉ + 0) | touches=48
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈((((-3/2) · |(maximum_degree - independent_domination_number)|) + ((5/2) · |(maximum_degree - domination_number)|)) + ((-1/2) · |(maximum_degree - total_domination_number)|))⌉ + 0) | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((-1/2) · |(maximum_degree - independent_domination_number)|) + ((3/2) · |(maximum_degree - radius)|)) + ((-1/2) · maximum_degree)) + 1)⌉ + 0) | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈((((-1/4) · |(maximum_degree - domination_number)|) + ((5/4) · |(maximum_degree - radius)|)) + ((-1/2) · |(maximum_degree - diameter)|))⌉ + 0) | touches=9
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈((((1 · |(maximum_degree - domination_number)|) + (1 · maximum_degree)) + ((-3/2) · |(maximum_degree - total_domination_number)|)) + -2)⌉ + 0) | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈((((-1/4) · |(maximum_degree - independent_domination_number)|) + ((5/4) · |(maximum_degree - radius)|)) + ((-1/2) · |(maximum_degree - diameter)|))⌉ + 0) | touches=9
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈((((1 · |(maximum_degree - independent_domination_number)|) + (1 · maximum_degree)) + ((-3/2) · |(maximum_degree - total_domination_number)|)) + -2)⌉ + 0) | touches=8
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((1/6) · order) + ((-1/3) · |(maximum_degree - radius)|)) + ((1/6) · |(minimum_degree - diameter)|)) + (2/3))⌉ + 0) | touches=78
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((-2/9) · |(maximum_degree - radius)|) + ((1/3) · |(minimum_degree - diameter)|)) + ((1/9) · |(chromatic_number - independence_number)|)) + (8/9))⌉ + 0) | touches=74
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((1/3) · |(minimum_degree - diameter)|) + ((-2/9) · |(maximum_degree - independent_domination_number)|)) + ((1/9) · |(chromatic_number - independence_number)|)) + (8/9))⌉ + 0) | touches=86
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((1/3) · |(minimum_degree - diameter)|) + ((-2/9) · |(maximum_degree - domination_number)|)) + ((1/9) · |(chromatic_number - independence_number)|)) + (8/9))⌉ + 0) | touches=83
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈((1 · |(maximum_degree - radius)|) + ((-1/2) · |(maximum_degree - diameter)|))⌉ + 0) | touches=9
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((2/5) · |(maximum_degree - radius)|) + ((3/10) · order)) + ((-13/20) · |(maximum_degree - total_domination_number)|)) + (3/5))⌉ + 0) | touches=12
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈((1 · |(maximum_degree - domination_number)|) + ((-1/2) · |(maximum_degree - total_domination_number)|))⌉ + 0) | touches=7
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈((1 · |(maximum_degree - domination_number)|) + ((-1/2) · |(maximum_degree - diameter)|))⌉ + 0) | touches=7
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈((1 · |(maximum_degree - independent_domination_number)|) + ((-1/2) · |(maximum_degree - total_domination_number)|))⌉ + 0) | touches=7
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈((1 · |(maximum_degree - independent_domination_number)|) + ((-1/2) · |(maximum_degree - diameter)|))⌉ + 0) | touches=7
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number ≥ ⌈((((1/4) · order) + ((1/4) · |(total_domination_number - largest_laplacian_eigenvalue)|)) + 0)⌉ | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number ≥ ⌈((((1/4) · largest_laplacian_eigenvalue) + ((1/4) · |(maximum_degree - radius)|)) + 0)⌉ | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number ≥ ⌈((((1/4) · largest_laplacian_eigenvalue) + ((1/4) · |(maximum_degree - domination_number)|)) + 0)⌉ | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number ≥ ⌈((((1/4) · largest_laplacian_eigenvalue) + ((1/4) · |(maximum_degree - independent_domination_number)|)) + 0)⌉ | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number ≥ ⌈(((((1/2) · largest_laplacian_eigenvalue) + ((1/2) · |(maximum_degree - diameter)|)) + ((-1/2) · |(diameter - largest_laplacian_eigenvalue)|)) + 0)⌉ | touches=8
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((1/2) · |(maximum_degree - diameter)|) + ((1/8) · |(maximum_degree - radius)|)) + ((-7/12) · |(maximum_degree - independent_domination_number)|)) + 1)⌉ + 0) | touches=48
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((1/2) · |(maximum_degree - diameter)|) + ((-19/13) · |(maximum_degree - radius)|)) + (1 · |(maximum_degree - domination_number)|)) + 1)⌉ + 0) | touches=46
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈(((((1/2) · |(maximum_degree - diameter)|) + ((-7/12) · |(maximum_degree - independent_domination_number)|)) + ((1/8) · |(maximum_degree - domination_number)|)) + 1)⌉ + 0) | touches=46
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((1/2) · |(maximum_degree - diameter)|) + ((-3/5) · |(maximum_degree - radius)|)) + ((1/6) · |(clique_number - independence_number)|)) + (5/6))⌉ + 0) | touches=38
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((1/2) · |(maximum_degree - diameter)|) + ((-3/5) · |(maximum_degree - domination_number)|)) + ((1/6) · |(clique_number - independence_number)|)) + (5/6))⌉ + 0) | touches=42
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((3/14) · order) + ((-2/7) · |(maximum_degree - independent_domination_number)|)) + ((-1/14) · |(maximum_degree - domination_number)|)) + (4/7))⌉ + 0) | touches=77
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((1/4) · order) + ((-1/8) · |(maximum_degree - independent_domination_number)|)) + ((-1/8) · |(diameter - zero_forcing_number)|)) + (1/8))⌉ + 0) | touches=69
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((-1/3) · |(maximum_degree - radius)|) + ((1/3) · |(diameter - zero_forcing_number)|)) + ((1/15) · |(chromatic_number - independence_number)|)) + (14/15))⌉ + 0) | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((3/14) · order) + ((-3/14) · |(maximum_degree - radius)|)) + ((-1/14) · |(diameter - zero_forcing_number)|)) + (4/7))⌉ + 0) | touches=77
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((2/9) · order) + ((-2/9) · |(maximum_degree - domination_number)|)) + ((-1/9) · |(diameter - zero_forcing_number)|)) + (5/9))⌉ + 0) | touches=76
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((-1/3) · |(maximum_degree - radius)|) + ((1/15) · |(clique_number - independence_number)|)) + ((1/3) · |(diameter - zero_forcing_number)|)) + (14/15))⌉ + 0) | touches=33
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((-1/3) · |(maximum_degree - radius)|) + ((1/3) · |(diameter - zero_forcing_number)|)) + ((1/15) · |(clique_number - independence_number)|)) + (14/15))⌉ + 0) | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((-3/4) · |(maximum_degree - independent_domination_number)|) + ((1/2) · |(maximum_degree - domination_number)|)) + ((1/2) · order)) + -1)⌉ + 0) | touches=7
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((1/4) · |(maximum_degree - domination_number)|) + ((-1/2) · |(maximum_degree - radius)|)) + ((3/4) · order)) + -3)⌉ + 0) | touches=4
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((11/16) · order) + ((-7/16) · maximum_degree)) + ((1/8) · |(maximum_degree - diameter)|)) + (-11/8))⌉ + 0) | touches=7
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((1/4) · |(maximum_degree - independent_domination_number)|) + ((-1/2) · |(maximum_degree - radius)|)) + ((3/4) · order)) + -3)⌉ + 0) | touches=4
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((1/14) · |(maximum_degree - independent_domination_number)|) + ((-3/7) · maximum_degree)) + ((5/7) · order)) + (-10/7))⌉ + 0) | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((3/4) · |(maximum_degree - independent_domination_number)|) + ((1/2) · order)) + (-1 · |(maximum_degree - total_domination_number)|)) + -1)⌉ + 0) | touches=7
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((3/4) · |(maximum_degree - domination_number)|) + ((1/2) · order)) + (-1 · |(maximum_degree - total_domination_number)|)) + -1)⌉ + 0) | touches=7
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((-7/16) · maximum_degree) + ((11/16) · order)) + ((1/8) · |(maximum_degree - diameter)|)) + (-11/8))⌉ + 0) | touches=7
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((-3/4) · |(maximum_degree - radius)|) + ((7/8) · order)) + ((1/2) · |(maximum_degree - total_domination_number)|)) + -4)⌉ + 0) | touches=6
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((1/2) · |(maximum_degree - diameter)|) + ((-6/13) · |(maximum_degree - radius)|)) + 1)⌉ + 0) | touches=36
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((1/2) · |(maximum_degree - diameter)|) + ((-6/13) · |(maximum_degree - independent_domination_number)|)) + 1)⌉ + 0) | touches=45
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (⌈((((1/2) · |(maximum_degree - diameter)|) + ((-6/13) · |(maximum_degree - domination_number)|)) + 1)⌉ + 0) | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ matching_number ≥ (⌈(((((-1/4) · |(maximum_degree - diameter)|) + ((2/15) · |(diameter - zero_forcing_number)|)) + ((2/15) · |(chromatic_number - independence_number)|)) + (13/15))⌉ + 0) | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈((((-6/13) · |(maximum_degree - independent_domination_number)|) + ((1/2) · |(maximum_degree - diameter)|)) + 1)⌉ + 0) | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈((((-6/13) · |(maximum_degree - domination_number)|) + ((1/2) · |(maximum_degree - diameter)|)) + 1)⌉ + 0) | touches=34
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((3/14) · order) + ((-7/19) · |(maximum_degree - domination_number)|)) + ((1/6) · |(maximum_degree - diameter)|)) + (4/7))⌉ + 0) | touches=86
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((-17/13) · |(maximum_degree - domination_number)|) + ((1/3) · |(maximum_degree - diameter)|)) + (1 · |(maximum_degree - radius)|)) + 1)⌉ + 0) | touches=44
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((((3/14) · order) + ((1/6) · |(maximum_degree - diameter)|)) + ((-7/19) · |(maximum_degree - domination_number)|)) + (4/7))⌉ + 0) | touches=84
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ matching_number ≥ (⌈(((((1/6) · |(maximum_degree - diameter)|) + ((-7/19) · |(maximum_degree - domination_number)|)) + ((3/14) · order)) + (4/7))⌉ + 0) | touches=83
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈((((-1/4) · |(maximum_degree - independent_domination_number)|) + ((1/2) · order)) + -1)⌉ + 0) | touches=6
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈((((-1/4) · |(maximum_degree - domination_number)|) + ((1/2) · order)) + -1)⌉ + 0) | touches=6
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈((((-1/4) · |(maximum_degree - radius)|) + ((5/8) · order)) + -2)⌉ + 0) | touches=6
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈((((1/2) · order) + ((-1/4) · |(maximum_degree - total_domination_number)|)) + -1)⌉ + 0) | touches=5
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((7/10) · order) + ((-2/5) · maximum_degree)) + ((1/20) · |(maximum_degree - total_domination_number)|)) + (-7/5))⌉ + 0) | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((((-2/5) · maximum_degree) + ((7/10) · order)) + ((1/20) · |(maximum_degree - total_domination_number)|)) + (-7/5))⌉ + 0) | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar)) ⇒ matching_number ≥ (⌈(((-3/2) · |(maximum_degree - total_domination_number)|) + (2 · |(maximum_degree - diameter)|))⌉ + 0) | touches=3
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number ≥ ⌈((((1/3) · order) + ((1/6) · |(maximum_degree - total_domination_number)|)) + 0)⌉ | touches=8
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⇒ matching_number ≥ (⌈(((2/11) · |(maximum_degree - diameter)|) + ((4/11) · |(diameter - largest_laplacian_eigenvalue)|))⌉ + 0) | touches=8
+
+
+--------------------------------------------------------------------------------
+INTRICATE MIXED INEQUALITIES
+--------------------------------------------------------------------------------
+
+Boolean columns: ['connected', 'chordal', 'eulerian', 'planar', 'K_4_free', 'nontrivial']
+Numeric columns: ['order', 'maximum_degree', 'minimum_degree', 'diameter', 'radius', 'clique_number', 'chromatic_number', 'independence_number'] ...
+Base hypothesis: ((connected) ∧ (nontrivial)) 
+
+[LOWER] total=1500
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈(((1/2) · domination_number) + ((1/14) · (domination_number)²))⌉
+    touches=120, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈((((1/2) · 1) · domination_number) + (((1/2) · (11/15)) · √(harmonic_index)))⌉
+    touches=109, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈((((1/2) · 1) · domination_number) + (((1/2) · 1) · √(min_maximal_matching_number)))⌉
+    touches=105, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈(((1/2) · domination_number) + ((1/30) · (diameter)²))⌉
+    touches=101, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈((((1/2) · 1) · radius) + (((1/2) · (11/15)) · √(harmonic_index)))⌉
+    touches=96, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈((((1/2) · 1) · domination_number) + (((1/2) · 1) · √(independent_domination_number)))⌉
+    touches=96, support=340
+
+[UPPER] total=181
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ ⌊((((1/2) · (1/2)) · order) + (((1/2) · (99/28)) · √(independence_number)))⌋
+    touches=92, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ (⌊(((1/2) · (1/2)) · order)⌋ + ⌊(((1/2) · (7/2)) · √(harmonic_index))⌋)
+    touches=67, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ (⌊(((1/2) · (1/2)) · order)⌋ + ⌊(((1/2) · (123/29)) · √(min_maximal_matching_number))⌋)
+    touches=63, support=340
+
+• (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≤ (⌊(((1/2) · (1/2)) · order)⌋ + ⌊(((1/2) · (49/12)) · √(min_maximal_matching_number))⌋)
+    touches=54, support=263
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ (⌊(((1/2) · (1/2)) · order)⌋ + ⌊(((1/2) · (49/20)) · √(order))⌋)
+    touches=48, support=340
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ matching_number ≤ (⌊(((1/2) · (18/13)) · harmonic_index)⌋ + ⌊(((1/2) · (7/2)) · √(min_maximal_matching_number))⌋)
+    touches=46, support=160
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+EQUALITY-CLASS HYPOTHESES BOOTSTRAP → REBUILD ENGINES
+--------------------------------------------------------------------------------
+
+Selected equality classes:
+  • independent_domination_number = 1.0·domination_number (tightness≈0.944, n=340)  → added as boolean 'independent_domination_number = 1.0·domination_number'
+  • clique_number = 1.0·chromatic_number     (tightness≈0.871, n=340)  → added as boolean 'clique_number = 1.0·chromatic_number'
+  • order = 2.0·matching_number              (tightness≈0.500, n=340)  → added as boolean 'order = 2.0·matching_number'
+  • maximum_degree = 1.0·minimum_degree      (tightness≈0.394, n=340)  → added as boolean 'maximum_degree = 1.0·minimum_degree'
+  • harmonic_index = 0.5·order               (tightness≈0.394, n=340)  → added as boolean 'harmonic_index = 0.5·order'
+  • domination_number = 1.0·matching_number  (tightness≈0.353, n=340)  → added as boolean 'domination_number = 1.0·matching_number'
+  • radius = 0.5·diameter                    (tightness≈0.338, n=340)  → added as boolean 'radius = 0.5·diameter'
+  • domination_number = 1.0·total_domination_number (tightness≈0.335, n=340)  → added as boolean 'domination_number = 1.0·total_domination_number'
+  • radius = 1.0·matching_number             (tightness≈0.274, n=340)  → added as boolean 'radius = 1.0·matching_number'
+  • min_maximal_matching_number = 1.0·matching_number (tightness≈0.235, n=340)  → added as boolean 'min_maximal_matching_number = 1.0·matching_number'
+  • independent_domination_number = 0.5·total_domination_number (tightness≈0.185, n=340)  → added as boolean 'independent_domination_number = 0.5·total_domination_number'
+  • minimum_degree = 1.0·zero_forcing_number (tightness≈0.162, n=340)  → added as boolean 'minimum_degree = 1.0·zero_forcing_number'
+
+Boolean columns in rebuilt frame (includes equality-class hypotheses):
+['connected', 'chordal', 'eulerian', 'planar', 'K_4_free', 'nontrivial', 'independent_domination_number = 1.0·domination_number', 'clique_number = 1.0·chromatic_number', 'order = 2.0·matching_number', 'maximum_degree = 1.0·minimum_degree', 'harmonic_index = 0.5·order', 'domination_number = 1.0·matching_number', 'radius = 0.5·diameter', 'domination_number = 1.0·total_domination_number', 'radius = 1.0·matching_number', 'min_maximal_matching_number = 1.0·matching_number', 'independent_domination_number = 0.5·total_domination_number', 'minimum_degree = 1.0·zero_forcing_number']
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=1
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (1 · matching_number)
+    touches=340, support=340
+
+[UPPER] total=1
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ (1 · matching_number)
+    touches=340, support=340
+
+[EQUAL] total=1
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number = (1 · matching_number)
+    touches=340, support=340
+
+
+--------------------------------------------------------------------------------
+K2 AFFINE BOUNDS (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=383
+
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ (((-1 · |(diameter - clique_number)|) + (1 · diameter)) + (1 · |(clique_number - matching_number)|))
+    touches=160, support=170
+
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ ((((1/15) · |(minimum_degree - diameter)|) + ((-1/15) · |(maximum_degree - diameter)|)) + (1 · harmonic_index))
+    touches=132, support=170
+
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ (1 · harmonic_index)
+    touches=128, support=170
+
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ ((((1/14) · |(minimum_degree - diameter)|) + ((-1/14) · |(diameter - spectral_radius)|)) + (1 · harmonic_index))
+    touches=123, support=170
+
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ ((((1/10) · |(diameter - spectral_radius)|) + ((-1/10) · |(maximum_degree - diameter)|)) + (1 · harmonic_index))
+    touches=116, support=170
+
+• (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ matching_number ≥ ((-1 · |(maximum_degree - domination_number)|) + (1 · maximum_degree))
+    touches=88, support=163
+
+[UPPER] total=362
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ ((1 · order) + (-1 · independence_number))
+    touches=175, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ ((1/2) · order)
+    touches=170, support=340
+
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ ((((1/2) · order) + (1 · |(clique_number - matching_number)|)) + (-1 · |(clique_number - harmonic_index)|))
+    touches=132, support=134
+
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ (((1 · harmonic_index) + (1 · |(clique_number - matching_number)|)) + (-1 · |(clique_number - harmonic_index)|))
+    touches=132, support=134
+
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ (1 · harmonic_index)
+    touches=128, support=134
+
+• ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≤ ((((1 · |(diameter - chromatic_number)|) + (-1 · |(diameter - clique_number)|)) + (1 · |(clique_number - matching_number)|)) + 3)
+    touches=116, support=164
+
+[EQUAL] total=1
+
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number = ((1/2) · order)
+    touches=170, support=170
+
+
+--------------------------------------------------------------------------------
+INTRICATE MIXED INEQUALITIES (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=11112
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈(((1/2) · domination_number) + ((1/14) · (domination_number)²))⌉
+    touches=120, support=340
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈((((1/2) · 1) · domination_number) + (((1/2) · (11/15)) · √(harmonic_index)))⌉
+    touches=109, support=340
+
+• (((connected) ∧ (nontrivial)) ∧ (independent_domination_number = 1.0·domination_number)) ⇒ matching_number ≥ ⌈(((1/2) · domination_number) + ((1/14) · (independent_domination_number)²))⌉
+    touches=108, support=321
+
+• (((connected) ∧ (nontrivial)) ∧ (radius = 0.5·diameter)) ⇒ matching_number ≥ ⌈(((1/2) · domination_number) + ((1/14) · (independent_domination_number)²))⌉
+    touches=70, support=115
+
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ ⌈(((1/2) · domination_number) + ((1/14) · (independent_domination_number)²))⌉
+    touches=12, support=170
+
+• (((connected) ∧ (nontrivial)) ∧ (independent_domination_number = 1.0·domination_number)) ⇒ matching_number ≥ ⌈(((1/2) · independent_domination_number) + ((1/14) · (domination_number)²))⌉
+    touches=108, support=321
+
+[UPPER] total=6433
+
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ ⌊((((1/2) · (1/2)) · order) + (((1/2) · (35/11)) · √(total_domination_number)))⌋
+    touches=122, support=134
+
+• ((((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ∧ (radius = 0.5·diameter)) ⇒ matching_number ≤ ⌊((((1/2) · (1/2)) · order) + (((1/2) · (35/11)) · √(total_domination_number)))⌋
+    touches=8, support=18
+
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ ⌊((((1/2) · 1) · harmonic_index) + (((1/2) · (35/11)) · √(total_domination_number)))⌋
+    touches=122, support=134
+
+• ((((connected) ∧ (nontrivial)) ∧ (independent_domination_number = 1.0·domination_number)) ∧ (clique_number = 1.0·chromatic_number)) ⇒ matching_number ≤ ⌊((((1/2) · (1/2)) · order) + (((1/2) · (53/25)) · √(order)))⌋
+    touches=121, support=279
+
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ ⌊((((1/2) · (1/2)) · order) + (((1/2) · (53/25)) · √(order)))⌋
+    touches=120, support=134
+
+• (((connected) ∧ (nontrivial)) ∧ (radius = 0.5·diameter)) ⇒ matching_number ≤ ⌊((((1/2) · (1/2)) · order) + (((1/2) · (53/25)) · √(order)))⌋
+    touches=14, support=115
+
+[EQUAL] total=431
+
+• (((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ⇒ matching_number = ⌊((((1/2) · 1) · domination_number) + (((1/2) · (45/17)) · √(domination_number)))⌋
+    touches=120, support=120
+
+• (((connected) ∧ (nontrivial)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · radius) + ((2/27) · (harmonic_index)²))⌉
+    touches=93, support=93
+
+• (((connected) ∧ (nontrivial)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌊((((1/2) · 1) · radius) + (((1/2) · (45/17)) · √(radius)))⌋
+    touches=93, support=93
+
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · radius) + ((1/12) · (harmonic_index)²))⌉
+    touches=72, support=72
+
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · radius) + ((1/8) · (domination_number)²))⌉
+    touches=72, support=72
+
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · radius) + ((1/6) · (min_maximal_matching_number)²))⌉
+    touches=72, support=72
+
+
+--------------------------------------------------------------------------------
+FULL CONJECTURE LIST (DEDUPED • RANKED • TOP-K)
+--------------------------------------------------------------------------------
+
+[LOWERS] total=100
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ (1 · matching_number)
+    touches=340, support=340
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ (((-1 · |(diameter - clique_number)|) + (1 · diameter)) + (1 · |(clique_number - matching_number)|))
+    touches=160, support=170
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ ((((1/15) · |(minimum_degree - diameter)|) + ((-1/15) · |(maximum_degree - diameter)|)) + (1 · harmonic_index))
+    touches=132, support=170
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ (1 · harmonic_index)
+    touches=128, support=170
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ ((((1/14) · |(minimum_degree - diameter)|) + ((-1/14) · |(diameter - spectral_radius)|)) + (1 · harmonic_index))
+    touches=123, support=170
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈(((1/2) · domination_number) + ((1/14) · (domination_number)²))⌉
+    touches=120, support=340
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number ≥ ((((1/10) · |(diameter - spectral_radius)|) + ((-1/10) · |(maximum_degree - diameter)|)) + (1 · harmonic_index))
+    touches=116, support=170
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈((((1/2) · 1) · domination_number) + (((1/2) · (11/15)) · √(harmonic_index)))⌉
+    touches=109, support=340
+• (((connected) ∧ (nontrivial)) ∧ (independent_domination_number = 1.0·domination_number)) ⇒ matching_number ≥ ⌈(((1/2) · domination_number) + ((1/14) · (independent_domination_number)²))⌉
+    touches=108, support=321
+• (((connected) ∧ (nontrivial)) ∧ (independent_domination_number = 1.0·domination_number)) ⇒ matching_number ≥ ⌈(((1/2) · independent_domination_number) + ((1/14) · (domination_number)²))⌉
+    touches=108, support=321
+• (((connected) ∧ (nontrivial)) ∧ (independent_domination_number = 1.0·domination_number)) ⇒ matching_number ≥ ⌈(((1/2) · independent_domination_number) + ((1/14) · (independent_domination_number)²))⌉
+    touches=108, support=321
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≥ ⌈((((1/2) · 1) · domination_number) + (((1/2) · 1) · √(min_maximal_matching_number)))⌉
+    touches=105, support=340
+
+[UPPERS] total=100
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ (1 · matching_number)
+    touches=340, support=340
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ (⌊((1/2) · order)⌋ + 0)
+    touches=258, support=340
+• (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ matching_number ≤ (⌊((((1/2) · order) + ((3/4) · |(maximum_degree - independent_domination_number)|)) + ((-3/4) · |(maximum_degree - domination_number)|))⌋ + 0)
+    touches=189, support=263
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ ((1 · order) + (-1 · independence_number))
+    touches=175, support=340
+• ((connected) ∧ (nontrivial)) ⇒ matching_number ≤ ((1/2) · order)
+    touches=170, support=340
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ ((((1/2) · order) + (1 · |(clique_number - matching_number)|)) + (-1 · |(clique_number - harmonic_index)|))
+    touches=132, support=134
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ (((1 · harmonic_index) + (1 · |(clique_number - matching_number)|)) + (-1 · |(clique_number - harmonic_index)|))
+    touches=132, support=134
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ (1 · harmonic_index)
+    touches=128, support=134
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ ⌊((((1/2) · (1/2)) · order) + (((1/2) · (35/11)) · √(total_domination_number)))⌋
+    touches=122, support=134
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ ⌊((((1/2) · 1) · harmonic_index) + (((1/2) · (35/11)) · √(total_domination_number)))⌋
+    touches=122, support=134
+• ((((connected) ∧ (nontrivial)) ∧ (independent_domination_number = 1.0·domination_number)) ∧ (clique_number = 1.0·chromatic_number)) ⇒ matching_number ≤ ⌊((((1/2) · (1/2)) · order) + (((1/2) · (53/25)) · √(order)))⌋
+    touches=121, support=279
+• (((connected) ∧ (nontrivial)) ∧ (maximum_degree = 1.0·minimum_degree)) ⇒ matching_number ≤ ⌊((((1/2) · (1/2)) · order) + (((1/2) · (53/25)) · √(order)))⌋
+    touches=120, support=134
+
+[EQUALS] total=100
+
+• ((connected) ∧ (nontrivial)) ⇒ matching_number = (1 · matching_number)
+    touches=340, support=340
+• (((connected) ∧ (nontrivial)) ∧ (order = 2.0·matching_number)) ⇒ matching_number = ((1/2) · order)
+    touches=170, support=170
+• (((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ⇒ matching_number = ⌊((((1/2) · 1) · domination_number) + (((1/2) · (45/17)) · √(domination_number)))⌋
+    touches=120, support=120
+• (((connected) ∧ (nontrivial)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · radius) + ((2/27) · (harmonic_index)²))⌉
+    touches=93, support=93
+• (((connected) ∧ (nontrivial)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌊((((1/2) · 1) · radius) + (((1/2) · (45/17)) · √(radius)))⌋
+    touches=93, support=93
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · radius) + ((1/12) · (harmonic_index)²))⌉
+    touches=72, support=72
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · radius) + ((1/8) · (domination_number)²))⌉
+    touches=72, support=72
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · radius) + ((1/6) · (min_maximal_matching_number)²))⌉
+    touches=72, support=72
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · domination_number) + ((1/12) · (harmonic_index)²))⌉
+    touches=72, support=72
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · domination_number) + ((1/8) · (domination_number)²))⌉
+    touches=72, support=72
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌈(((1/2) · domination_number) + ((1/6) · (min_maximal_matching_number)²))⌉
+    touches=72, support=72
+• ((((connected) ∧ (nontrivial)) ∧ (domination_number = 1.0·matching_number)) ∧ (radius = 1.0·matching_number)) ⇒ matching_number = ⌊((((1/2) · 1) · radius) + (((1/2) · 2) · √(radius)))⌋
+    touches=72, support=72
+
+────────────────────────────────────────────────────────────────────────────────
+END OF REPORT
+Finished: 2025-11-06 21:15:50
+────────────────────────────────────────────────────────────────────────────────

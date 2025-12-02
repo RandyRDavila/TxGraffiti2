@@ -1,0 +1,1176 @@
+────────────────────────────────────────────────────────────────────────────────
+TxGraffiti • Full Program Run Report
+────────────────────────────────────────────────────────────────────────────────
+Started: 2025-11-11 19:45:58
+Working dir: /Users/randydavila/Documents/automated-conjecturing/txgraffiti2
+Python: 3.13.2
+────────────────────────────────────────────────────────────────────────────────
+
+--------------------------------------------------------------------------------
+QUALITATIVE RELATIONS (TOP 12)
+--------------------------------------------------------------------------------
+
+=== Qualitative Relations (top 12) ===
+• [((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (triangle_free))]  zero_forcing_number ↑ minimum_degree  (rho=1.000, n=21/21, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (claw_free))]  zero_forcing_number ↑ minimum_degree  (rho=1.000, n=19/19, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar))]  zero_forcing_number ↑ largest_laplacian_eigenvalue  (rho=0.981, n=19/19, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (claw_free))]  zero_forcing_number ↑ clique_number  (rho=0.980, n=38/38, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (claw_free))]  zero_forcing_number ↑ chromatic_number  (rho=0.980, n=38/38, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (eulerian))]  zero_forcing_number ↑ largest_laplacian_eigenvalue  (rho=0.980, n=21/21, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (planar))]  zero_forcing_number ↑ maximum_degree  (rho=0.971, n=19/19, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (eulerian))]  zero_forcing_number ↑ minimum_degree  (rho=0.967, n=12/12, method=spearman)
+• [(((connected) ∧ (nontrivial)) ∧ (eulerian))]  zero_forcing_number ↑ largest_laplacian_eigenvalue  (rho=0.959, n=24/24, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (eulerian))]  zero_forcing_number ↑ maximum_degree  (rho=0.953, n=12/12, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (regular))]  zero_forcing_number ↑ maximum_degree  (rho=0.953, n=12/12, method=spearman)
+• [((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (regular))]  zero_forcing_number ↑ minimum_degree  (rho=0.953, n=12/12, method=spearman)
+
+--------------------------------------------------------------------------------
+ASYMPTOTIC LIMITS (QUALITATIVE → DEFINITE)
+--------------------------------------------------------------------------------
+
+[ASYMPTOTIC] total=487
+
+• (((connected) ∧ (nontrivial))) ⇒ lim_{matching_number→∞} (zero_forcing_number / size) = (12/49)
+• ((((connected) ∧ (nontrivial)) ∧ (K_4_free))) ⇒ lim_{matching_number→∞} (zero_forcing_number / size) = (12/49)
+• ((((connected) ∧ (nontrivial)) ∧ (planar))) ⇒ lim_{order→∞} zero_forcing_number = ∞
+• ((((connected) ∧ (nontrivial)) ∧ (planar))) ⇒ lim_{size→∞} zero_forcing_number = ∞
+• ((((connected) ∧ (nontrivial)) ∧ (planar))) ⇒ lim_{independence_number→∞} zero_forcing_number = ∞
+• ((((connected) ∧ (nontrivial)) ∧ (planar))) ⇒ lim_{annihilation_number→∞} zero_forcing_number = ∞
+• ((((connected) ∧ (nontrivial)) ∧ (planar))) ⇒ lim_{largest_laplacian_eigenvalue→∞} zero_forcing_number = ∞
+• (((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar))) ⇒ lim_{order→∞} zero_forcing_number = ∞
+• (((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar))) ⇒ lim_{size→∞} zero_forcing_number = ∞
+• (((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar))) ⇒ lim_{independence_number→∞} zero_forcing_number = ∞
+
+--------------------------------------------------------------------------------
+GRAFFITICLASSRELATIONS SUMMARY
+--------------------------------------------------------------------------------
+
+Boolean columns: ['connected', 'bipartite', 'chordal', 'cubic', 'eulerian', 'planar', 'regular', 'subcubic', 'tree', 'K_4_free', 'triangle_free', 'claw_free', 'nontrivial']
+Expr columns: ['order', 'size', 'maximum_degree', 'minimum_degree', 'diameter', 'radius', 'clique_number', 'chromatic_number', 'independence_number', 'matching_number', 'triameter', 'slater', 'annihilation_number', 'residue', 'harmonic_index', 'domination_number', 'total_domination_number', 'independent_domination_number', 'min_maximal_matching_number', 'spectral_radius', 'largest_laplacian_eigenvalue', 'second_largest_adjacency_eigenvalue', 'zero_forcing_number']
+Base hypothesis: connected ∧ nontrivial
+
+Nonredundant conjunctions:
+  connected ∧ nontrivial ∧ K_4_free
+  connected ∧ nontrivial ∧ bipartite
+  connected ∧ nontrivial ∧ chordal
+  connected ∧ nontrivial ∧ claw_free
+  connected ∧ nontrivial ∧ cubic
+  connected ∧ nontrivial ∧ eulerian
+  connected ∧ nontrivial ∧ planar
+  connected ∧ nontrivial ∧ regular
+
+Example atomic conjectures:
+
+  (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ clique_number = 2 ∧ chromatic_number = 2
+
+  (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ maximum_degree = 3 ∧ minimum_degree = 3
+
+  (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2
+
+  (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ clique_number = 2
+
+  ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ maximum_degree = 3 ∧ minimum_degree = 3
+
+=== Class Equivalences ===
+  (clique_number = 2 ∧ chromatic_number = 2) ≡ (((connected) ∧ (nontrivial)) ∧ (bipartite))
+  (maximum_degree = 3 ∧ minimum_degree = 3) ≡ (((connected) ∧ (nontrivial)) ∧ (cubic))
+  (clique_number = 2) ≡ (((connected) ∧ (nontrivial)) ∧ (triangle_free))
+  (maximum_degree = 3 ∧ minimum_degree = 3 ∧ clique_number = 2 ∧ chromatic_number = 2) ≡ ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (cubic))
+  (order = 4 ∧ size = 6 ∧ maximum_degree = 3 ∧ minimum_degree = 3 ∧ diameter = 1 ∧ radius = 1 ∧ clique_number = 4 ∧ chromatic_number = 4 ∧ independence_number = 1 ∧ matching_number = 2 ∧ triameter = 3 ∧ slater = 1 ∧ annihilation_number = 2 ∧ residue = 1 ∧ harmonic_index = 2 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1 ∧ min_maximal_matching_number = 2 ∧ spectral_radius = 3 ∧ largest_laplacian_eigenvalue = 4 ∧ second_largest_adjacency_eigenvalue = -1 ∧ zero_forcing_number = 3) ≡ ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (cubic))
+  (diameter = 1 ∧ radius = 1 ∧ independence_number = 1 ∧ slater = 1 ∧ residue = 1 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1 ∧ second_largest_adjacency_eigenvalue = -1) ≡ ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (regular))
+  (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2 ∧ zero_forcing_number = 1) ≡ ((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (tree))
+  (maximum_degree = 3 ∧ minimum_degree = 3 ∧ clique_number = 2) ≡ ((((connected) ∧ (nontrivial)) ∧ (cubic)) ∧ (triangle_free))
+  (maximum_degree = 2 ∧ minimum_degree = 2 ∧ clique_number = 2 ∧ zero_forcing_number = 2) ≡ ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (subcubic))
+  (order = 2 ∧ size = 1 ∧ maximum_degree = 1 ∧ minimum_degree = 1 ∧ diameter = 1 ∧ radius = 1 ∧ clique_number = 2 ∧ chromatic_number = 2 ∧ independence_number = 1 ∧ matching_number = 1 ∧ triameter = 0 ∧ slater = 1 ∧ annihilation_number = 1 ∧ residue = 1 ∧ harmonic_index = 1 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1 ∧ min_maximal_matching_number = 1 ∧ spectral_radius = 1 ∧ largest_laplacian_eigenvalue = 2 ∧ second_largest_adjacency_eigenvalue = -1 ∧ zero_forcing_number = 1) ≡ ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (tree))
+
+=== Inclusions (equalities ⇒ class) ===
+
+=== Inclusions (class ⇒ equalities) ===
+  (((connected) ∧ (nontrivial)) ∧ (tree)) ⊆ (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⊆ (maximum_degree = 3 ∧ minimum_degree = 3)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (chordal)) ⊆ (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (claw_free)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (eulerian)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (regular)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⊆ (clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (eulerian)) ⊆ (radius = 1 ∧ slater = 1 ∧ domination_number = 1 ∧ total_domination_number = 2 ∧ independent_domination_number = 1)
+  ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (triangle_free)) ⊆ (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (cubic)) ⊆ (maximum_degree = 3 ∧ minimum_degree = 3)
+  ((((connected) ∧ (nontrivial)) ∧ (claw_free)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (cubic)) ∧ (planar)) ⊆ (maximum_degree = 3 ∧ minimum_degree = 3)
+  ((((connected) ∧ (nontrivial)) ∧ (eulerian)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (tree)) ⊆ (minimum_degree = 1 ∧ clique_number = 2 ∧ chromatic_number = 2)
+  ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⊆ (clique_number = 2)
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS
+--------------------------------------------------------------------------------
+
+[LOWER] total=1
+
+• ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ (1 · zero_forcing_number)
+    touches=340, support=340
+
+[UPPER] total=1
+
+• ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≤ (1 · zero_forcing_number)
+    touches=340, support=340
+
+[EQUAL] total=1
+
+• ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number = (1 · zero_forcing_number)
+    touches=340, support=340
+
+
+--------------------------------------------------------------------------------
+K2 AFFINE BOUNDS GENERATION
+--------------------------------------------------------------------------------
+
+[LOWER] total=800
+
+• (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ (((1 · |(minimum_degree - diameter)|) + (-1 · |(diameter - zero_forcing_number)|)) + 1)
+    touches=105, support=198
+
+• ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ (((1 · |(minimum_degree - diameter)|) + (-1 · |(diameter - zero_forcing_number)|)) + 1)
+    touches=71, support=146
+
+• ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ((-1 · |(diameter - zero_forcing_number)|) + (1 · diameter))
+    touches=80, support=90
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ((-1 · |(diameter - zero_forcing_number)|) + (1 · diameter))
+    touches=69, support=70
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ((((-1 · |(diameter - zero_forcing_number)|) + (-1 · diameter)) + (2 · |(minimum_degree - diameter)|)) + 2)
+    touches=69, support=70
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ (((-1 · |(diameter - zero_forcing_number)|) + (1 · |(minimum_degree - diameter)|)) + 1)
+    touches=68, support=70
+
+[UPPER] total=885
+
+• (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≤ ((((-1 · |(diameter - chromatic_number)|) + (1 · |(clique_number - zero_forcing_number)|)) + (1 · |(maximum_degree - diameter)|)) + 3)
+    touches=94, support=120
+
+• (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≤ ((1 · |(clique_number - zero_forcing_number)|) + 3)
+    touches=84, support=120
+
+• ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≤ ((((-1/2) · triameter) + (1 · order)) + 1)
+    touches=78, support=340
+
+• (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ zero_forcing_number ≤ ((1 · size) + (-1 · |(minimum_degree - diameter)|))
+    touches=76, support=318
+
+• ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≤ ((1 · size) + (-1 · |(minimum_degree - diameter)|))
+    touches=37, support=70
+
+• (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≤ ((((((-1/2) · triameter) + (1 · order)) + ((1/2) · |(maximum_degree - independent_domination_number)|)) + ((-1/2) · |(maximum_degree - domination_number)|)) + 1)
+    touches=73, support=163
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+INTEGER-AWARE LIFTING
+--------------------------------------------------------------------------------
+
+Before vs After (lowers): 800 → 800
+Before vs After (uppers): 885 → 885
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((-1/2) · order) + ((1/2) · |(independence_number - matching_number)|)) + (1 · annihilation_number))⌉ | touches=67
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((-1/2) · size) + ((1/2) · |(independence_number - matching_number)|)) + (1 · annihilation_number)) + (-1/2))⌉ | touches=67
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · |(size - triameter)|) + (1 · |(independence_number - matching_number)|)) + ((-1/2) · |(order - triameter)|)) + (-1/2))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-3/2) · diameter) + ((5/2) · |(minimum_degree - diameter)|)) + (-1 · |(maximum_degree - diameter)|)) + (3/2))⌉ | touches=46
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((1/4) · |(order - size)|)) + ((-3/4) · |(diameter - chromatic_number)|)) + ((1/4) · |(diameter - clique_number)|)) + (-1/4))⌉ | touches=86
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · size) + ((-3/2) · diameter)) + ((1/2) · |(diameter - chromatic_number)|)) + (5/2))⌉ | touches=37
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · order) + ((-3/2) · diameter)) + ((1/2) · |(diameter - chromatic_number)|)) + (5/2))⌉ | touches=37
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1 · |(size - triameter)|) + (-1 · |(order - triameter)|)) + ((-3/2) · diameter)) + ((1/2) · |(diameter - chromatic_number)|)) + (5/2))⌉ | touches=37
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((1/4) · |(order - size)|)) + ((-1/2) · |(diameter - chromatic_number)|)) + (-1/4))⌉ | touches=84
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((1/4) · |(order - size)|)) + ((-1/2) · |(diameter - clique_number)|)) + (-1/4))⌉ | touches=72
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/2) · size) + ((1/4) · triameter)) + ((-3/4) · order)) + ((-1/4) · |(order - triameter)|)) + (3/2))⌉ | touches=53
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((1/4) · |(maximum_degree - diameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + ((-1/4) · |(diameter - zero_forcing_number)|)) + (3/4))⌉ | touches=61
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · size) + ((-5/4) · diameter)) + ((1/4) · |(maximum_degree - diameter)|)) + (7/4))⌉ | touches=33
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · order) + ((-5/4) · diameter)) + ((1/4) · |(maximum_degree - diameter)|)) + (7/4))⌉ | touches=33
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((-1/6) · size) + ((1/4) · triameter)) + ((1/4) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + 3)⌉ | touches=91
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/12) · size) + ((-1/4) · |(size - triameter)|)) + ((1/4) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + 3)⌉ | touches=91
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/12) · triameter) + ((-1/6) · |(size - triameter)|)) + ((1/4) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + 3)⌉ | touches=91
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/4) · order)) + ((1/4) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + 3)⌉ | touches=91
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((-1/4) · |(size - triameter)|) + ((1/8) · order)) + ((1/4) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + 3)⌉ | touches=91
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((1/2) · |(clique_number - zero_forcing_number)|) + 3)⌉ | touches=87
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + (-1 · |(minimum_degree - diameter)|)) + ((1/2) · diameter))⌉ | touches=54
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + ((-3/4) · |(diameter - chromatic_number)|)) + ((1/4) · |(diameter - clique_number)|))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-1/2) · |(minimum_degree - diameter)|)) + ((1/8) · |(order - size)|)) + (3/8))⌉ | touches=70
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-5/8) · |(minimum_degree - diameter)|)) + ((1/8) · |(diameter - chromatic_number)|)) + (5/8))⌉ | touches=68
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-5/8) · |(minimum_degree - diameter)|)) + ((1/8) · |(diameter - chromatic_number)|)) + (5/8))⌉ | touches=56
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-3/4) · |(diameter - chromatic_number)|)) + ((1/4) · diameter)) + (-1/2))⌉ | touches=47
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · size) + ((1/4) · triameter)) + ((-1/8) · order)) + ((-1/2) · |(minimum_degree - diameter)|)) + (5/8))⌉ | touches=72
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-3/4) · |(minimum_degree - diameter)|)) + ((1/8) · |(order - size)|)) + ((1/4) · diameter)) + (1/8))⌉ | touches=75
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-3/4) · |(diameter - chromatic_number)|)) + ((1/4) · |(order - size)|)) + ((1/4) · diameter)) + (-3/4))⌉ | touches=61
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · triameter) + ((1/8) · order)) + ((-1/2) · |(minimum_degree - diameter)|)) + ((1/8) · |(order - triameter)|)) + (1/2))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · size) + ((1/4) · |(size - triameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + (1/2))⌉ | touches=49
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/2) · order)) + ((1/2) · size)) + ((-1/2) · diameter)) + (3/2))⌉ | touches=51
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · order) + ((1/4) · |(size - triameter)|)) + (-1 · diameter)) + ((1/2) · |(minimum_degree - diameter)|)) + (5/4))⌉ | touches=46
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · size) + ((1/4) · |(size - triameter)|)) + ((-5/8) · diameter)) + ((1/8) · |(minimum_degree - diameter)|)) + (9/8))⌉ | touches=50
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + ((-1/2) · |(minimum_degree - diameter)|)) + (1/2))⌉ | touches=69
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + ((-1/2) · |(minimum_degree - diameter)|)) + (1/2))⌉ | touches=62
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((((1/2) · size) + (-1 · order)) + ((-1/2) · |(order - size)|)) + (1 · annihilation_number)) + (3/2))⌉ | touches=61
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-1/2) · |(minimum_degree - diameter)|)) + ((1/6) · |(order - size)|)) + (1/3))⌉ | touches=65
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-1/2) · |(diameter - chromatic_number)|)) + ((1/4) · |(order - size)|)) + (-1/4))⌉ | touches=59
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((1/4) · |(order - size)|)) + ((-1/2) · diameter)) + (3/4))⌉ | touches=48
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((3/16) · size) + ((1/4) · triameter)) + ((-3/16) · order)) + ((-1/2) · diameter)) + (19/16))⌉ | touches=57
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · diameter) + ((1/2) · |(clique_number - zero_forcing_number)|)) + ((-1/8) · |(maximum_degree - diameter)|)) + (21/8))⌉ | touches=88
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/16) · size) + ((3/16) · triameter)) + ((-1/2) · |(minimum_degree - diameter)|)) + ((1/16) · |(order - triameter)|)) + (9/16))⌉ | touches=56
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-11/8) · diameter)) + ((7/8) · |(minimum_degree - diameter)|)) + (15/8))⌉ | touches=49
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · order) + ((1/4) · |(size - triameter)|)) + ((-1/2) · diameter)) + (3/4))⌉ | touches=45
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · order) + ((1/4) · |(size - triameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + (1/4))⌉ | touches=46
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · size) + ((1/4) · |(size - triameter)|)) + ((-1/2) · diameter)) + 1)⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/4) · order)) + ((1/4) · size)) + ((-1/2) · |(minimum_degree - diameter)|)) + (3/4))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((3/4) · triameter) + ((-1/2) · order)) + ((-1/2) · |(size - triameter)|)) + ((-1/2) · diameter)) + (3/2))⌉ | touches=48
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((3/4) · triameter) + ((-1/2) · order)) + ((-1/2) · |(size - triameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + 1)⌉ | touches=49
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · triameter) + ((1/8) · order)) + ((1/8) · |(order - triameter)|)) + ((-1/2) · diameter)) + 1)⌉ | touches=48
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · triameter) + ((1/8) · order)) + ((1/8) · |(order - triameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + (1/2))⌉ | touches=49
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · triameter) + ((1/8) · size)) + ((1/8) · |(order - triameter)|)) + ((-1/2) · diameter)) + (9/8))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · triameter) + ((1/8) · size)) + ((1/8) · |(order - triameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + (5/8))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/4) · |(size - triameter)|)) + ((1/4) · |(order - triameter)|)) + ((-1/2) · diameter)) + (5/4))⌉ | touches=49
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/4) · |(size - triameter)|)) + ((1/4) · |(order - triameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + (3/4))⌉ | touches=50
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((1/4) · triameter) + ((-1/2) · |(diameter - chromatic_number)|))⌉ | touches=49
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((1/4) · triameter) + ((-1/2) · |(diameter - clique_number)|))⌉ | touches=50
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · triameter) + ((5/18) · |(size - triameter)|)) + ((-1/2) · |(diameter - chromatic_number)|))⌉ | touches=81
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · triameter) + ((5/18) · |(size - triameter)|)) + ((-1/2) · |(diameter - clique_number)|))⌉ | touches=78
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/2) · |(diameter - zero_forcing_number)|)) + ((-1/2) · |(size - triameter)|)) + ((1/2) · |(maximum_degree - diameter)|)) + (3/2))⌉ | touches=49
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((((-1/2) · |(diameter - zero_forcing_number)|) + ((1/2) · |(maximum_degree - diameter)|)) + ((1/4) · order)) + ((-1/4) · |(order - triameter)|)) + 1)⌉ | touches=49
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((((-1/2) · |(diameter - zero_forcing_number)|) + ((1/2) · |(maximum_degree - diameter)|)) + ((1/4) · size)) + ((-1/4) · |(order - triameter)|)) + (5/4))⌉ | touches=49
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + ((-1/2) · diameter)) + 1)⌉ | touches=48
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + ((-1/2) · diameter)) + 1)⌉ | touches=48
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/2) · |(order - triameter)|) + ((-1/4) · diameter)) + ((1/2) · |(diameter - chromatic_number)|)) + ((-3/4) · |(maximum_degree - diameter)|)) + (11/4))⌉ | touches=46
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/2) · |(order - triameter)|) + ((-1/2) · diameter)) + ((1/2) · |(diameter - chromatic_number)|)) + ((-1/2) · |(maximum_degree - diameter)|)) + (7/2))⌉ | touches=49
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · triameter) + ((1/6) · |(size - triameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + (1/2))⌉ | touches=82
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/2) · |(diameter - zero_forcing_number)|)) + ((1/2) · |(maximum_degree - diameter)|)) + ((-1/2) · |(order - triameter)|)) + 1)⌉ | touches=48
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · |(order - triameter)|) + ((1/2) · |(diameter - chromatic_number)|)) + (-1 · |(maximum_degree - diameter)|)) + 2)⌉ | touches=44
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((-1/4) · |(size - triameter)|) + ((1/4) · order)) + ((-1/2) · |(maximum_degree - independent_domination_number)|)) + ((1/2) · |(maximum_degree - domination_number)|)) + (3/4))⌉ | touches=43
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((((-1/4) · |(size - triameter)|) + ((-1/2) · |(maximum_degree - independent_domination_number)|)) + ((1/4) · order)) + ((1/2) · |(maximum_degree - domination_number)|)) + (3/4))⌉ | touches=43
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((-1/10) · triameter) + ((1/5) · |(size - triameter)|)) + ((6/5) · |(minimum_degree - diameter)|)) + ((-6/5) · |(diameter - zero_forcing_number)|)) + (4/5))⌉ | touches=81
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((-1/4) · |(size - triameter)|) + ((-1/2) · |(maximum_degree - independent_domination_number)|)) + ((1/2) · |(maximum_degree - domination_number)|)) + ((1/4) · order)) + (3/4))⌉ | touches=43
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/10) · triameter) + ((3/10) · |(size - triameter)|)) + ((-1/2) · |(diameter - chromatic_number)|))⌉ | touches=59
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((3/20) · triameter) + ((1/5) · |(size - triameter)|)) + ((-5/4) · |(diameter - chromatic_number)|)) + ((3/4) · diameter)) + (-3/2))⌉ | touches=62
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · |(order - triameter)|) + ((-2/5) · diameter)) + ((-1/10) · |(diameter - chromatic_number)|)) + (16/5))⌉ | touches=46
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · |(order - triameter)|) + ((-3/8) · diameter)) + ((-1/8) · |(maximum_degree - diameter)|)) + (25/8))⌉ | touches=46
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((-2/3) · size) + (1 · triameter)) + ((3/2) · |(order - triameter)|)) + ((-1/2) · |(diameter - chromatic_number)|)) + 2)⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((-2/3) · size) + (1 · triameter)) + ((3/2) · |(order - triameter)|)) + ((-1/2) · |(maximum_degree - diameter)|)) + 2)⌉ | touches=41
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/3) · size) + (-1 · |(size - triameter)|)) + ((3/2) · |(order - triameter)|)) + ((-1/2) · |(diameter - chromatic_number)|)) + 2)⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/3) · size) + (-1 · |(size - triameter)|)) + ((3/2) · |(order - triameter)|)) + ((-1/2) · |(maximum_degree - diameter)|)) + 2)⌉ | touches=41
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1 · triameter) + (-1 · order)) + ((3/2) · |(order - triameter)|)) + ((-1/2) · |(diameter - chromatic_number)|)) + 2)⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1 · triameter) + (-1 · order)) + ((3/2) · |(order - triameter)|)) + ((-1/2) · |(maximum_degree - diameter)|)) + 2)⌉ | touches=41
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1 · |(size - triameter)|) + ((1/2) · order)) + ((3/2) · |(order - triameter)|)) + ((-1/2) · |(diameter - chromatic_number)|)) + 2)⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1 · |(size - triameter)|) + ((1/2) · order)) + ((3/2) · |(order - triameter)|)) + ((-1/2) · |(maximum_degree - diameter)|)) + 2)⌉ | touches=41
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · |(order - triameter)|) + ((-1/2) · diameter)) + (7/2))⌉ | touches=45
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · |(size - triameter)|) + (-1 · diameter)) + ((1/2) · |(minimum_degree - diameter)|)) + (3/2))⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · size) + ((-1/2) · order)) + ((-1/3) · |(order - size)|)) + (11/6))⌉ | touches=45
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/2) · size) + ((1/8) · triameter)) + ((-11/16) · order)) + ((-1/16) · |(size - triameter)|)) + (27/16))⌉ | touches=53
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((1/6) · size) + ((-1/6) · |(size - triameter)|)) + ((-2/3) · |(maximum_degree - independent_domination_number)|)) + ((2/3) · |(maximum_degree - domination_number)|)) + 1)⌉ | touches=42
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · |(size - triameter)|) + ((-1/2) · |(order - triameter)|)) + ((-1/4) · |(diameter - zero_forcing_number)|)) + ((1/2) · |(diameter - chromatic_number)|)) + (5/4))⌉ | touches=44
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈(((((-1/2) · |(diameter - zero_forcing_number)|) + (1 · |(maximum_degree - diameter)|)) + ((-1/2) · |(order - triameter)|)) + 2)⌉ | touches=24
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((3/20) · triameter) + ((1/5) · |(size - triameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + (1/2))⌉ | touches=68
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/10) · triameter) + ((3/10) · |(size - triameter)|)) + ((-1/2) · diameter)) + 1)⌉ | touches=57
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · |(order - triameter)|) + ((-1/2) · |(diameter - chromatic_number)|)) + 2)⌉ | touches=38
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · |(order - triameter)|) + ((-1/2) · |(maximum_degree - diameter)|)) + 2)⌉ | touches=40
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/10) · diameter) + ((-1/10) · |(diameter - chromatic_number)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (27/10))⌉ | touches=88
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((2/3) · size) + (-1 · |(order - triameter)|)) + ((-7/4) · diameter)) + ((3/4) · |(maximum_degree - diameter)|)) + (1/4))⌉ | touches=25
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1 · order) + (-1 · |(order - triameter)|)) + ((-7/4) · diameter)) + ((3/4) · |(maximum_degree - diameter)|)) + (1/4))⌉ | touches=25
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · |(size - triameter)|) + ((-1/2) · diameter)) + 1)⌉ | touches=38
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · |(size - triameter)|) + ((-1/2) · |(minimum_degree - diameter)|)) + (1/2))⌉ | touches=38
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · order) + ((1/6) · |(size - triameter)|)) + ((-1/3) · |(diameter - zero_forcing_number)|)) + (1/2))⌉ | touches=52
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · size) + ((-1/6) · |(size - triameter)|)) + 1)⌉ | touches=38
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((-1/4) · |(size - triameter)|) + ((1/4) · order)) + (3/4))⌉ | touches=40
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/16) · triameter) + ((3/16) · order)) + ((-1/16) · |(order - triameter)|)) + ((-1/4) · |(diameter - chromatic_number)|)) + (1/4))⌉ | touches=69
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · triameter) + ((1/8) · order)) + ((-1/2) · |(minimum_degree - diameter)|)) + ((1/8) · diameter)) + (3/8))⌉ | touches=70
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈((((((-1/2) · size) + ((3/4) · order)) + ((1/2) · |(size - triameter)|)) + ((-3/4) · |(order - triameter)|)) + (-1/2))⌉ | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · |(size - triameter)|) + ((1/2) · |(maximum_degree - diameter)|)) + ((-1/2) · |(diameter - zero_forcing_number)|)) + ((-1/4) · |(order - triameter)|)) + (5/4))⌉ | touches=25
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-1/4) · |(order - triameter)|)) + ((-1/4) · |(diameter - chromatic_number)|)) + (1/4))⌉ | touches=58
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/6) · size) + ((-1/6) · |(size - triameter)|)) + ((1/6) · |(order - triameter)|)) + ((-1/6) · |(diameter - chromatic_number)|)) + (5/6))⌉ | touches=76
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/16) · triameter) + ((3/16) · order)) + ((-3/8) · |(diameter - chromatic_number)|)) + ((1/16) · diameter)) + (1/16))⌉ | touches=62
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · order) + ((3/8) · size)) + ((-1/4) · diameter)) + (9/8))⌉ | touches=51
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · size) + ((1/6) · |(order - triameter)|)) + ((-1/3) · |(maximum_degree - diameter)|)) + (1/2))⌉ | touches=46
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((-1/8) · triameter) + ((1/8) · order)) + ((1/4) · size)) + ((-1/8) · |(order - triameter)|)) + (3/4))⌉ | touches=33
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((-1/8) · order) + ((3/8) · size)) + ((-7/16) · diameter)) + ((3/16) · |(minimum_degree - diameter)|)) + (21/16))⌉ | touches=51
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · order) + ((1/8) · |(size - triameter)|)) + ((-7/8) · |(diameter - chromatic_number)|)) + ((5/8) · |(diameter - clique_number)|)) + (3/8))⌉ | touches=80
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · size) + ((-1/16) · |(size - triameter)|)) + ((-1/16) · |(diameter - zero_forcing_number)|)) + (15/16))⌉ | touches=61
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · size) + ((-1/16) · |(size - triameter)|)) + ((-1/16) · |(diameter - zero_forcing_number)|)) + (15/16))⌉ | touches=73
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((1/4) · |(size - triameter)|)) + ((-1/2) · |(order - triameter)|)) + ((-1/4) · |(diameter - chromatic_number)|))⌉ | touches=68
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((1/4) · |(order - size)|)) + ((-1/4) · |(order - triameter)|)) + ((-1/4) · |(diameter - chromatic_number)|))⌉ | touches=70
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((1/6) · triameter) + ((-1/3) · |(size - triameter)|)) + ((-2/3) · |(maximum_degree - independent_domination_number)|)) + ((2/3) · |(maximum_degree - domination_number)|)) + 1)⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((-1/4) · |(size - triameter)|) + ((1/4) · size)) + 1)⌉ | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-3/4) · |(size - triameter)|)) + ((1/4) · |(order - triameter)|)) + (5/4))⌉ | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · triameter) + ((3/8) · order)) + ((-1/8) · |(order - triameter)|)) + (1/2))⌉ | touches=29
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · triameter) + ((3/8) · order)) + ((-1/8) · |(order - triameter)|)) + (1/2))⌉ | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · triameter) + ((3/8) · size)) + ((-1/8) · |(order - triameter)|)) + (7/8))⌉ | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((-1/4) · |(size - triameter)|) + (1 · order)) + ((-3/4) · size))⌉ | touches=29
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((-1/16) · size) + ((5/16) · order)) + ((-1/4) · diameter)) + (11/16))⌉ | touches=58
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((2/15) · size) + ((-1/15) · |(size - triameter)|)) + ((-1/15) · diameter)) + 1)⌉ | touches=59
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · size) + ((-1/6) · |(order - size)|)) + ((-1/6) · diameter)) + (7/6))⌉ | touches=58
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/16) · size) + ((1/8) · triameter)) + ((1/16) · order)) + ((-3/8) · |(diameter - chromatic_number)|)) + (3/16))⌉ | touches=69
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/16) · size) + ((3/16) · triameter)) + ((-1/2) · |(minimum_degree - diameter)|)) + ((1/16) · diameter)) + (1/2))⌉ | touches=74
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((-1/16) · size) + ((5/16) · order)) + ((-5/16) · |(diameter - chromatic_number)|)) + ((1/16) · diameter)) + (1/16))⌉ | touches=60
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((-1/10) · |(order - triameter)|) + ((3/10) · diameter)) + ((-1/10) · |(diameter - chromatic_number)|)) + ((3/5) · |(clique_number - zero_forcing_number)|)) + (11/5))⌉ | touches=111
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/16) · triameter) + ((3/16) · order)) + ((-1/16) · |(order - triameter)|)) + ((-1/4) · diameter)) + (3/4))⌉ | touches=53
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((1/4) · |(size - triameter)|)) + ((-9/16) · |(order - triameter)|)) + ((-3/16) · diameter)) + (7/16))⌉ | touches=54
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((-1/2) · order) + ((1/2) · size)) + (3/2))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · order) + ((-1/4) · |(size - triameter)|)) + (3/4))⌉ | touches=32
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · size) + ((-1/4) · |(order - triameter)|)) + (3/4))⌉ | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · size) + ((-1/4) · |(order - triameter)|)) + (3/4))⌉ | touches=29
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · size) + ((-1/4) · |(minimum_degree - diameter)|)) + (3/4))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · order) + (-1 · diameter)) + ((3/4) · |(minimum_degree - diameter)|)) + (3/2))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · size) + ((-5/8) · diameter)) + ((3/8) · |(minimum_degree - diameter)|)) + (11/8))⌉ | touches=51
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈(((((4/17) · |(order - size)|) + (-1 · |(maximum_degree - independent_domination_number)|)) + (1 · |(maximum_degree - domination_number)|)) + (13/17))⌉ | touches=34
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((1/10) · size) + ((-1/10) · |(size - triameter)|)) + 1)⌉ | touches=51
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/10) · size) + ((-1/10) · |(size - triameter)|)) + 1)⌉ | touches=38
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · size) + ((-1/4) · order)) + (5/4))⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · size) + ((-1/4) · order)) + (5/4))⌉ | touches=26
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/16) · size) + ((5/16) · order)) + ((-1/4) · |(diameter - clique_number)|)) + (3/16))⌉ | touches=68
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/9) · size) + ((-1/9) · |(size - triameter)|)) + ((1/9) · |(order - size)|)) + (8/9))⌉ | touches=53
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · |(size - triameter)|) + ((-1/4) · |(diameter - zero_forcing_number)|)) + (3/4))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · |(size - triameter)|) + ((-1/4) · |(diameter - zero_forcing_number)|)) + (3/4))⌉ | touches=60
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((3/16) · order) + ((-1/8) · |(maximum_degree - diameter)|)) + ((-1/16) · |(order - triameter)|)) + (1/2))⌉ | touches=60
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈(((((3/16) · order) + ((-1/8) · |(maximum_degree - diameter)|)) + ((-1/16) · |(order - triameter)|)) + (1/2))⌉ | touches=53
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · triameter) + ((-1/3) · |(size - triameter)|)) + 1)⌉ | touches=35
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((-1/4) · |(order - triameter)|) + ((1/4) · |(diameter - chromatic_number)|)) + (5/4))⌉ | touches=27
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/16) · size) + ((5/16) · order)) + ((-1/4) · |(diameter - chromatic_number)|)) + (3/16))⌉ | touches=69
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((-1/16) · size) + ((5/16) · order)) + ((-1/4) · |(diameter - chromatic_number)|)) + (3/16))⌉ | touches=59
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/7) · triameter) + ((1/7) · |(order - size)|)) + ((-3/7) · |(diameter - zero_forcing_number)|)) + ((1/7) · |(diameter - chromatic_number)|)) + (5/7))⌉ | touches=90
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + ((-1/2) · |(size - triameter)|)) + 1)⌉ | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + ((-1/2) · |(order - triameter)|)) + (1/2))⌉ | touches=28
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + ((-1/2) · |(order - triameter)|)) + (1/2))⌉ | touches=31
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · order) + ((-1/4) · |(order - triameter)|)) + (1/2))⌉ | touches=29
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · order) + ((-1/4) · |(order - triameter)|)) + (1/2))⌉ | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((3/4) · order) + ((-1/2) · size)) + ((-1/4) · |(order - triameter)|))⌉ | touches=29
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · size) + ((-1/9) · diameter)) + 1)⌉ | touches=57
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/3) · |(size - triameter)|) + ((-1/3) · diameter)) + 1)⌉ | touches=47
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/16) · triameter) + ((3/16) · order)) + ((-5/16) · diameter)) + (13/16))⌉ | touches=58
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((-1/6) · |(diameter - chromatic_number)|) + ((1/2) · |(clique_number - zero_forcing_number)|)) + 3)⌉ | touches=88
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/18) · |(order - triameter)|) + ((-5/18) · |(diameter - chromatic_number)|)) + ((4/9) · |(clique_number - zero_forcing_number)|)) + ((2/9) · |(maximum_degree - diameter)|)) + (26/9))⌉ | touches=87
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((3/4) · triameter) + ((1/4) · |(order - triameter)|)) + ((-7/4) · diameter)) + ((3/4) · |(diameter - chromatic_number)|)) + (7/4))⌉ | touches=43
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((3/4) · triameter) + ((1/4) · |(order - triameter)|)) + ((-7/4) · diameter)) + ((3/4) · |(maximum_degree - diameter)|)) + (7/4))⌉ | touches=39
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/16) · triameter) + ((3/16) · order)) + ((-1/16) · |(order - triameter)|)) + (3/4))⌉ | touches=34
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-1/4) · |(order - triameter)|)) + ((-1/4) · diameter)) + (3/4))⌉ | touches=49
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · order) + ((-1/4) · diameter)) + (3/4))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · order) + ((-1/4) · |(minimum_degree - diameter)|)) + (1/2))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · size) + ((-1/4) · diameter)) + 1)⌉ | touches=51
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-1/4) · |(size - triameter)|)) + ((-1/4) · |(order - triameter)|)) + (3/4))⌉ | touches=31
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · |(size - triameter)|) + ((1/6) · |(order - triameter)|)) + ((-1/3) · |(maximum_degree - diameter)|)) + (1/2))⌉ | touches=45
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈(((4/17) · |(order - size)|) + (13/17))⌉ | touches=33
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((1/3) · |(order - size)|) + (2/3))⌉ | touches=24
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((2/15) · size) + ((-1/15) · |(size - triameter)|)) + ((-1/15) · |(diameter - chromatic_number)|)) + (13/15))⌉ | touches=72
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((2/15) · size) + ((-1/15) · |(size - triameter)|)) + ((-1/15) · |(diameter - clique_number)|)) + (13/15))⌉ | touches=72
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/10) · size) + ((-1/10) · |(diameter - zero_forcing_number)|)) + (9/10))⌉ | touches=57
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/10) · size) + ((-1/10) · |(diameter - zero_forcing_number)|)) + (9/10))⌉ | touches=70
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/10) · triameter) + ((-1/5) · |(size - triameter)|)) + 1)⌉ | touches=36
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/8) · triameter) + ((-1/4) · |(order - triameter)|)) + (3/4))⌉ | touches=34
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈((((1/8) · triameter) + ((-1/4) · |(order - triameter)|)) + (3/4))⌉ | touches=31
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/8) · triameter) + ((-1/4) · |(order - triameter)|)) + (3/4))⌉ | touches=40
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/8) · order) + ((-1/8) · |(order - triameter)|)) + (3/4))⌉ | touches=36
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈((((1/8) · order) + ((-1/8) · |(order - triameter)|)) + (3/4))⌉ | touches=33
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/8) · order) + ((-1/8) · |(order - triameter)|)) + (3/4))⌉ | touches=42
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · |(size - triameter)|) + ((-1/9) · |(order - size)|)) + ((-1/3) · |(diameter - zero_forcing_number)|)) + (7/9))⌉ | touches=71
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/7) · triameter) + ((-2/7) · |(size - triameter)|)) + ((4/7) · |(order - size)|)) + (3/7))⌉ | touches=42
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((-1/4) · |(order - triameter)|) + ((1/4) · diameter)) + (3/4))⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((2/19) · size) + ((-2/19) · |(minimum_degree - diameter)|)) + (17/19))⌉ | touches=70
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((2/19) · size) + ((-2/19) · |(minimum_degree - diameter)|)) + (17/19))⌉ | touches=57
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · size) + ((-1/6) · |(order - size)|)) + ((-1/6) · |(diameter - chromatic_number)|)) + (5/6))⌉ | touches=73
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((2/19) · triameter) + ((-4/19) · |(size - triameter)|)) + ((1/2) · |(order - size)|)) + (1/2))⌉ | touches=48
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((2/11) · order) + ((-2/11) · |(minimum_degree - diameter)|)) + ((-3/11) · |(diameter - chromatic_number)|)) + ((3/11) · |(diameter - clique_number)|)) + (7/11))⌉ | touches=82
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((2/19) · size) + ((-2/19) · |(maximum_degree - diameter)|)) + (15/19))⌉ | touches=55
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/6) · |(size - triameter)|) + ((2/3) · |(maximum_degree - diameter)|)) + ((-1/2) · |(diameter - zero_forcing_number)|)) + ((-1/3) · |(order - triameter)|)) + (3/2))⌉ | touches=31
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/19) · |(size - triameter)|) + ((8/19) · |(clique_number - zero_forcing_number)|)) + ((-2/19) · |(maximum_degree - diameter)|)) + (50/19))⌉ | touches=88
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/9) · size) + ((2/3) · triameter)) + (1 · |(diameter - chromatic_number)|)) + (-2 · |(maximum_degree - diameter)|)) + -4)⌉ | touches=40
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((7/9) · size) + ((-2/3) · |(size - triameter)|)) + (1 · |(diameter - chromatic_number)|)) + (-2 · |(maximum_degree - diameter)|)) + -4)⌉ | touches=40
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((7/9) · triameter) + ((1/9) · |(size - triameter)|)) + (1 · |(diameter - chromatic_number)|)) + (-2 · |(maximum_degree - diameter)|)) + -4)⌉ | touches=40
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((2/3) · triameter) + ((1/6) · order)) + (1 · |(diameter - chromatic_number)|)) + (-2 · |(maximum_degree - diameter)|)) + -4)⌉ | touches=40
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((3/4) · triameter) + ((1/4) · |(order - triameter)|)) + ((-3/2) · diameter)) + ((1/2) · |(maximum_degree - diameter)|)) + 1)⌉ | touches=37
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((3/4) · triameter) + ((1/4) · |(order - triameter)|)) + (1 · |(diameter - chromatic_number)|)) + (-2 · |(maximum_degree - diameter)|)) + (-7/2))⌉ | touches=38
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · size) + ((-1/8) · triameter)) + ((3/4) · annihilation_number)) + (1/4))⌉ | touches=66
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((-1/2) · order) + ((1/8) · |(order - size)|)) + (1 · annihilation_number)) + (3/8))⌉ | touches=43
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · triameter) + ((-1/3) · |(diameter - zero_forcing_number)|)) + (2/3))⌉ | touches=61
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · triameter) + ((-1/3) · |(diameter - zero_forcing_number)|)) + (2/3))⌉ | touches=62
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((5/16) · size) + ((-13/16) · order)) + (1 · annihilation_number)) + (13/16))⌉ | touches=45
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · triameter) + ((1/6) · |(maximum_degree - diameter)|)) + ((-1/2) · |(diameter - zero_forcing_number)|)) + (5/6))⌉ | touches=81
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · size) + ((-3/2) · order)) + (2 · annihilation_number)) + (-1/2))⌉ | touches=19
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · size) + ((-3/2) · order)) + (2 · annihilation_number)) + (-1/2))⌉ | touches=18
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((-1/12) · size) + ((-1/12) · order)) + ((2/3) · annihilation_number)) + ((-1/6) · |(order - triameter)|)) + (1/4))⌉ | touches=63
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((2/15) · size) + ((-2/15) · |(size - triameter)|)) + ((1/11) · order)) + ((-1/11) · |(maximum_degree - diameter)|)) + (8/11))⌉ | touches=61
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · triameter) + ((-1/2) · |(diameter - zero_forcing_number)|)) + ((1/6) · |(maximum_degree - diameter)|)) + (5/6))⌉ | touches=77
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · triameter) + ((-1/2) · |(diameter - zero_forcing_number)|)) + ((1/6) · |(maximum_degree - diameter)|)) + (5/6))⌉ | touches=65
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · size) + ((1/3) · triameter)) + ((-2/3) · order)) + 2)⌉ | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · size) + ((1/3) · triameter)) + ((-4/3) · harmonic_index)) + 2)⌉ | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · |(size - triameter)|) + ((2/3) · triameter)) + ((-2/3) · order)) + 2)⌉ | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · |(size - triameter)|) + ((2/3) · triameter)) + ((-4/3) · harmonic_index)) + 2)⌉ | touches=32
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((((1/3) · |(size - triameter)|) + ((-2/3) · |(order - triameter)|)) + ((16/3) · annihilation_number)) + ((-16/3) · matching_number)) + 2)⌉ | touches=28
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/3) · |(size - triameter)|) + ((-2/3) · |(order - triameter)|)) + ((16/3) · annihilation_number)) + ((-16/3) · matching_number)) + 2)⌉ | touches=25
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/9) · size) + ((2/3) · triameter)) + (-1 · diameter)) + -1)⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/9) · size) + ((2/3) · triameter)) + (-1 · |(maximum_degree - diameter)|)) + -4)⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((7/9) · size) + ((-2/3) · |(size - triameter)|)) + (-1 · diameter)) + -1)⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((7/9) · size) + ((-2/3) · |(size - triameter)|)) + (-1 · |(maximum_degree - diameter)|)) + -4)⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((7/9) · triameter) + ((1/9) · |(size - triameter)|)) + (-1 · diameter)) + -1)⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((7/9) · triameter) + ((1/9) · |(size - triameter)|)) + (-1 · |(maximum_degree - diameter)|)) + -4)⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((2/3) · triameter) + ((1/6) · order)) + (-1 · diameter)) + -1)⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((2/3) · triameter) + ((1/6) · order)) + (-1 · |(maximum_degree - diameter)|)) + -4)⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · triameter) + ((-1/8) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (9/4))⌉ | touches=101
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((3/4) · triameter) + ((1/4) · |(order - triameter)|)) + (-1 · |(maximum_degree - diameter)|)) + (-7/2))⌉ | touches=33
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · size) + ((-1/8) · |(size - triameter)|)) + ((-1/8) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (9/4))⌉ | touches=101
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/11) · size) + ((-2/11) · |(order - triameter)|)) + ((1/11) · |(diameter - chromatic_number)|)) + ((6/11) · |(clique_number - zero_forcing_number)|)) + (20/11))⌉ | touches=110
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((-1/8) · |(size - triameter)|) + ((3/16) · order)) + ((-1/8) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (9/4))⌉ | touches=101
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/9) · size) + ((2/3) · triameter)) + (-1 · |(diameter - chromatic_number)|)) + -4)⌉ | touches=35
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((7/9) · size) + ((-2/3) · |(size - triameter)|)) + (-1 · |(diameter - chromatic_number)|)) + -4)⌉ | touches=35
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((7/9) · triameter) + ((1/9) · |(size - triameter)|)) + (-1 · |(diameter - chromatic_number)|)) + -4)⌉ | touches=35
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((2/3) · triameter) + ((1/6) · order)) + (-1 · |(diameter - chromatic_number)|)) + -4)⌉ | touches=35
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((3/4) · triameter) + ((1/4) · |(order - triameter)|)) + (-1 · diameter)) + (-1/2))⌉ | touches=33
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((3/4) · triameter) + ((1/4) · |(order - triameter)|)) + (-1 · |(diameter - chromatic_number)|)) + (-7/2))⌉ | touches=33
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · size) + ((1/6) · |(size - triameter)|)) + ((-1/3) · |(diameter - zero_forcing_number)|)) + (2/3))⌉ | touches=53
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((-1/9) · |(size - triameter)|) + ((1/9) · order)) + (8/9))⌉ | touches=47
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((((-1/9) · |(size - triameter)|) + ((1/9) · order)) + ((-7/9) · |(maximum_degree - independent_domination_number)|)) + ((7/9) · |(maximum_degree - domination_number)|)) + (8/9))⌉ | touches=51
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((-1/2) · order) + (1 · annihilation_number)) + (1/2))⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((-1/2) · order) + (1 · annihilation_number)) + (1/2))⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · order) + ((-1/9) · |(size - triameter)|)) + (8/9))⌉ | touches=41
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · order) + ((-1/9) · |(size - triameter)|)) + (8/9))⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · order) + ((-1/9) · |(size - triameter)|)) + (8/9))⌉ | touches=32
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((2/11) · order) + ((-2/11) · |(minimum_degree - diameter)|)) + (7/11))⌉ | touches=71
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((2/11) · order) + ((-2/11) · |(minimum_degree - diameter)|)) + (7/11))⌉ | touches=58
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · size) + ((-1/6) · |(order - size)|)) + ((-1/6) · |(diameter - clique_number)|)) + (5/6))⌉ | touches=71
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/16) · order) + ((1/8) · |(independence_number - matching_number)|)) + ((-3/16) · |(diameter - zero_forcing_number)|)) + ((1/4) · annihilation_number)) + (3/8))⌉ | touches=92
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((-1/2) · size) + (1 · annihilation_number))⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈(((-1/2) · size) + (1 · annihilation_number))⌉ | touches=39
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈(((((3/20) · size) + ((-1/5) · |(maximum_degree - diameter)|)) + ((1/20) · order)) + (11/20))⌉ | touches=58
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/3) · |(size - triameter)|) + ((-2/3) · |(order - triameter)|)) + 2)⌉ | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · size) + ((-1/3) · triameter)) + ((-2/3) · |(order - triameter)|)) + 2)⌉ | touches=30
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · size) + ((-1/3) · |(order - triameter)|)) + ((-2/3) · harmonic_index)) + 2)⌉ | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈((((-1/3) · |(diameter - zero_forcing_number)|) + ((1/3) · |(size - triameter)|)) + (2/3))⌉ | touches=45
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1 · size) + (-1 · order)) + ((-1/2) · |(order - size)|)) + ((-1/2) · annihilation_number)) + 3)⌉ | touches=14
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1 · size) + (-1 · order)) + ((-1/2) · |(order - size)|)) + ((-1/2) · matching_number)) + 3)⌉ | touches=14
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1 · size) + ((-1/2) · |(order - size)|)) + ((-1/2) · annihilation_number)) + (-2 · harmonic_index)) + 3)⌉ | touches=14
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1 · size) + ((-1/2) · |(order - size)|)) + ((-1/2) · matching_number)) + (-2 · harmonic_index)) + 3)⌉ | touches=14
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/12) · size) + ((-1/4) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (9/4))⌉ | touches=101
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · order) + ((-1/4) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (9/4))⌉ | touches=101
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/14) · order) + ((-1/7) · |(order - triameter)|)) + ((1/7) · diameter)) + ((4/7) · |(clique_number - zero_forcing_number)|)) + 2)⌉ | touches=110
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((-1/14) · order) + ((3/7) · diameter)) + ((-1/7) · |(diameter - chromatic_number)|)) + ((4/7) · |(clique_number - zero_forcing_number)|)) + (16/7))⌉ | touches=106
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/3) · |(size - triameter)|) + ((-1/3) · |(diameter - zero_forcing_number)|)) + (2/3))⌉ | touches=45
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈(((((1/15) · size) + ((1/15) · order)) + ((-2/15) · |(maximum_degree - diameter)|)) + (2/3))⌉ | touches=74
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ zero_forcing_number ≥ ⌈((((1/12) · size) + ((-1/12) · |(minimum_degree - diameter)|)) + (11/12))⌉ | touches=75
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · size) + ((-1/9) · |(order - triameter)|)) + (8/9))⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · size) + ((-1/9) · |(order - triameter)|)) + (8/9))⌉ | touches=34
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · size) + ((-1/9) · |(order - triameter)|)) + (8/9))⌉ | touches=51
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/6) · |(independence_number - matching_number)|) + ((1/6) · |(maximum_degree - diameter)|)) + ((1/3) · annihilation_number)) + ((-1/3) · |(diameter - zero_forcing_number)|)) + (1/2))⌉ | touches=103
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1 · size) + ((-5/4) · order)) + ((-1/2) · |(order - size)|)) + 3)⌉ | touches=14
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1 · size) + ((-1/2) · |(order - size)|)) + ((-5/2) · harmonic_index)) + 3)⌉ | touches=14
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · diameter) + (1 · |(diameter - chromatic_number)|)) + ((-5/4) · |(maximum_degree - diameter)|)) + (9/4))⌉ | touches=13
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/18) · triameter) + ((-1/18) · |(order - triameter)|)) + ((1/9) · diameter)) + ((5/9) · |(clique_number - zero_forcing_number)|)) + (20/9))⌉ | touches=110
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/7) · |(size - triameter)|) + ((-2/7) · |(order - triameter)|)) + ((1/7) · diameter)) + ((4/7) · |(clique_number - zero_forcing_number)|)) + 2)⌉ | touches=110
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/9) · |(order - triameter)|) + ((2/9) · diameter)) + ((5/9) · |(clique_number - zero_forcing_number)|)) + (22/9))⌉ | touches=109
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · triameter) + ((-1/8) · |(order - size)|)) + ((1/2) · annihilation_number)) + (5/8))⌉ | touches=61
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · size) + ((-1/9) · |(diameter - chromatic_number)|)) + (7/9))⌉ | touches=70
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/9) · size) + ((-1/9) · |(diameter - clique_number)|)) + (7/9))⌉ | touches=70
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · size) + ((1/2) · |(independence_number - matching_number)|)) + ((-1/8) · |(diameter - zero_forcing_number)|)) + (3/8))⌉ | touches=74
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((3/16) · order) + ((1/4) · |(independence_number - matching_number)|)) + ((-3/16) · |(diameter - zero_forcing_number)|)) + (3/8))⌉ | touches=83
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((3/17) · order) + ((5/17) · |(independence_number - matching_number)|)) + ((3/17) · |(maximum_degree - diameter)|)) + ((-6/17) · |(diameter - zero_forcing_number)|)) + (9/17))⌉ | touches=100
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((((1/6) · |(size - triameter)|) + ((-1/2) · |(diameter - zero_forcing_number)|)) + ((2/3) · |(maximum_degree - diameter)|)) + ((-1/3) · |(order - triameter)|)) + (3/2))⌉ | touches=28
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((3/16) · triameter) + ((-7/8) · |(diameter - zero_forcing_number)|)) + ((1/2) · |(diameter - chromatic_number)|)) + (1/2))⌉ | touches=80
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/5) · order)) + ((2/5) · |(order - size)|)) + ((-1/4) · |(order - triameter)|)) + (3/2))⌉ | touches=27
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((2/5) · |(order - size)|)) + ((-1/4) · |(order - triameter)|)) + ((-2/5) · harmonic_index)) + (3/2))⌉ | touches=27
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((2/5) · |(order - size)|) + ((-1/2) · |(order - triameter)|)) + ((18/5) · annihilation_number)) + ((-7/2) · matching_number)) + (3/2))⌉ | touches=25
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/3) · |(size - triameter)|) + ((-1/3) · |(minimum_degree - diameter)|)) + ((-1/18) · |(order - size)|)) + (13/18))⌉ | touches=55
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((2/15) · size) + ((-1/15) · |(size - triameter)|)) + ((-1/5) · |(diameter - chromatic_number)|)) + ((2/15) · diameter)) + (3/5))⌉ | touches=61
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/10) · triameter) + ((1/10) · |(diameter - chromatic_number)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + ((-1/10) · |(maximum_degree - diameter)|)) + (21/10))⌉ | touches=102
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/18) · size) + ((1/6) · triameter)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (5/2))⌉ | touches=101
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/9) · size) + ((-1/6) · |(size - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (5/2))⌉ | touches=101
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/9) · triameter) + ((-1/18) · |(size - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (5/2))⌉ | touches=101
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · triameter) + ((-1/12) · order)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (5/2))⌉ | touches=101
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/6) · |(size - triameter)|) + ((1/6) · order)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (5/2))⌉ | touches=101
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · triameter) + ((-1/8) · diameter)) + ((1/8) · |(diameter - chromatic_number)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (9/4))⌉ | touches=101
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((-1/11) · |(size - triameter)|) + ((1/11) · order)) + ((1/11) · diameter)) + ((6/11) · |(clique_number - zero_forcing_number)|)) + (26/11))⌉ | touches=108
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((1/6) · |(size - triameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + ((-1/6) · |(order - triameter)|)) + (1/3))⌉ | touches=51
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ zero_forcing_number ≥ ⌈((((((4/19) · order) + ((-1/19) · |(order - size)|)) + ((-2/19) · |(maximum_degree - diameter)|)) + ((-2/19) · |(minimum_degree - diameter)|)) + (10/19))⌉ | touches=84
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((2/19) · size) + ((-2/19) · |(minimum_degree - diameter)|)) + ((-7/19) · |(diameter - chromatic_number)|)) + ((7/19) · |(diameter - clique_number)|)) + (17/19))⌉ | touches=83
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · triameter) + ((1/4) · |(independence_number - matching_number)|)) + ((1/2) · annihilation_number)) + (1/4))⌉ | touches=63
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((((1/6) · |(independence_number - matching_number)|) + ((-1/3) · |(diameter - zero_forcing_number)|)) + ((1/6) · |(maximum_degree - diameter)|)) + ((1/3) · annihilation_number)) + (1/2))⌉ | touches=97
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((1 · size) + ((-3/2) · order)) + 3)⌉ | touches=10
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((1 · size) + (-3 · harmonic_index)) + 3)⌉ | touches=10
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((-1/8) · |(size - triameter)|) + ((1/4) · annihilation_number)) + (3/4))⌉ | touches=57
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((-1/6) · |(maximum_degree - diameter)|) + ((1/3) · annihilation_number)) + (1/3))⌉ | touches=80
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((-1/6) · |(maximum_degree - diameter)|) + ((1/3) · annihilation_number)) + (1/3))⌉ | touches=69
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/7) · size) + ((-1/7) · |(size - triameter)|)) + ((3/7) · |(independence_number - matching_number)|)) + (4/7))⌉ | touches=67
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((3/20) · size) + ((-1/10) · triameter)) + ((1/20) · |(size - triameter)|)) + ((4/5) · |(independence_number - matching_number)|)) + (1/5))⌉ | touches=88
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · size) + ((-1/6) · |(maximum_degree - diameter)|)) + (2/3))⌉ | touches=58
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((((-1/10) · triameter) + ((3/20) · size)) + ((1/20) · |(size - triameter)|)) + ((4/5) · |(independence_number - matching_number)|)) + (1/5))⌉ | touches=78
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((((11/16) · size) + ((-11/16) · order)) + ((-7/16) · |(order - size)|)) + ((-1/8) · annihilation_number)) + (9/4))⌉ | touches=23
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((((11/16) · size) + ((-11/16) · order)) + ((-7/16) · |(order - size)|)) + ((-1/8) · matching_number)) + (9/4))⌉ | touches=23
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((((11/16) · size) + ((-7/16) · |(order - size)|)) + ((-1/8) · annihilation_number)) + ((-11/8) · harmonic_index)) + (9/4))⌉ | touches=23
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((((11/16) · size) + ((-7/16) · |(order - size)|)) + ((-1/8) · matching_number)) + ((-11/8) · harmonic_index)) + (9/4))⌉ | touches=23
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · |(order - size)|) + ((-1/2) · |(order - triameter)|)) + (3/2))⌉ | touches=24
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((11/6) · size) + ((-7/12) · |(size - triameter)|)) + ((11/12) · |(order - triameter)|)) + ((-61/12) · annihilation_number)) + 3)⌉ | touches=38
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/5) · size) + ((1/5) · |(order - size)|)) + ((-2/5) · |(order - triameter)|)) + ((-2/5) · annihilation_number)) + (9/5))⌉ | touches=25
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/5) · size) + ((1/5) · |(order - size)|)) + ((-2/5) · |(order - triameter)|)) + ((-2/5) · matching_number)) + (9/5))⌉ | touches=25
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((5/4) · |(size - triameter)|) + ((11/6) · triameter)) + ((11/12) · |(order - triameter)|)) + ((-61/12) · annihilation_number)) + 3)⌉ | touches=38
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · triameter) + ((-1/4) · |(order - triameter)|)) + (3/2))⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((-2/15) · size) + ((3/10) · triameter)) + ((1/10) · |(diameter - chromatic_number)|)) + (13/5))⌉ | touches=25
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · triameter) + ((-2/15) · |(size - triameter)|)) + ((1/10) · |(diameter - chromatic_number)|)) + (13/5))⌉ | touches=25
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/9) · |(size - triameter)|) + ((8/9) · |(diameter - chromatic_number)|)) + ((-10/9) · |(maximum_degree - diameter)|)) + (20/9))⌉ | touches=45
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/2) · triameter) + ((-5/8) · diameter)) + (1 · |(diameter - chromatic_number)|)) + ((-7/8) · |(maximum_degree - diameter)|)) + (7/8))⌉ | touches=26
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((3/11) · |(size - triameter)|) + ((-5/11) · |(order - triameter)|)) + ((1/11) · |(diameter - chromatic_number)|)) + ((6/11) · |(clique_number - zero_forcing_number)|)) + (20/11))⌉ | touches=108
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/2) · triameter) + (-1 · diameter)) + (1 · |(diameter - chromatic_number)|)) + ((-1/2) · |(maximum_degree - diameter)|)) + 2)⌉ | touches=27
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((-1/3) · |(maximum_degree - radius)|) + ((1/3) · annihilation_number))⌉ | touches=41
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · |(independence_number - matching_number)|) + ((-1/6) · |(diameter - zero_forcing_number)|)) + ((1/3) · annihilation_number)) + (1/3))⌉ | touches=85
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · |(maximum_degree - diameter)|) + ((-1/3) · |(diameter - zero_forcing_number)|)) + ((1/3) · annihilation_number)) + (2/3))⌉ | touches=93
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · |(maximum_degree - diameter)|) + ((1/3) · annihilation_number)) + ((-1/3) · |(diameter - zero_forcing_number)|)) + (2/3))⌉ | touches=94
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈((((1/3) · |(size - triameter)|) + ((-1/3) · |(order - triameter)|)) + (2/3))⌉ | touches=18
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/3) · |(size - triameter)|) + ((-1/3) · |(order - triameter)|)) + (2/3))⌉ | touches=24
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((-1/3) · |(diameter - zero_forcing_number)|) + ((1/6) · |(maximum_degree - diameter)|)) + ((1/3) · annihilation_number)) + (2/3))⌉ | touches=87
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · order) + ((11/16) · |(minimum_degree - diameter)|)) + ((-1/16) · |(order - triameter)|)) + ((-13/16) · |(diameter - zero_forcing_number)|)) + (13/16))⌉ | touches=92
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · order) + ((11/16) · |(minimum_degree - diameter)|)) + ((-1/16) · |(order - triameter)|)) + ((-13/16) · |(diameter - zero_forcing_number)|)) + (13/16))⌉ | touches=77
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((11/16) · size) + ((-3/4) · order)) + ((-7/16) · |(order - size)|)) + (9/4))⌉ | touches=23
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((11/16) · size) + ((-7/16) · |(order - size)|)) + ((-3/2) · harmonic_index)) + (9/4))⌉ | touches=23
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((5/4) · size) + ((-1/4) · |(size - triameter)|)) + ((-13/4) · matching_number)) + (9/4))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1 · size) + ((1/4) · triameter)) + ((-13/4) · matching_number)) + (9/4))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1 · |(size - triameter)|) + ((5/4) · triameter)) + ((-13/4) · matching_number)) + (9/4))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((2/3) · size) + ((-1/3) · |(size - triameter)|)) + ((1/3) · |(order - size)|)) + ((-5/3) · annihilation_number)) + 2)⌉ | touches=26
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((2/3) · size) + ((-1/3) · |(size - triameter)|)) + ((1/3) · |(order - size)|)) + ((-5/3) · matching_number)) + 2)⌉ | touches=26
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/12) · triameter) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (9/4))⌉ | touches=102
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · diameter) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (7/3))⌉ | touches=94
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((3/20) · triameter) + ((-1/20) · order)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (9/4))⌉ | touches=102
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · triameter) + ((-7/8) · diameter)) + ((3/8) · |(maximum_degree - diameter)|)) + (13/8))⌉ | touches=25
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · triameter) + (1 · |(diameter - chromatic_number)|)) + ((-3/2) · |(maximum_degree - diameter)|)) + -1)⌉ | touches=24
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · |(size - triameter)|) + ((-1/4) · |(order - triameter)|)) + ((1/2) · |(clique_number - zero_forcing_number)|)) + (9/4))⌉ | touches=98
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/13) · |(order - triameter)|) + ((3/13) · diameter)) + ((7/13) · |(clique_number - zero_forcing_number)|)) + (30/13))⌉ | touches=110
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · triameter) + (-1 · diameter)) + ((1/2) · |(diameter - chromatic_number)|)) + 2)⌉ | touches=24
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · triameter) + (-1 · diameter)) + ((1/2) · |(maximum_degree - diameter)|)) + 2)⌉ | touches=24
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈(((((-3/4) · |(maximum_degree - radius)|) + (-1 · |(maximum_degree - independent_domination_number)|)) + (2 · |(maximum_degree - domination_number)|)) + (3/4))⌉ | touches=34
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · order) + ((-1/6) · |(diameter - zero_forcing_number)|)) + (2/3))⌉ | touches=58
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · order) + ((-1/6) · |(diameter - zero_forcing_number)|)) + (2/3))⌉ | touches=70
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((2/5) · |(maximum_degree - diameter)|) + ((-1/5) · |(diameter - zero_forcing_number)|)) + ((-1/5) · |(order - triameter)|)) + (7/5))⌉ | touches=24
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈(((((2/5) · |(maximum_degree - diameter)|) + ((-1/5) · |(diameter - zero_forcing_number)|)) + ((-1/5) · |(order - triameter)|)) + (7/5))⌉ | touches=21
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((-1/5) · |(diameter - zero_forcing_number)|) + ((2/5) · |(maximum_degree - diameter)|)) + ((-1/5) · |(order - triameter)|)) + (7/5))⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((1/2) · order) + -3)⌉ | touches=7
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((1 · harmonic_index) + -3)⌉ | touches=7
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((-3/13) · |(size - triameter)|) + ((7/13) · |(order - size)|)) + ((3/13) · annihilation_number)) + (6/13))⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((-3/13) · |(size - triameter)|) + ((7/13) · |(order - size)|)) + ((3/13) · matching_number)) + (6/13))⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((-3/13) · |(size - triameter)|) + ((7/13) · |(order - size)|)) + ((3/13) · harmonic_index)) + (6/13))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · size) + ((-1/4) · |(size - triameter)|)) + ((3/8) · |(order - size)|)) + (3/4))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · size) + ((-1/4) · |(size - triameter)|)) + ((3/8) · |(order - size)|)) + (3/4))⌉ | touches=21
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · size) + ((1/4) · triameter)) + ((3/8) · |(order - size)|)) + (3/4))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · size) + ((1/4) · triameter)) + ((3/8) · |(order - size)|)) + (3/4))⌉ | touches=21
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · |(size - triameter)|) + ((1/8) · triameter)) + ((3/8) · |(order - size)|)) + (3/4))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · |(size - triameter)|) + ((1/8) · triameter)) + ((3/8) · |(order - size)|)) + (3/4))⌉ | touches=21
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((5/16) · size) + ((-3/16) · |(order - triameter)|)) + ((-5/8) · annihilation_number)) + (27/16))⌉ | touches=24
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-3/13) · |(size - triameter)|) + ((2/13) · order)) + ((6/13) · |(order - size)|)) + (6/13))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-3/13) · |(size - triameter)|) + ((6/13) · |(order - size)|)) + ((4/13) · annihilation_number)) + (6/13))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-3/13) · |(size - triameter)|) + ((6/13) · |(order - size)|)) + ((4/13) · matching_number)) + (6/13))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-3/13) · |(size - triameter)|) + ((6/13) · |(order - size)|)) + ((4/13) · harmonic_index)) + (6/13))⌉ | touches=22
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((3/11) · triameter) + ((1/11) · order)) + ((3/11) · |(order - size)|)) + ((-6/11) · annihilation_number)) + (12/11))⌉ | touches=26
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((3/11) · triameter) + ((1/11) · order)) + ((3/11) · |(order - size)|)) + ((-6/11) · matching_number)) + (12/11))⌉ | touches=26
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((-1/9) · size) + ((1/3) · triameter)) + 2)⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((2/9) · size) + ((-1/3) · |(size - triameter)|)) + 2)⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((2/9) · triameter) + ((-1/9) · |(size - triameter)|)) + 2)⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/3) · triameter) + ((-1/6) · order)) + 2)⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · triameter) + ((-1/2) · diameter)) + (1/2))⌉ | touches=20
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · triameter) + ((-1/2) · |(diameter - chromatic_number)|)) + -1)⌉ | touches=20
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · triameter) + ((-1/2) · |(maximum_degree - diameter)|)) + -1)⌉ | touches=20
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((-1/3) · |(size - triameter)|) + ((1/3) · order)) + 2)⌉ | touches=21
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((-1/3) · |(size - triameter)|) + (1 · |(order - triameter)|)) + 3)⌉ | touches=35
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((2/15) · size) + ((-4/15) · |(maximum_degree - radius)|)) + (7/15))⌉ | touches=52
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((-3/4) · |(maximum_degree - radius)|) + (1 · |(maximum_degree - domination_number)|)) + (3/4))⌉ | touches=31
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((((4/19) · size) + ((-2/19) · |(size - triameter)|)) + ((-2/19) · order)) + ((-1/19) · |(maximum_degree - radius)|)) + (21/19))⌉ | touches=71
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((((1/8) · size) + ((-1/8) · |(size - triameter)|)) + ((1/10) · |(order - size)|)) + ((-1/20) · |(maximum_degree - radius)|)) + (9/10))⌉ | touches=66
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈(((((-1/2) · |(maximum_degree - radius)|) + (-1 · |(maximum_degree - independent_domination_number)|)) + ((7/4) · |(maximum_degree - domination_number)|)) + (3/4))⌉ | touches=37
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · order) + ((-2/3) · |(maximum_degree - radius)|)) + ((-7/6) · |(maximum_degree - independent_domination_number)|)) + ((5/3) · |(maximum_degree - domination_number)|))⌉ | touches=44
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((-1/12) · triameter) + ((1/3) · annihilation_number)) + (2/3))⌉ | touches=52
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · order) + ((-2/3) · |(maximum_degree - radius)|)) + ((1/2) · |(maximum_degree - independent_domination_number)|))⌉ | touches=43
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((-1/20) · order) + ((-7/20) · |(diameter - zero_forcing_number)|)) + ((1/2) · annihilation_number)) + (1/2))⌉ | touches=91
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/12) · triameter) + ((1/6) · |(maximum_degree - diameter)|)) + ((-1/2) · |(minimum_degree - diameter)|)) + ((1/3) · annihilation_number)) + (1/2))⌉ | touches=73
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((-1/20) · order) + ((1/2) · annihilation_number)) + ((-7/20) · |(diameter - zero_forcing_number)|)) + (1/2))⌉ | touches=91
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/6) · |(independence_number - matching_number)|) + ((1/3) · annihilation_number)) + ((-1/6) · |(diameter - zero_forcing_number)|)) + (1/3))⌉ | touches=85
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((-5/12) · |(size - triameter)|) + ((7/12) · |(independence_number - matching_number)|)) + ((1/6) · annihilation_number)) + ((1/3) · |(order - triameter)|)) + (7/12))⌉ | touches=74
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((-1 · |(maximum_degree - independent_domination_number)|) + ((7/4) · |(maximum_degree - domination_number)|)) + ((-1/2) · |(maximum_degree - radius)|)) + (3/4))⌉ | touches=37
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈(((((-1/6) · |(maximum_degree - diameter)|) + ((-1/18) · |(order - triameter)|)) + ((7/18) · annihilation_number)) + (5/18))⌉ | touches=73
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((-1/8) · order) + ((-3/8) · |(diameter - zero_forcing_number)|)) + ((5/8) · annihilation_number)) + (1/2))⌉ | touches=76
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((2/13) · triameter) + ((8/13) · |(minimum_degree - diameter)|)) + ((-3/13) · |(order - triameter)|)) + ((-10/13) · |(diameter - zero_forcing_number)|)) + (10/13))⌉ | touches=91
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈(((((-1/13) · triameter) + ((3/13) · size)) + ((-2/13) · |(maximum_degree - radius)|)) + (9/13))⌉ | touches=46
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/8) · |(size - triameter)|)) + ((-1/2) · |(maximum_degree - diameter)|)) + ((5/8) · |(maximum_degree - independent_domination_number)|)) + (-3/8))⌉ | touches=63
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-1/8) · |(size - triameter)|)) + ((-1/2) · |(maximum_degree - diameter)|)) + ((5/8) · |(maximum_degree - domination_number)|)) + (-3/8))⌉ | touches=67
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((1/12) · triameter) + ((-1/6) · |(size - triameter)|)) + ((3/4) · |(maximum_degree - domination_number)|)) + ((-1/2) · |(maximum_degree - radius)|)) + (3/4))⌉ | touches=39
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/16) · size) + ((3/16) · |(order - size)|)) + (3/4))⌉ | touches=14
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · size) + ((-9/20) · annihilation_number)) + (6/5))⌉ | touches=18
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · size) + ((-9/20) · matching_number)) + (6/5))⌉ | touches=18
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · size) + ((-9/20) · harmonic_index)) + (6/5))⌉ | touches=18
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · |(order - size)|) + ((3/20) · annihilation_number)) + (3/5))⌉ | touches=13
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · |(order - size)|) + ((3/20) · matching_number)) + (3/5))⌉ | touches=13
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/4) · |(order - size)|) + ((3/20) · harmonic_index)) + (3/5))⌉ | touches=13
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((5/14) · annihilation_number) + ((3/14) · |(order - triameter)|)) + (3/14))⌉ | touches=30
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((5/14) · matching_number) + ((3/14) · |(order - triameter)|)) + (3/14))⌉ | touches=30
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((3/14) · |(order - triameter)|) + ((5/14) · harmonic_index)) + (3/14))⌉ | touches=31
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((3/14) · |(order - triameter)|) + ((5/14) · annihilation_number)) + (3/14))⌉ | touches=30
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((3/14) · |(order - triameter)|) + ((5/14) · annihilation_number)) + (3/14))⌉ | touches=30
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((3/14) · |(order - triameter)|) + ((5/14) · matching_number)) + (3/14))⌉ | touches=30
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((3/14) · |(order - triameter)|) + ((5/14) · matching_number)) + (3/14))⌉ | touches=30
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/3) · size) + ((1/3) · triameter)) + ((1/3) · |(order - size)|)) + ((-5/3) · annihilation_number)) + 2)⌉ | touches=26
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/3) · size) + ((1/3) · triameter)) + ((1/3) · |(order - size)|)) + ((-5/3) · matching_number)) + 2)⌉ | touches=26
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/3) · |(size - triameter)|) + ((2/3) · triameter)) + ((1/3) · |(order - size)|)) + ((-5/3) · annihilation_number)) + 2)⌉ | touches=26
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/3) · |(size - triameter)|) + ((2/3) · triameter)) + ((1/3) · |(order - size)|)) + ((-5/3) · matching_number)) + 2)⌉ | touches=26
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/13) · size) + ((-8/13) · |(minimum_degree - diameter)|)) + ((7/13) · diameter)) + (5/13))⌉ | touches=76
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/3) · |(size - triameter)|) + ((-2/3) · diameter)) + (8/3))⌉ | touches=46
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/18) · order) + ((4/9) · |(clique_number - zero_forcing_number)|)) + (7/3))⌉ | touches=88
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/2) · |(order - triameter)|) + ((-1/3) · diameter)) + (17/6))⌉ | touches=46
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/2) · triameter) + ((-4/5) · diameter)) + ((3/10) · |(diameter - chromatic_number)|)) + (7/5))⌉ | touches=25
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/14) · order) + ((1/14) · |(size - triameter)|)) + ((4/7) · |(minimum_degree - diameter)|)) + ((-5/7) · |(diameter - zero_forcing_number)|)) + (11/14))⌉ | touches=74
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((((1/12) · triameter) + ((1/12) · order)) + ((-1/3) · |(diameter - zero_forcing_number)|)) + ((1/12) · |(order - triameter)|)) + (2/3))⌉ | touches=53
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((-1/2) · |(maximum_degree - radius)|) + ((3/4) · |(maximum_degree - independent_domination_number)|)) + (3/4))⌉ | touches=35
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((-1/2) · |(maximum_degree - radius)|) + ((3/4) · |(maximum_degree - domination_number)|)) + (3/4))⌉ | touches=34
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((1/6) · order) + ((-2/3) · |(maximum_degree - radius)|)) + ((1/2) · |(maximum_degree - domination_number)|))⌉ | touches=43
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈(((((-1/16) · |(maximum_degree - diameter)|) + (-1 · |(maximum_degree - independent_domination_number)|)) + ((21/16) · |(maximum_degree - domination_number)|)) + (11/16))⌉ | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ zero_forcing_number ≥ ⌈(((((2/17) · size) + ((-2/17) · |(maximum_degree - radius)|)) + ((-2/17) · |(minimum_degree - diameter)|)) + (15/17))⌉ | touches=67
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((-1/4) · |(diameter - zero_forcing_number)|) + ((3/8) · annihilation_number)) + (1/2))⌉ | touches=90
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((3/8) · annihilation_number) + ((-1/4) · |(diameter - zero_forcing_number)|)) + (1/2))⌉ | touches=90
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((-5/17) · order) + ((1/17) · |(maximum_degree - diameter)|)) + ((14/17) · annihilation_number)) + ((-3/17) · |(order - triameter)|)) + (7/17))⌉ | touches=65
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((3/4) · |(maximum_degree - independent_domination_number)|) + ((-1/2) · |(maximum_degree - radius)|)) + (3/4))⌉ | touches=35
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((3/4) · |(maximum_degree - domination_number)|) + ((-1/2) · |(maximum_degree - radius)|)) + (3/4))⌉ | touches=34
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈(((((-1/16) · order) + ((-19/16) · |(maximum_degree - independent_domination_number)|)) + ((3/2) · |(maximum_degree - domination_number)|)) + (7/8))⌉ | touches=28
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((-1 · |(maximum_degree - independent_domination_number)|) + ((21/16) · |(maximum_degree - domination_number)|)) + ((-1/16) · |(maximum_degree - diameter)|)) + (11/16))⌉ | touches=28
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((-19/16) · |(maximum_degree - independent_domination_number)|) + ((-1/16) · order)) + ((3/2) · |(maximum_degree - domination_number)|)) + (7/8))⌉ | touches=28
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((-1 · |(maximum_degree - independent_domination_number)|) + ((-1/16) · |(maximum_degree - diameter)|)) + ((21/16) · |(maximum_degree - domination_number)|)) + (11/16))⌉ | touches=28
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((((2/17) · size) + ((10/19) · |(independence_number - matching_number)|)) + ((-4/17) · |(diameter - zero_forcing_number)|)) + ((2/17) · |(maximum_degree - diameter)|)) + (9/19))⌉ | touches=81
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈(((((-19/16) · |(maximum_degree - independent_domination_number)|) + ((3/2) · |(maximum_degree - domination_number)|)) + ((-1/16) · order)) + (7/8))⌉ | touches=28
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈(((1/8) · size) + (3/4))⌉ | touches=14
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/8) · |(size - triameter)|) + ((1/9) · triameter)) + (7/8))⌉ | touches=33
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (regular)) ⇒ zero_forcing_number ≥ ⌈((((1/12) · |(size - triameter)|) + ((2/15) · order)) + (13/20))⌉ | touches=33
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈((((1/12) · |(size - triameter)|) + ((2/15) · order)) + (13/20))⌉ | touches=33
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (regular)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((1/4) · |(size - triameter)|) + (3/4))⌉ | touches=28
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈(((((3/10) · triameter) + ((-1/5) · order)) + ((1/10) · |(diameter - chromatic_number)|)) + (13/5))⌉ | touches=25
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (cubic)) ⇒ zero_forcing_number ≥ ⌈((((1/3) · |(size - triameter)|) + ((-2/3) · |(maximum_degree - diameter)|)) + (2/3))⌉ | touches=40
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((-1/10) · order) + ((3/10) · size)) + ((-1/5) · |(diameter - zero_forcing_number)|)) + (9/10))⌉ | touches=53
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((-1/16) · |(maximum_degree - diameter)|) + ((5/16) · |(maximum_degree - independent_domination_number)|)) + (11/16))⌉ | touches=26
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((-1/16) · |(maximum_degree - diameter)|) + ((5/16) · |(maximum_degree - domination_number)|)) + (11/16))⌉ | touches=26
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈(((((2/15) · size) + ((-7/5) · |(maximum_degree - independent_domination_number)|)) + (1 · |(maximum_degree - domination_number)|)) + (1/3))⌉ | touches=48
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((((3/10) · size) + ((-1/5) · order)) + ((-1/4) · |(order - size)|)) + ((-1/10) · |(maximum_degree - diameter)|)) + (5/4))⌉ | touches=79
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((((2/17) · size) + ((-2/17) · |(maximum_degree - diameter)|)) + ((-4/17) · |(maximum_degree - radius)|)) + ((1/3) · |(maximum_degree - independent_domination_number)|)) + (2/3))⌉ | touches=99
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((((2/17) · size) + ((-2/17) · |(maximum_degree - diameter)|)) + ((-4/17) · |(maximum_degree - radius)|)) + ((1/3) · |(maximum_degree - domination_number)|)) + (2/3))⌉ | touches=98
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (K_4_free)) ⇒ zero_forcing_number ≥ ⌈(((((1/12) · |(maximum_degree - diameter)|) + ((2/15) · |(maximum_degree - radius)|)) + ((-2/15) · |(minimum_degree - diameter)|)) + 1)⌉ | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((1/9) · size) + ((-1/3) · |(maximum_degree - radius)|)) + ((1/9) · annihilation_number)) + (2/9))⌉ | touches=50
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈(((((-3/20) · |(size - triameter)|) + ((-1/5) · order)) + ((7/10) · annihilation_number)) + (1/2))⌉ | touches=78
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈(((1 · |(maximum_degree - diameter)|) + ((-11/12) · |(diameter - zero_forcing_number)|)) + 1)⌉ | touches=23
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((-1/17) · |(size - triameter)|) + ((5/17) · |(maximum_degree - independent_domination_number)|)) + (14/17))⌉ | touches=26
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((-1/17) · |(size - triameter)|) + ((5/17) · |(maximum_degree - domination_number)|)) + (14/17))⌉ | touches=26
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((-1/16) · order) + ((5/16) · |(maximum_degree - independent_domination_number)|)) + (7/8))⌉ | touches=25
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((-1/16) · order) + ((5/16) · |(maximum_degree - domination_number)|)) + (7/8))⌉ | touches=25
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((5/16) · |(maximum_degree - independent_domination_number)|) + ((-1/16) · |(maximum_degree - diameter)|)) + (11/16))⌉ | touches=25
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((5/16) · |(maximum_degree - domination_number)|) + ((-1/16) · |(maximum_degree - diameter)|)) + (11/16))⌉ | touches=25
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (bipartite)) ⇒ zero_forcing_number ≥ ⌈((((((-5/17) · order) + ((1/17) · |(maximum_degree - diameter)|)) + ((-3/17) · |(order - triameter)|)) + ((14/17) · annihilation_number)) + (7/17))⌉ | touches=64
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((5/16) · |(maximum_degree - independent_domination_number)|) + ((-1/16) · order)) + (7/8))⌉ | touches=25
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (chordal)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((((3/19) · size) + ((-3/19) · |(maximum_degree - diameter)|)) + ((3/19) · |(maximum_degree - domination_number)|)) + ((-2/19) · |(maximum_degree - radius)|)) + (12/19))⌉ | touches=62
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/4) · triameter) + ((-3/14) · |(order - triameter)|)) + ((-5/14) · |(diameter - zero_forcing_number)|)) + (4/7))⌉ | touches=80
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · order) + ((7/12) · |(minimum_degree - diameter)|)) + ((-3/4) · |(diameter - zero_forcing_number)|)) + (3/4))⌉ | touches=96
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (bipartite)) ∧ (subcubic)) ⇒ zero_forcing_number ≥ ⌈(((((1/8) · order) + ((7/12) · |(minimum_degree - diameter)|)) + ((-3/4) · |(diameter - zero_forcing_number)|)) + (3/4))⌉ | touches=76
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (tree)) ⇒ zero_forcing_number ≥ ⌈(((((-5/7) · |(diameter - zero_forcing_number)|) + ((3/7) · |(maximum_degree - diameter)|)) + ((2/7) · size)) + (5/7))⌉ | touches=78
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (subcubic)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((((1/4) · triameter) + ((-5/18) · |(size - triameter)|)) + ((10/19) · |(order - size)|)) + ((-2/9) · diameter)) + (9/19))⌉ | touches=70
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((2/15) · size) + ((-2/5) · |(maximum_degree - independent_domination_number)|)) + (1/3))⌉ | touches=44
+
+Refined: ((connected) ∧ (nontrivial)) ⇒ zero_forcing_number ≥ ⌈((((2/15) · size) + ((-2/5) · |(maximum_degree - domination_number)|)) + (1/3))⌉ | touches=45
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((-1/20) · |(triameter - largest_laplacian_eigenvalue)|) + ((1/4) · |(maximum_degree - radius)|)) + (4/5))⌉ | touches=29
+
+Refined: (((connected) ∧ (nontrivial)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((-1/20) · |(triameter - largest_laplacian_eigenvalue)|) + ((1/4) · |(maximum_degree - radius)|)) + (4/5))⌉ | touches=25
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (planar)) ⇒ zero_forcing_number ≥ ⌈((((((1/6) · triameter) + ((2/15) · |(size - triameter)|)) + ((-3/5) · |(maximum_degree - diameter)|)) + ((2/3) · |(maximum_degree - independent_domination_number)|)) + (-3/5))⌉ | touches=62
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (planar)) ∧ (triangle_free)) ⇒ zero_forcing_number ≥ ⌈((((-1/7) · size) + ((-1/7) · triameter)) + ((6/7) · annihilation_number))⌉ | touches=60
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((9/19) · |(size - triameter)|) + ((-11/19) · |(maximum_degree - diameter)|)) + ((7/19) · |(maximum_degree - independent_domination_number)|)) + ((2/19) · |(maximum_degree - radius)|)) + (-8/19))⌉ | touches=50
+
+Refined: ((((connected) ∧ (nontrivial)) ∧ (K_4_free)) ∧ (chordal)) ⇒ zero_forcing_number ≥ ⌈((((((9/19) · |(size - triameter)|) + ((-11/19) · |(maximum_degree - diameter)|)) + ((7/19) · |(maximum_degree - domination_number)|)) + ((2/19) · |(maximum_degree - radius)|)) + (-8/19))⌉

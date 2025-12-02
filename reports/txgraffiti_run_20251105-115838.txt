@@ -1,0 +1,843 @@
+────────────────────────────────────────────────────────────────────────────────
+TxGraffiti • Full Program Run Report
+────────────────────────────────────────────────────────────────────────────────
+Started: 2025-11-05 11:58:39
+Working dir: /Users/randydavila/Documents/automated-conjecturing/txgraffiti2
+Python: 3.13.2
+────────────────────────────────────────────────────────────────────────────────
+
+--------------------------------------------------------------------------------
+QUALITATIVE RELATIONS (TOP 12)
+--------------------------------------------------------------------------------
+
+=== Qualitative Relations (top 12) ===
+• [((TRUE ∧ (deficient)) ∧ (div_10))]  phi ↑ n  (rho=1.000, n=14/14, method=spearman)
+• [((TRUE ∧ (deficient)) ∧ (div_10))]  phi ↑ sqrt_n  (rho=1.000, n=14/14, method=spearman)
+• [((TRUE ∧ (deficient)) ∧ (div_10))]  phi ↑ log_n  (rho=1.000, n=14/14, method=spearman)
+• [((TRUE ∧ (deficient)) ∧ (div_10))]  phi ↑ log10_n  (rho=1.000, n=14/14, method=spearman)
+• [((TRUE ∧ (deficient)) ∧ (div_10))]  phi ↑ sigma  (rho=1.000, n=14/14, method=spearman)
+• [(prime)]  phi ↑ n  (rho=1.000, n=95/95, method=spearman)
+• [(prime)]  phi ↑ sqrt_n  (rho=1.000, n=95/95, method=spearman)
+• [(prime)]  phi ↑ log_n  (rho=1.000, n=95/95, method=spearman)
+• [(prime)]  phi ↑ log10_n  (rho=1.000, n=95/95, method=spearman)
+• [(prime)]  phi ↑ sigma  (rho=1.000, n=95/95, method=spearman)
+• [((TRUE ∧ (odd)) ∧ (prime))]  phi ↑ n  (rho=1.000, n=94/94, method=spearman)
+• [((TRUE ∧ (odd)) ∧ (prime))]  phi ↑ sqrt_n  (rho=1.000, n=94/94, method=spearman)
+
+--------------------------------------------------------------------------------
+ASYMPTOTIC LIMITS (QUALITATIVE → DEFINITE)
+--------------------------------------------------------------------------------
+
+[ASYMPTOTIC] total=2278
+
+• (TRUE) ⇒ lim_{abundancy_index→∞} (phi / sigma) = (4/27)
+• (TRUE) ⇒ lim_{n→∞} phi = ∞
+• (TRUE) ⇒ lim_{sqrt_n→∞} phi = ∞
+• (TRUE) ⇒ lim_{log_n→∞} phi = ∞
+• (TRUE) ⇒ lim_{log10_n→∞} phi = ∞
+• (TRUE) ⇒ lim_{rad→∞} phi = ∞
+• (TRUE) ⇒ lim_{spf→∞} phi = ∞
+• (TRUE) ⇒ lim_{lpf→∞} phi = ∞
+• (TRUE) ⇒ lim_{popcount→∞} phi = ∞
+• ((composite)) ⇒ lim_{abundancy_index→∞} (phi / n) = (1/3)
+
+--------------------------------------------------------------------------------
+GRAFFITICLASSRELATIONS SUMMARY
+--------------------------------------------------------------------------------
+
+Boolean columns: ['even', 'odd', 'prime', 'composite', 'squarefree', 'perfect_square', 'perfect_cube', 'triangular', 'fibonacci', 'abundant', 'perfect', 'deficient', 'smooth_5', 'smooth_7', 'highly_divisible', 'div_3', 'div_4', 'div_5', 'div_6', 'div_7', 'div_8', 'div_9', 'div_10', 'div_11', 'div_12']
+Expr columns: ['n', 'sqrt_n', 'log_n', 'log10_n', 'tau', 'sigma', 'phi', 'mu', 'liouville', 'omega', 'Omega', 'rad', 'spf', 'lpf', 'v2', 'popcount', 'aliquot_sum', 'abundancy_index']
+Base hypothesis: TRUE
+
+Nonredundant conjunctions:
+  abundant
+  composite
+  deficient
+  div_10
+  div_11
+  div_12
+  div_3
+  div_4
+
+Example atomic conjectures:
+
+  (abundant) ⇒ spf = 2
+
+  (div_10) ⇒ spf = 2
+
+  (div_12) ⇒ mu = 0 ∧ spf = 2
+
+  (div_4) ⇒ mu = 0 ∧ spf = 2
+
+  (div_6) ⇒ spf = 2
+
+=== Class Equivalences ===
+  (spf = 2) ≡ (even)
+  (v2 = 0) ≡ (odd)
+  (omega = 2 ∧ spf = 2 ∧ abundancy_index = 2) ≡ (perfect)
+  (tau = 2 ∧ mu = -1 ∧ liouville = -1 ∧ omega = 1 ∧ Omega = 1 ∧ aliquot_sum = 1) ≡ (prime)
+  (n = 144 ∧ sqrt_n = 12 ∧ log_n = 4.969813299576001 ∧ log10_n = 2.1583624920952498 ∧ tau = 15 ∧ sigma = 403 ∧ phi = 48 ∧ mu = 0 ∧ liouville = 1 ∧ omega = 2 ∧ Omega = 6 ∧ rad = 6 ∧ spf = 2 ∧ lpf = 3 ∧ v2 = 4 ∧ popcount = 2 ∧ aliquot_sum = 259 ∧ abundancy_index = 2.798611111111111) ≡ ((TRUE ∧ (abundant)) ∧ (fibonacci))
+  (n = 216 ∧ sqrt_n = 14.696938456699067 ∧ log_n = 5.375278407684165 ∧ log10_n = 2.3344537511509307 ∧ tau = 16 ∧ sigma = 600 ∧ phi = 72 ∧ mu = 0 ∧ liouville = 1 ∧ omega = 2 ∧ Omega = 6 ∧ rad = 6 ∧ spf = 2 ∧ lpf = 3 ∧ v2 = 3 ∧ popcount = 4 ∧ aliquot_sum = 384 ∧ abundancy_index = 2.7777777777777777) ≡ ((TRUE ∧ (abundant)) ∧ (perfect_cube))
+  (spf = 3 ∧ v2 = 0) ≡ ((TRUE ∧ (deficient)) ∧ (div_3))
+
+=== Inclusions (equalities ⇒ class) ===
+
+=== Inclusions (class ⇒ equalities) ===
+  (abundant) ⊆ (spf = 2)
+  (div_10) ⊆ (spf = 2)
+  (div_12) ⊆ (mu = 0 ∧ spf = 2)
+  (div_4) ⊆ (mu = 0 ∧ spf = 2)
+  (div_6) ⊆ (spf = 2)
+  (div_8) ⊆ (mu = 0 ∧ spf = 2)
+  (div_9) ⊆ (mu = 0)
+  (perfect_square) ⊆ (liouville = 1)
+  ((TRUE ∧ (abundant)) ∧ (div_10)) ⊆ (spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (div_11)) ⊆ (spf = 2 ∧ lpf = 11)
+  ((TRUE ∧ (abundant)) ∧ (div_3)) ⊆ (spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (div_4)) ⊆ (mu = 0 ∧ spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (div_5)) ⊆ (spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (div_6)) ⊆ (spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (div_7)) ⊆ (spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (div_8)) ⊆ (mu = 0 ∧ spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (div_9)) ⊆ (mu = 0 ∧ spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (highly_divisible)) ⊆ (mu = 0 ∧ spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (perfect_square)) ⊆ (mu = 0 ∧ liouville = 1 ∧ omega = 2 ∧ spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (smooth_5)) ⊆ (spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (smooth_7)) ⊆ (spf = 2)
+  ((TRUE ∧ (abundant)) ∧ (squarefree)) ⊆ (spf = 2 ∧ v2 = 1)
+  ((TRUE ∧ (abundant)) ∧ (triangular)) ⊆ (spf = 2)
+  ((TRUE ∧ (composite)) ∧ (even)) ⊆ (spf = 2)
+  ((TRUE ∧ (composite)) ∧ (highly_divisible)) ⊆ (spf = 2)
+  ((TRUE ∧ (composite)) ∧ (odd)) ⊆ (v2 = 0)
+  ((TRUE ∧ (composite)) ∧ (perfect_cube)) ⊆ (mu = 0)
+  ((TRUE ∧ (composite)) ∧ (perfect_square)) ⊆ (mu = 0 ∧ liouville = 1)
+  ((TRUE ∧ (deficient)) ∧ (div_10)) ⊆ (spf = 2 ∧ v2 = 1)
+  ((TRUE ∧ (deficient)) ∧ (div_4)) ⊆ (mu = 0 ∧ spf = 2)
+  ((TRUE ∧ (deficient)) ∧ (div_8)) ⊆ (mu = 0 ∧ spf = 2)
+  ((TRUE ∧ (deficient)) ∧ (div_9)) ⊆ (mu = 0 ∧ spf = 3 ∧ v2 = 0)
+  ((TRUE ∧ (deficient)) ∧ (even)) ⊆ (spf = 2)
+  ((TRUE ∧ (deficient)) ∧ (highly_divisible)) ⊆ (popcount = 1)
+  ((TRUE ∧ (deficient)) ∧ (perfect_square)) ⊆ (liouville = 1)
+  ((TRUE ∧ (div_10)) ∧ (div_11)) ⊆ (spf = 2 ∧ lpf = 11)
+  ((TRUE ∧ (div_10)) ∧ (div_12)) ⊆ (mu = 0 ∧ spf = 2 ∧ popcount = 4)
+  ((TRUE ∧ (div_10)) ∧ (div_3)) ⊆ (spf = 2 ∧ popcount = 4)
+  ((TRUE ∧ (div_10)) ∧ (div_4)) ⊆ (mu = 0 ∧ spf = 2)
+  ((TRUE ∧ (div_10)) ∧ (div_6)) ⊆ (spf = 2 ∧ popcount = 4)
+  ((TRUE ∧ (div_10)) ∧ (div_7)) ⊆ (spf = 2 ∧ lpf = 7)
+  ((TRUE ∧ (div_10)) ∧ (div_8)) ⊆ (mu = 0 ∧ spf = 2)
+  ((TRUE ∧ (div_10)) ∧ (div_9)) ⊆ (mu = 0 ∧ omega = 3 ∧ rad = 30 ∧ spf = 2 ∧ lpf = 5 ∧ popcount = 4)
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS
+--------------------------------------------------------------------------------
+
+[LOWER] total=1
+
+• phi ≥ (1 · phi)
+    touches=500, support=500
+
+[UPPER] total=1
+
+• phi ≤ (1 · phi)
+    touches=500, support=500
+
+[EQUAL] total=1
+
+• phi = (1 · phi)
+    touches=500, support=500
+
+
+--------------------------------------------------------------------------------
+K2 AFFINE BOUNDS GENERATION
+--------------------------------------------------------------------------------
+
+[LOWER] total=445
+
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((-1 · sigma) + (2 · n)) + (1 · tau)) + -2)
+    touches=239, support=279
+
+• (odd) ⇒ phi ≥ ((((-1 · sigma) + (2 · n)) + (1 · tau)) + -2)
+    touches=194, support=250
+
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((-1 · sigma) + (2 · rad)) + (1 · tau)) + -2)
+    touches=239, support=279
+
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((1 · sigma) + (-2 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=239, support=279
+
+• (odd) ⇒ phi ≥ ((((1 · sigma) + (-2 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=194, support=250
+
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((1 · n) + (-1 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=239, support=279
+
+[UPPER] total=210
+
+• ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≤ ((((1 · n) + (-1 · lpf)) + (-1 · spf)) + 1)
+    touches=145, support=210
+
+• ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≤ ((((1 · rad) + (-1 · lpf)) + (-1 · spf)) + 1)
+    touches=145, support=210
+
+• (odd) ⇒ phi ≤ (((1 · n) + ((1/2) · liouville)) + (-1/2))
+    touches=95, support=250
+
+• (odd) ⇒ phi ≤ ((((1 · sigma) + ((-14/9) · aliquot_sum)) + ((2/9) · liouville)) + (-2/9))
+    touches=80, support=250
+
+• (odd) ⇒ phi ≤ (((((1/18) · rad) + ((17/18) · n)) + ((1/2) · liouville)) + (-1/2))
+    touches=80, support=250
+
+• (odd) ⇒ phi ≤ (((((17/18) · n) + ((1/18) · lpf)) + ((1/2) · liouville)) + (-1/2))
+    touches=80, support=250
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+INTEGER-AWARE LIFTING
+--------------------------------------------------------------------------------
+
+Before vs After (lowers): 445 → 445
+Before vs After (uppers): 210 → 210
+
+Refined: (squarefree) ⇒ phi ≥ (⌈((((-1 · sigma) + (2 · n)) + ((9/2) · tau)) + -16)⌉ + 0) | touches=146
+
+Refined: (squarefree) ⇒ phi ≥ (⌈((((-1 · sigma) + (2 · rad)) + ((9/2) · tau)) + -16)⌉ + 0) | touches=146
+
+Refined: (squarefree) ⇒ phi ≥ (⌈((((1 · sigma) + (-2 · aliquot_sum)) + ((9/2) · tau)) + -16)⌉ + 0) | touches=146
+
+Refined: (squarefree) ⇒ phi ≥ (⌈((((1 · n) + (-1 · aliquot_sum)) + ((9/2) · tau)) + -16)⌉ + 0) | touches=146
+
+Refined: (squarefree) ⇒ phi ≥ (⌈((((1 · rad) + (-1 · aliquot_sum)) + ((9/2) · tau)) + -16)⌉ + 0) | touches=146
+
+Refined: phi ≥ (⌈(((((2/3) · sigma) + (-1 · aliquot_sum)) + ((1/2) · tau)) + -2)⌉ + 0) | touches=104
+
+Refined: phi ≥ (⌈(((((-1/3) · sigma) + (1 · n)) + ((1/2) · tau)) + -2)⌉ + 0) | touches=104
+
+Refined: phi ≥ (⌈(((((5/18) · rad) + ((13/18) · spf)) + (-1 · tau)) + 1)⌉ + 0) | touches=96
+
+Refined: ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((((2/5) · n) + ((3/5) · spf)) + (-1 · tau)) + 1)⌉ + 0) | touches=96
+
+Refined: ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((((2/5) · rad) + ((3/5) · spf)) + (-1 · tau)) + 1)⌉ + 0) | touches=96
+
+Refined: (odd) ⇒ phi ≥ (⌈((((1 · spf) + ((11/2) · tau)) + ((-5/2) · liouville)) + (-29/2))⌉ + 0) | touches=96
+
+Refined: phi ≥ (⌈((((2/9) · rad) + ((7/9) · spf)) + -1)⌉ + 0) | touches=98
+
+Refined: (squarefree) ⇒ phi ≥ (⌈((((2/9) · n) + ((7/9) · spf)) + -1)⌉ + 0) | touches=98
+
+Refined: (squarefree) ⇒ phi ≥ (⌈(((1 · spf) + ((1/8) · aliquot_sum)) + (-9/8))⌉ + 0) | touches=96
+
+Refined: ((TRUE ∧ (odd)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((1 · spf) + ((8/15) · aliquot_sum)) + (-23/15))⌉ + 0) | touches=95
+
+Refined: ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((1 · spf) + ((7/19) · aliquot_sum)) + (-26/19))⌉ + 0) | touches=97
+
+Refined: phi ≥ (⌈(((((-1/3) · aliquot_sum) + ((2/3) · rad)) + (2 · Omega)) + -4)⌉ + 0) | touches=97
+
+Refined: phi ≥ (⌈(((((-1/3) · aliquot_sum) + ((2/3) · n)) + ((1/2) · tau)) + -2)⌉ + 0) | touches=104
+
+Refined: phi ≥ (⌈((((4/17) · rad) + ((13/17) · spf)) + (-1 · Omega))⌉ + 0) | touches=96
+
+Refined: phi ≥ (⌈((((4/17) · n) + ((13/17) · spf)) + (-1 · Omega))⌉ + 0) | touches=97
+
+Refined: phi ≥ (⌈(((((-1/3) · aliquot_sum) + ((2/3) · rad)) + ((1/2) · tau)) + -2)⌉ + 0) | touches=97
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ ⌈((((((2/3) · n) + ((-1/3) · aliquot_sum)) + ((1/2) · tau)) + -2) + 0)⌉ | touches=97
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈(((((2/3) · n) + ((-1/3) · aliquot_sum)) + ((1/2) · tau)) + -2)⌉ + 0) | touches=79
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ ⌈((((((2/3) · rad) + ((-1/3) · aliquot_sum)) + ((1/2) · tau)) + -2) + 0)⌉ | touches=97
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈(((((2/3) · rad) + ((-1/3) · aliquot_sum)) + ((1/2) · tau)) + -2)⌉ + 0) | touches=74
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈(((((3/8) · rad) + ((1/4) · lpf)) + ((-3/4) · tau)) + 2)⌉ + 0) | touches=62
+
+Refined: phi ≥ (⌈((((2/3) · sigma) + (-1 · aliquot_sum)) + 0)⌉ + 0) | touches=56
+
+Refined: phi ≥ (⌈((((-1/3) · sigma) + (1 · n)) + 0)⌉ + 0) | touches=56
+
+Refined: phi ≥ (⌈(((((2/3) · sigma) + (-1 · aliquot_sum)) + (0 · rad)) + 0)⌉ + 0) | touches=56
+
+Refined: phi ≥ (⌈(((((2/3) · sigma) + (-1 · aliquot_sum)) + (0 · lpf)) + 0)⌉ + 0) | touches=56
+
+Refined: phi ≥ (⌈(((((-1/3) · sigma) + (0 · rad)) + (1 · n)) + 0)⌉ + 0) | touches=56
+
+Refined: phi ≥ (⌈(((((-1/3) · sigma) + (1 · n)) + (0 · lpf)) + 0)⌉ + 0) | touches=56
+
+Refined: (composite) ⇒ phi ≥ (⌈(((((1/4) · rad) + ((1/2) · lpf)) + ((-7/12) · tau)) + (4/3))⌉ + 0) | touches=56
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((1/3) · sigma) + ((-85/2) · tau)) + 168)⌉ + 0) | touches=53
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((1/2) · n) + (-21 · tau)) + 83)⌉ + 0) | touches=53
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((1/2) · rad) + (-21 · tau)) + 83)⌉ + 0) | touches=53
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈((((1 · lpf) + ((15/2) · tau)) + (-5 · v2)) + -26)⌉ + 0) | touches=53
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((-1/3) · sigma) + (1 · rad)) + 0)⌉ + 0) | touches=52
+
+Refined: (deficient) ⇒ phi ≥ (⌈((((1/6) · sigma) + ((1/2) · lpf)) + (-3/2))⌉ + 0) | touches=52
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈(((((3/8) · n) + ((1/4) · lpf)) + (-1 · tau)) + 3)⌉ + 0) | touches=52
+
+Refined: ((TRUE ∧ (composite)) ∧ (odd)) ⇒ phi ≥ (⌈(((((5/6) · rad) + ((-1/2) · aliquot_sum)) + (1 · tau)) + -4)⌉ + 0) | touches=50
+
+Refined: ((TRUE ∧ (composite)) ∧ (odd)) ⇒ phi ≥ (⌈(((((5/6) · rad) + ((-1/2) · aliquot_sum)) + (-2 · liouville)) + 2)⌉ + 0) | touches=50
+
+Refined: (even) ⇒ phi ≥ (⌈(((((2/3) · sigma) + (-1 · aliquot_sum)) + ((5/2) · tau)) + -18)⌉ + 0) | touches=47
+
+Refined: (even) ⇒ phi ≥ (⌈(((((-1/3) · sigma) + (1 · n)) + ((5/2) · tau)) + -18)⌉ + 0) | touches=47
+
+Refined: ((TRUE ∧ (composite)) ∧ (odd)) ⇒ phi ≥ (⌈(((((1/2) · rad) + ((1/2) · lpf)) + ((-3/2) · tau)) + 4)⌉ + 0) | touches=44
+
+Refined: (even) ⇒ phi ≥ (⌈(((((-1/3) · aliquot_sum) + ((2/3) · n)) + ((5/2) · tau)) + -18)⌉ + 0) | touches=47
+
+Refined: ((TRUE ∧ (composite)) ∧ (odd)) ⇒ phi ≥ (⌈(((((-1/2) · sigma) + ((4/3) · n)) + (-1 · liouville)) + 1)⌉ + 0) | touches=41
+
+Refined: ((TRUE ∧ (composite)) ∧ (odd)) ⇒ phi ≥ (⌈(((((5/6) · n) + ((-1/2) · aliquot_sum)) + (-1 · liouville)) + 1)⌉ + 0) | touches=41
+
+Refined: phi ≥ (⌈((((-1/3) · aliquot_sum) + ((2/3) · rad)) + 0)⌉ + 0) | touches=55
+
+Refined: phi ≥ (⌈((((-1/3) · aliquot_sum) + ((2/3) · n)) + 0)⌉ + 0) | touches=56
+
+Refined: phi ≥ (⌈(((((-1/3) · aliquot_sum) + (0 · rad)) + ((2/3) · n)) + 0)⌉ + 0) | touches=56
+
+Refined: phi ≥ (⌈(((((-1/3) · aliquot_sum) + ((2/3) · n)) + (0 · lpf)) + 0)⌉ + 0) | touches=56
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ ⌈(((((2/3) · n) + ((-1/3) · aliquot_sum)) + 0) + 0)⌉ | touches=53
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((2/3) · n) + ((-1/3) · aliquot_sum)) + 0)⌉ + 0) | touches=52
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ ⌈(((((2/3) · rad) + ((-1/3) · aliquot_sum)) + 0) + 0)⌉ | touches=53
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((2/3) · rad) + ((-1/3) · aliquot_sum)) + 0)⌉ + 0) | touches=52
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ ⌈((((((2/3) · n) + ((-1/3) · aliquot_sum)) + (0 · lpf)) + 0) + 0)⌉ | touches=53
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ ⌈((((((2/3) · n) + ((-1/3) · aliquot_sum)) + (0 · mu)) + 0) + 0)⌉ | touches=53
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ ⌈((((((2/3) · rad) + ((-1/3) · aliquot_sum)) + (0 · lpf)) + 0) + 0)⌉ | touches=53
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈(((((2/3) · rad) + ((-1/3) · aliquot_sum)) + (0 · lpf)) + 0)⌉ + 0) | touches=51
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ ⌈((((((2/3) · rad) + ((-1/3) · aliquot_sum)) + (0 · mu)) + 0) + 0)⌉ | touches=53
+
+Refined: ((TRUE ∧ (composite)) ∧ (odd)) ⇒ phi ≥ (⌈((((2/3) · rad) + (-6 · tau)) + (22 · liouville))⌉ + 0) | touches=38
+
+Refined: ((TRUE ∧ (composite)) ∧ (odd)) ⇒ phi ≥ (⌈((((2/3) · rad) + (34 · liouville)) + -36)⌉ + 0) | touches=37
+
+Refined: (div_3) ⇒ phi ≥ (⌈(((((-1/2) · sigma) + ((4/3) · n)) + (4 · tau)) + -28)⌉ + 0) | touches=36
+
+Refined: (div_3) ⇒ phi ≥ (⌈(((((-1/2) · aliquot_sum) + ((5/6) · n)) + (4 · tau)) + -28)⌉ + 0) | touches=36
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((4/15) · n) + ((-1/10) · rad)) + (1 · lpf)) + -2)⌉ + 0) | touches=37
+
+Refined: (div_4) ⇒ phi ≥ (⌈(((2 · lpf) + ((4/3) · tau)) + -10)⌉ + 0) | touches=30
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((1/2) · sigma) + ((-2/3) · aliquot_sum)) + ((1/2) · tau)) + -4)⌉ + 0) | touches=27
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((-1/6) · sigma) + ((2/3) · n)) + ((1/2) · tau)) + -4)⌉ + 0) | touches=27
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((-1/6) · aliquot_sum) + ((1/2) · n)) + ((1/2) · tau)) + -4)⌉ + 0) | touches=27
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((1/4) · n) + ((1/2) · lpf)) + ((-3/4) · tau)) + 4)⌉ + 0) | touches=26
+
+Refined: (div_5) ⇒ phi ≥ (⌈(((((-2/3) · sigma) + ((8/5) · n)) + (6 · tau)) + -40)⌉ + 0) | touches=24
+
+Refined: (div_3) ⇒ phi ≥ (⌈(((((3/14) · n) + ((5/7) · lpf)) + ((-17/14) · v2)) + (-11/14))⌉ + 0) | touches=24
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((1/3) · n) + (-16 · mu)) + -18)⌉ + 0) | touches=23
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((1/3) · rad) + (-16 · mu)) + -18)⌉ + 0) | touches=23
+
+Refined: (odd) ⇒ phi ≥ (⌈(((((3/7) · rad) + ((-1/7) · spf)) + ((5/7) · lpf)) + (-11/7))⌉ + 0) | touches=131
+
+Refined: (div_3) ⇒ phi ≥ (⌈((((3/14) · n) + ((5/7) · lpf)) + -2)⌉ + 0) | touches=23
+
+Refined: ((TRUE ∧ (composite)) ∧ (div_3)) ⇒ phi ≥ (⌈(((((3/14) · n) + ((5/7) · lpf)) + ((-45/14) · v2)) + (17/14))⌉ + 0) | touches=25
+
+Refined: (abundant) ⇒ phi ≥ (⌈((((3/14) · rad) + ((5/7) · lpf)) + -2)⌉ + 0) | touches=22
+
+Refined: (deficient) ⇒ phi ≥ (⌈(((((1/2) · aliquot_sum) + ((-27/8) · tau)) + ((27/8) · Omega)) + (31/8))⌉ + 0) | touches=21
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈(((((1/2) · aliquot_sum) + ((-9/4) · tau)) + ((9/4) · v2)) + (11/4))⌉ + 0) | touches=19
+
+Refined: (div_5) ⇒ phi ≥ (⌈(((((14/15) · sigma) + ((-8/5) · aliquot_sum)) + (6 · tau)) + -40)⌉ + 0) | touches=24
+
+Refined: (div_5) ⇒ phi ≥ (⌈(((((5/9) · sigma) + ((-3/4) · aliquot_sum)) + ((-23/12) · v2)) + (17/12))⌉ + 0) | touches=19
+
+Refined: (div_5) ⇒ phi ≥ (⌈((((5/9) · sigma) + ((-3/4) · aliquot_sum)) + (-1/2))⌉ + 0) | touches=17
+
+Refined: (deficient) ⇒ phi ≥ (⌈(((((3/8) · n) + ((1/4) · lpf)) + ((-5/8) · tau)) + 1)⌉ + 0) | touches=66
+
+Refined: ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((((3/8) · rad) + ((1/4) · lpf)) + ((-5/8) · tau)) + 1)⌉ + 0) | touches=65
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈(((((3/8) · rad) + ((1/4) · lpf)) + ((-5/8) · tau)) + 1)⌉ + 0) | touches=63
+
+Refined: (deficient) ⇒ phi ≥ (⌈((((2/5) · rad) + ((-23/15) · Omega)) + (3/5))⌉ + 0) | touches=12
+
+Refined: (deficient) ⇒ phi ≥ (⌈((((2/5) · n) + ((-23/15) · Omega)) + (3/5))⌉ + 0) | touches=12
+
+Refined: (deficient) ⇒ phi ≥ (⌈((((1/2) · aliquot_sum) + (-2 · tau)) + 3)⌉ + 0) | touches=12
+
+Refined: (deficient) ⇒ phi ≥ (⌈((((1/2) · aliquot_sum) + ((-14/3) · Omega)) + 1)⌉ + 0) | touches=12
+
+Refined: (deficient) ⇒ phi ≥ (⌈(((((2/5) · rad) + ((3/5) · spf)) + ((-26/15) · Omega)) + 0)⌉ + 0) | touches=107
+
+Refined: (deficient) ⇒ phi ≥ (⌈(((((2/5) · n) + ((3/5) · spf)) + ((-26/15) · Omega)) + 0)⌉ + 0) | touches=107
+
+Refined: (deficient) ⇒ phi ≥ (⌈((((1 · spf) + ((1/2) · aliquot_sum)) + (-5 · Omega)) + 0)⌉ + 0) | touches=12
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈((((2/9) · sigma) + ((-32/3) · v2)) + (8/3))⌉ + 0) | touches=13
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈((((2/5) · rad) + (-6 · v2)) + 2)⌉ + 0) | touches=12
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈((((2/5) · n) + (-6 · v2)) + 2)⌉ + 0) | touches=13
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈((((2/9) · sigma) + ((-25/18) · tau)) + (28/9))⌉ + 0) | touches=12
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈((((2/5) · n) + ((9/5) · v2)) + (-29/5))⌉ + 0) | touches=13
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈((((1/2) · aliquot_sum) + ((-9/4) · tau)) + 5)⌉ + 0) | touches=12
+
+Refined: (abundant) ⇒ phi ≥ (⌈((((1/3) · n) + ((-17/4) · tau)) + ((17/2) · Omega))⌉ + 0) | touches=12
+
+Refined: (deficient) ⇒ phi ≥ (⌈(((2/9) · sigma) + -8)⌉ + 0) | touches=11
+
+Refined: (deficient) ⇒ phi ≥ (⌈(((2/5) · rad) + -4)⌉ + 0) | touches=11
+
+Refined: (deficient) ⇒ phi ≥ (⌈(((2/5) · n) + -4)⌉ + 0) | touches=11
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈(((1/2) · aliquot_sum) + -13)⌉ + 0) | touches=11
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈(((1/2) · aliquot_sum) + -13)⌉ + 0) | touches=11
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈((((2/9) · sigma) + ((-27/16) · tau)) + (11/2))⌉ + 0) | touches=12
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈((((1/2) · aliquot_sum) + ((-27/10) · tau)) + (43/5))⌉ + 0) | touches=12
+
+Refined: (odd) ⇒ phi ≥ (⌈((((8/15) · n) + (-8 · liouville)) + -16)⌉ + 0) | touches=10
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈((((1/2) · aliquot_sum) + ((27/14) · v2)) + (-209/14))⌉ + 0) | touches=12
+
+Refined: (div_4) ⇒ phi ≥ (⌈((((2 · lpf) + (8 · v2)) + ((5/2) · popcount)) + (-61/2))⌉ + 0) | touches=10
+
+Refined: (odd) ⇒ phi ≥ (⌈((((8/15) · rad) + (4 · liouville)) + -4)⌉ + 0) | touches=11
+
+Refined: (odd) ⇒ phi ≥ (⌈(((((-1/3) · sigma) + ((16/15) · rad)) + ((4/15) · spf)) + (-4/5))⌉ + 0) | touches=106
+
+Refined: ((TRUE ∧ (odd)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((((1/3) · sigma) + ((2/3) · spf)) + ((-18/7) · tau)) + (18/7))⌉ + 0) | touches=9
+
+Refined: (div_3) ⇒ phi ≥ (⌈((((2 · lpf) + ((1/2) · popcount)) + (1 · v2)) + -6)⌉ + 0) | touches=14
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈(((((2/5) · rad) + ((-8/15) · tau)) + ((38/15) · v2)) + (-34/15))⌉ + 0) | touches=13
+
+Refined: (odd) ⇒ phi ≥ (⌈(((8/15) · rad) + -8)⌉ + 0) | touches=8
+
+Refined: ((TRUE ∧ (odd)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((1/3) · sigma) + -16)⌉ + 0) | touches=8
+
+Refined: ((TRUE ∧ (odd)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((8/15) · n) + -8)⌉ + 0) | touches=8
+
+Refined: (odd) ⇒ phi ≥ (⌈(((((-13/2) · tau) + (32 · popcount)) + ((23/2) · liouville)) + (-211/2))⌉ + 0) | touches=6
+
+Refined: ((TRUE ∧ (odd)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((8/9) · aliquot_sum) + ((-13/3) · tau)) + (16/3))⌉ + 0) | touches=9
+
+Refined: (div_3) ⇒ phi ≥ (⌈(((((4/15) · rad) + (-1 · tau)) + ((12/5) · popcount)) + (-8/5))⌉ + 0) | touches=7
+
+Refined: phi ≥ (⌈(((((-5/2) · tau) + ((23/2) · popcount)) + (10 · Omega)) + -48)⌉ + 0) | touches=5
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈(((((2/5) · n) + ((31/5) · spf)) + ((23/15) · popcount)) + (-128/5))⌉ + 0) | touches=6
+
+Refined: (odd) ⇒ phi ≥ (⌈(((((2/9) · sigma) + ((2/15) · rad)) + ((2/3) · lpf)) + (-40/3))⌉ + 0) | touches=9
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((-1/2) · tau) + (10 · popcount)) + (18 · Omega)) + -90)⌉ + 0) | touches=5
+
+Refined: (smooth_7) ⇒ phi ≥ (⌈(((((-3/20) · rad) + (2 · tau)) + ((9/5) · lpf)) + (-25/2))⌉ + 0) | touches=5
+
+Refined: (smooth_7) ⇒ phi ≥ (⌈(((((3/2) · tau) + (2 · v2)) + (2 · lpf)) + -16)⌉ + 0) | touches=5
+
+Refined: (div_5) ⇒ phi ≥ (⌈(((((4/15) · rad) + (-1 · tau)) + ((32/3) · popcount)) + (-104/3))⌉ + 0) | touches=7
+
+Refined: (composite) ⇒ phi ≥ (⌈(((4/15) · n) + (-8 · v2))⌉ + 0) | touches=4
+
+Refined: (composite) ⇒ phi ≥ (⌈(((((1/4) · n) + ((-9/2) · v2)) + ((9/2) · popcount)) + -18)⌉ + 0) | touches=4
+
+Refined: (composite) ⇒ phi ≥ (⌈(((((19/8) · tau) + (11 · spf)) + (10 · popcount)) + (-149/2))⌉ + 0) | touches=4
+
+Refined: (composite) ⇒ phi ≥ (⌈(((((35/3) · spf) + (11 · v2)) + (11 · popcount)) + (-220/3))⌉ + 0) | touches=6
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈((((12 · spf) + (12 · tau)) + ((4/5) · v2)) + -84)⌉ + 0) | touches=4
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈((((9 · spf) + (14 · popcount)) + ((59/5) · v2)) + -75)⌉ + 0) | touches=4
+
+Refined: (even) ⇒ phi ≥ (⌈(((((2/9) · n) + ((2/3) · popcount)) + ((4/3) · v2)) + (-8/3))⌉ + 0) | touches=9
+
+Refined: (even) ⇒ phi ≥ (⌈(((((4/15) · rad) + ((-8/15) · tau)) + ((38/15) · v2)) + -2)⌉ + 0) | touches=5
+
+Refined: (even) ⇒ phi ≥ (⌈(((((19/20) · lpf) + ((61/20) · popcount)) + (8 · Omega)) + (-659/20))⌉ + 0) | touches=5
+
+Refined: (even) ⇒ phi ≥ (⌈(((((-1/2) · tau) + ((11/2) · popcount)) + (10 · Omega)) + -40)⌉ + 0) | touches=4
+
+Refined: ((TRUE ∧ (composite)) ∧ (even)) ⇒ phi ≥ (⌈(((((2/9) · n) + ((4/3) · v2)) + ((2/3) · popcount)) + (-8/3))⌉ + 0) | touches=9
+
+Refined: (smooth_7) ⇒ phi ≥ (⌈(((((2/9) · n) + ((4/3) · v2)) + ((2/3) · popcount)) + (-8/3))⌉ + 0) | touches=9
+
+Refined: ((TRUE ∧ (composite)) ∧ (even)) ⇒ phi ≥ (⌈(((((19/20) · lpf) + (8 · Omega)) + ((61/20) · popcount)) + (-659/20))⌉ + 0) | touches=5
+
+Refined: ((TRUE ∧ (composite)) ∧ (even)) ⇒ phi ≥ (⌈(((((4/3) · tau) + ((-8/3) · v2)) + ((16/3) · Omega)) + -16)⌉ + 0) | touches=5
+
+Refined: ((TRUE ∧ (composite)) ∧ (even)) ⇒ phi ≥ (⌈(((((-7/5) · tau) + ((68/5) · v2)) + ((82/5) · popcount)) + -60)⌉ + 0) | touches=5
+
+Refined: ((TRUE ∧ (composite)) ∧ (even)) ⇒ phi ≥ (⌈(((((-1/2) · tau) + (10 · Omega)) + ((11/2) · popcount)) + -40)⌉ + 0) | touches=4
+
+Refined: (smooth_7) ⇒ phi ≥ (⌈(((((-1/2) · tau) + (10 · Omega)) + ((11/2) · popcount)) + -40)⌉ + 0) | touches=4
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((4/15) · n) + (-4 · mu)) + -4)⌉ + 0) | touches=5
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((4/15) · rad) + (-4 · mu)) + -4)⌉ + 0) | touches=5
+
+Refined: (div_3) ⇒ phi ≥ (⌈((((4/15) · n) + ((-46/5) · v2)) + (6/5))⌉ + 0) | touches=4
+
+Refined: (div_3) ⇒ phi ≥ (⌈(((((1/4) · n) + ((9/2) · popcount)) + ((-35/4) · v2)) + (-55/4))⌉ + 0) | touches=4
+
+Refined: (div_3) ⇒ phi ≥ (⌈(((((-1/2) · tau) + (10 · popcount)) + (10 · Omega)) + -58)⌉ + 0) | touches=4
+
+Refined: (div_3) ⇒ phi ≥ (⌈(((((3/2) · tau) + ((-31/2) · v2)) + (10 · Omega)) + (-37/2))⌉ + 0) | touches=6
+
+Refined: ((TRUE ∧ (composite)) ∧ (div_3)) ⇒ phi ≥ (⌈((((4/15) · n) + ((-58/5) · v2)) + (18/5))⌉ + 0) | touches=5
+
+Refined: ((TRUE ∧ (composite)) ∧ (div_3)) ⇒ phi ≥ (⌈(((((4/15) · rad) + ((-7/10) · tau)) + ((-18/5) · v2)) + (34/5))⌉ + 0) | touches=6
+
+Refined: ((TRUE ∧ (composite)) ∧ (odd)) ⇒ phi ≥ (⌈(((((35/16) · lpf) + ((237/16) · spf)) + (-22 · liouville)) + -55)⌉ + 0) | touches=4
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈(((((5/2) · tau) + (12 · popcount)) + ((29/4) · v2)) + (-189/4))⌉ + 0) | touches=4
+
+Refined: (div_4) ⇒ phi ≥ (⌈(((((-17/3) · tau) + (18 · popcount)) + (20 · Omega)) + -68)⌉ + 0) | touches=4
+
+Refined: (abundant) ⇒ phi ≥ (⌈((((1/3) · n) + ((-17/5) · tau)) + (102/5))⌉ + 0) | touches=4
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((4/15) · rad) + ((2/15) · tau)) + ((116/15) · v2)) + (-268/15))⌉ + 0) | touches=5
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((8/5) · lpf) + (8 · v2)) + ((32/5) · popcount)) + (-168/5))⌉ + 0) | touches=5
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((21/10) · lpf) + (-8 · v2)) + (22 · Omega)) + (-683/10))⌉ + 0) | touches=5
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((-1/2) · tau) + (18 · v2)) + (19 · popcount)) + -90)⌉ + 0) | touches=4
+
+Refined: (smooth_7) ⇒ phi ≥ (⌈((((1/5) · rad) + ((3/5) · lpf)) + -1)⌉ + 0) | touches=7
+
+Refined: ((TRUE ∧ (even)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((1/9) · sigma) + (-8 · mu)) + -8)⌉ + 0) | touches=5
+
+Refined: (div_5) ⇒ phi ≥ (⌈((((4/15) · rad) + ((32/9) · spf)) + (-136/9))⌉ + 0) | touches=4
+
+Refined: (div_5) ⇒ phi ≥ (⌈((((4/15) · n) + ((-32/3) · v2)) + (8/3))⌉ + 0) | touches=4
+
+Refined: (div_5) ⇒ phi ≥ (⌈(((((4/15) · rad) + ((44/3) · popcount)) + ((56/9) · spf)) + (-712/9))⌉ + 0) | touches=5
+
+Refined: (div_5) ⇒ phi ≥ (⌈(((((16/3) · tau) + ((76/9) · spf)) + (-8 · v2)) + (-440/9))⌉ + 0) | touches=4
+
+Refined: phi ≥ (⌈(((((1/3) · rad) + (-4 · tau)) + ((55/9) · popcount)) + (-20/3))⌉ + 0) | touches=9
+
+Refined: (composite) ⇒ phi ≥ (⌈((((3/2) · tau) + (-1 · v2)) + -3)⌉ + 0) | touches=3
+
+Refined: (composite) ⇒ phi ≥ (⌈(((((2/9) · rad) + (8 · v2)) + (8 · popcount)) + (-116/3))⌉ + 0) | touches=4
+
+Refined: (deficient) ⇒ phi ≥ (⌈(((((3/16) · sigma) + ((7/16) · lpf)) + ((-13/16) · tau)) + (19/16))⌉ + 0) | touches=56
+
+Refined: (squarefree) ⇒ phi ≥ (⌈(((4/15) · n) + -8)⌉ + 0) | touches=3
+
+Refined: (squarefree) ⇒ phi ≥ (⌈(((4/15) · rad) + -8)⌉ + 0) | touches=3
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈(((7 · spf) + ((3/2) · v2)) + -15)⌉ + 0) | touches=4
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈((((51/4) · popcount) + ((37/4) · v2)) + -43)⌉ + 0) | touches=3
+
+Refined: ((TRUE ∧ (composite)) ∧ (deficient)) ⇒ phi ≥ (⌈(((((10/9) · lpf) + ((134/9) · spf)) + ((121/9) · tau)) + -112)⌉ + 0) | touches=5
+
+Refined: (odd) ⇒ phi ≥ (⌈((((11/2) · tau) + ((-5/2) · liouville)) + (-23/2))⌉ + 0) | touches=3
+
+Refined: (even) ⇒ phi ≥ (⌈(((((-7/5) · tau) + ((82/5) · popcount)) + ((68/5) · v2)) + -60)⌉ + 0) | touches=5
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((2/19) · aliquot_sum) + ((416/19) · popcount)) + -84)⌉ + 0) | touches=4
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((((3/14) · n) + ((4/7) · lpf)) + ((2/19) · popcount)) + (-33/19))⌉ + 0) | touches=55
+
+Refined: ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≥ (⌈(((((3/14) · rad) + ((4/7) · lpf)) + ((2/19) · popcount)) + (-33/19))⌉ + 0) | touches=55
+
+Refined: ((TRUE ∧ (odd)) ∧ (squarefree)) ⇒ phi ≥ (⌈((((8/3) · tau) + ((82/3) · popcount)) + -112)⌉ + 0) | touches=3
+
+Refined: (div_3) ⇒ phi ≥ (⌈(((((4/15) · n) + ((-37/5) · v2)) + ((-3/5) · Omega)) + (9/5))⌉ + 0) | touches=5
+
+Refined: ((TRUE ∧ (composite)) ∧ (odd)) ⇒ phi ≥ (⌈(((((35/3) · spf) + ((32/3) · popcount)) + ((-13/3) · liouville)) + (-202/3))⌉ + 0) | touches=4
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈((((5/2) · tau) + (12 · popcount)) + -40)⌉ + 0) | touches=3
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈(((12 · popcount) + ((17/2) · v2)) + (-77/2))⌉ + 0) | touches=4
+
+Refined: ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≥ (⌈((((1 · lpf) + ((1/6) · popcount)) + (2 · v2)) + (-25/6))⌉ + 0) | touches=53
+
+Refined: (abundant) ⇒ phi ≥ (⌈((((2/15) · rad) + (2 · tau)) + -12)⌉ + 0) | touches=3
+
+Refined: (abundant) ⇒ phi ≥ (⌈((((2/9) · rad) + ((-2/3) · popcount)) + 4)⌉ + 0) | touches=4
+
+Refined: (abundant) ⇒ phi ≥ (⌈(((((4/15) · rad) + ((-9/5) · tau)) + ((58/5) · Omega)) + (-128/5))⌉ + 0) | touches=5
+
+Refined: (smooth_7) ⇒ phi ≥ (⌈(((((1/3) · n) + ((-7/3) · tau)) + ((11/3) · popcount)) + (-8/3))⌉ + 0) | touches=5
+
+Refined: (smooth_7) ⇒ phi ≥ (⌈((((8 · v2) + ((4/3) · lpf)) + ((20/3) · popcount)) + (-100/3))⌉ + 0) | touches=7
+
+
+--------------------------------------------------------------------------------
+INTRICATE MIXED INEQUALITIES
+--------------------------------------------------------------------------------
+
+Boolean columns: ['even', 'odd', 'prime', 'composite', 'squarefree', 'perfect_square', 'perfect_cube', 'triangular', 'fibonacci', 'abundant', 'perfect', 'deficient', 'smooth_5', 'smooth_7', 'highly_divisible', 'div_3', 'div_4', 'div_5', 'div_6', 'div_7', 'div_8', 'div_9', 'div_10', 'div_11', 'div_12']
+Numeric columns: ['n', 'sqrt_n', 'log_n', 'log10_n', 'tau', 'sigma', 'phi', 'mu'] ...
+Base hypothesis: TRUE 
+
+[LOWER] total=1027
+
+• ((smooth_5)) ⇒ phi ≥ ⌈(((2/15) · n) + ((2/15) · (sqrt_n)²))⌉
+    touches=16, support=67
+
+• ((div_8)) ⇒ phi ≥ ⌈(((2/15) · n) + ((2/15) · (sqrt_n)²))⌉
+    touches=4, support=62
+
+• ((div_9)) ⇒ phi ≥ ⌈(((2/15) · n) + ((2/15) · (sqrt_n)²))⌉
+    touches=4, support=55
+
+• ((deficient) ∧ (smooth_7)) ⇒ phi ≥ ⌈(((1/5) · n) + ((1/5) · (sqrt_n)²))⌉
+    touches=9, support=42
+
+• ((odd) ∧ (smooth_5)) ⇒ phi ≥ ⌈(((4/15) · n) + ((4/15) · (sqrt_n)²))⌉
+    touches=9, support=16
+
+• ((deficient)) ⇒ phi ≥ ⌈(((2/11) · n) + ((2/11) · (sqrt_n)²))⌉
+    touches=8, support=376
+
+[UPPER] total=130
+
+• ((div_12)) ⇒ phi ≤ (((1/6) · n) + ((1/6) · (sqrt_n)²))
+    touches=14, support=41
+
+• ((highly_divisible) ∧ (div_3)) ⇒ phi ≤ (((1/6) · n) + ((1/6) · (sqrt_n)²))
+    touches=5, support=10
+
+• ((composite) ∧ (div_5)) ⇒ phi ≤ ⌊(((2/5) · n) + (0 · (sigma)²))⌋
+    touches=12, support=99
+
+• ((div_10)) ⇒ phi ≤ (((1/5) · n) + ((1/5) · (sqrt_n)²))
+    touches=12, support=50
+
+• ((div_3) ∧ (div_5)) ⇒ phi ≤ ⌊(((4/15) · n) + (0 · (sigma)²))⌋
+    touches=12, support=33
+
+• ((smooth_7) ∧ (div_10)) ⇒ phi ≤ ⌊(((1/5) · n) + ((1/5) · (sqrt_n)²))⌋
+    touches=12, support=31
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+EQUALITY-CLASS HYPOTHESES BOOTSTRAP → REBUILD ENGINES
+--------------------------------------------------------------------------------
+
+Selected equality classes:
+  • liouville = 1.0·mu                       (tightness≈1.000, n=150)  → added as boolean 'liouville = 1.0·mu'
+  • n = 1.0·rad                              (tightness≈0.612, n=500)  → added as boolean 'n = 1.0·rad'
+  • Omega = 1.0·omega                        (tightness≈0.611, n=499)  → added as boolean 'Omega = 1.0·omega'
+  • v2 = 0.0·mu                              (tightness≈0.627, n=150)  → added as boolean 'v2 = 0.0·mu'
+  • v2 = 0.0·tau                             (tightness≈0.500, n=500)  → added as boolean 'v2 = 0.0·tau'
+  • v2 = 0.0·rad                             (tightness≈0.500, n=500)  → added as boolean 'v2 = 0.0·rad'
+  • v2 = 0.0·spf                             (tightness≈0.500, n=500)  → added as boolean 'v2 = 0.0·spf'
+  • v2 = 0.0·lpf                             (tightness≈0.500, n=500)  → added as boolean 'v2 = 0.0·lpf'
+  • v2 = 0.0·popcount                        (tightness≈0.500, n=500)  → added as boolean 'v2 = 0.0·popcount'
+  • v2 = 0.0·abundancy_index                 (tightness≈0.500, n=500)  → added as boolean 'v2 = 0.0·abundancy_index'
+  • v2 = 0.0·n                               (tightness≈0.500, n=500)  → added as boolean 'v2 = 0.0·n'
+  • v2 = 0.0·sigma                           (tightness≈0.500, n=500)  → added as boolean 'v2 = 0.0·sigma'
+
+Boolean columns in rebuilt frame (includes equality-class hypotheses):
+['even', 'odd', 'prime', 'composite', 'squarefree', 'perfect_square', 'perfect_cube', 'triangular', 'fibonacci', 'abundant', 'perfect', 'deficient', 'smooth_5', 'smooth_7', 'highly_divisible', 'div_3', 'div_4', 'div_5', 'div_6', 'div_7', 'div_8', 'div_9', 'div_10', 'div_11', 'div_12', 'liouville = 1.0·mu', 'n = 1.0·rad', 'Omega = 1.0·omega', 'v2 = 0.0·mu', 'v2 = 0.0·tau', 'v2 = 0.0·rad', 'v2 = 0.0·spf', 'v2 = 0.0·lpf', 'v2 = 0.0·popcount', 'v2 = 0.0·abundancy_index', 'v2 = 0.0·n', 'v2 = 0.0·sigma']
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=1
+
+• phi ≥ (1 · phi)
+    touches=500, support=500
+
+[UPPER] total=1
+
+• phi ≤ (1 · phi)
+    touches=500, support=500
+
+[EQUAL] total=1
+
+• phi = (1 · phi)
+    touches=500, support=500
+
+
+--------------------------------------------------------------------------------
+K2 AFFINE BOUNDS (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=199
+
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((-1 · sigma) + (2 · n)) + (1 · tau)) + -2)
+    touches=239, support=279
+
+• (v2 = 0.0·n) ⇒ phi ≥ ((((-1 · sigma) + (2 · n)) + (1 · tau)) + -2)
+    touches=194, support=250
+
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((-1 · sigma) + (2 · rad)) + (1 · tau)) + -2)
+    touches=239, support=279
+
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((1 · sigma) + (-2 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=239, support=279
+
+• (v2 = 0.0·n) ⇒ phi ≥ ((((1 · sigma) + (-2 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=194, support=250
+
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((1 · n) + (-1 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=239, support=279
+
+[UPPER] total=53
+
+• (v2 = 0.0·n) ⇒ phi ≤ (((1 · n) + ((1/2) · liouville)) + (-1/2))
+    touches=95, support=250
+
+• (v2 = 0.0·n) ⇒ phi ≤ ((((1 · sigma) + ((-14/9) · aliquot_sum)) + ((2/9) · liouville)) + (-2/9))
+    touches=80, support=250
+
+• (v2 = 0.0·n) ⇒ phi ≤ (((((1/18) · rad) + ((17/18) · n)) + ((1/2) · liouville)) + (-1/2))
+    touches=80, support=250
+
+• (v2 = 0.0·n) ⇒ phi ≤ (((((17/18) · n) + ((1/18) · lpf)) + ((1/2) · liouville)) + (-1/2))
+    touches=80, support=250
+
+• (v2 = 0.0·n) ⇒ phi ≤ ((((1 · n) + ((-5/9) · aliquot_sum)) + ((2/9) · liouville)) + (-2/9))
+    touches=80, support=250
+
+• (v2 = 0.0·n) ⇒ phi ≤ (((((-5/9) · sigma) + ((14/9) · n)) + ((2/9) · liouville)) + (-2/9))
+    touches=70, support=250
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+INTRICATE MIXED INEQUALITIES (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=1027
+
+• ((smooth_5)) ⇒ phi ≥ ⌈(((2/15) · n) + ((2/15) · (sqrt_n)²))⌉
+    touches=16, support=67
+
+• ((div_8)) ⇒ phi ≥ ⌈(((2/15) · n) + ((2/15) · (sqrt_n)²))⌉
+    touches=4, support=62
+
+• ((div_9)) ⇒ phi ≥ ⌈(((2/15) · n) + ((2/15) · (sqrt_n)²))⌉
+    touches=4, support=55
+
+• ((deficient) ∧ (smooth_7)) ⇒ phi ≥ ⌈(((1/5) · n) + ((1/5) · (sqrt_n)²))⌉
+    touches=9, support=42
+
+• ((odd) ∧ (smooth_5)) ⇒ phi ≥ ⌈(((4/15) · n) + ((4/15) · (sqrt_n)²))⌉
+    touches=9, support=16
+
+• ((deficient)) ⇒ phi ≥ ⌈(((2/11) · n) + ((2/11) · (sqrt_n)²))⌉
+    touches=8, support=376
+
+[UPPER] total=130
+
+• ((div_12)) ⇒ phi ≤ (((1/6) · n) + ((1/6) · (sqrt_n)²))
+    touches=14, support=41
+
+• ((highly_divisible) ∧ (div_3)) ⇒ phi ≤ (((1/6) · n) + ((1/6) · (sqrt_n)²))
+    touches=5, support=10
+
+• ((composite) ∧ (div_5)) ⇒ phi ≤ ⌊(((2/5) · n) + (0 · (sigma)²))⌋
+    touches=12, support=99
+
+• ((div_10)) ⇒ phi ≤ (((1/5) · n) + ((1/5) · (sqrt_n)²))
+    touches=12, support=50
+
+• ((div_3) ∧ (div_5)) ⇒ phi ≤ ⌊(((4/15) · n) + (0 · (sigma)²))⌋
+    touches=12, support=33
+
+• ((smooth_7) ∧ (div_10)) ⇒ phi ≤ ⌊(((1/5) · n) + ((1/5) · (sqrt_n)²))⌋
+    touches=12, support=31
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+FULL CONJECTURE LIST (DEDUPED • RANKED • TOP-K)
+--------------------------------------------------------------------------------
+
+[LOWERS] total=100
+
+• phi ≥ (1 · phi)
+    touches=500, support=500
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((-1 · sigma) + (2 · n)) + (1 · tau)) + -2)
+    touches=239, support=279
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((-1 · sigma) + (2 · rad)) + (1 · tau)) + -2)
+    touches=239, support=279
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((1 · sigma) + (-2 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=239, support=279
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((1 · n) + (-1 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=239, support=279
+• ((TRUE ∧ (deficient)) ∧ (squarefree)) ⇒ phi ≥ ((((1 · rad) + (-1 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=239, support=279
+• (odd) ⇒ phi ≥ ((((-1 · sigma) + (2 · n)) + (1 · tau)) + -2)
+    touches=194, support=250
+• (odd) ⇒ phi ≥ ((((1 · sigma) + (-2 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=194, support=250
+• (odd) ⇒ phi ≥ ((((1 · n) + (-1 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=194, support=250
+• (odd) ⇒ phi ≥ ((((1 · rad) + (-1 · aliquot_sum)) + (1 · tau)) + -2)
+    touches=187, support=250
+• phi ≥ ((1 · lpf) + -1)
+    touches=147, support=500
+• (deficient) ⇒ phi ≥ ((((-1 · sigma) + (2 · n)) + (5 · tau)) + -18)
+    touches=146, support=376
+
+[UPPERS] total=100
+
+• phi ≤ (1 · phi)
+    touches=500, support=500
+• ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≤ ((((1 · n) + (-1 · lpf)) + (-1 · spf)) + 1)
+    touches=145, support=210
+• ((TRUE ∧ (composite)) ∧ (squarefree)) ⇒ phi ≤ ((((1 · rad) + (-1 · lpf)) + (-1 · spf)) + 1)
+    touches=145, support=210
+• (deficient) ⇒ phi ≤ (⌊(((1 · n) + ((-1/7) · popcount)) + (1/7))⌋ + 0)
+    touches=95, support=376
+• (squarefree) ⇒ phi ≤ (⌊(((1 · n) + ((-1/7) · popcount)) + (1/7))⌋ + 0)
+    touches=95, support=306
+• (squarefree) ⇒ phi ≤ (⌊(((1 · rad) + ((-1/7) · popcount)) + (1/7))⌋ + 0)
+    touches=95, support=306
+• (odd) ⇒ phi ≤ (((1 · n) + ((1/2) · liouville)) + (-1/2))
+    touches=95, support=250
+• (odd) ⇒ phi ≤ ((((1 · sigma) + ((-14/9) · aliquot_sum)) + ((2/9) · liouville)) + (-2/9))
+    touches=80, support=250
+• (odd) ⇒ phi ≤ (((((1/18) · rad) + ((17/18) · n)) + ((1/2) · liouville)) + (-1/2))
+    touches=80, support=250
+• (odd) ⇒ phi ≤ (((((17/18) · n) + ((1/18) · lpf)) + ((1/2) · liouville)) + (-1/2))
+    touches=80, support=250
+• (odd) ⇒ phi ≤ ((((1 · n) + ((-5/9) · aliquot_sum)) + ((2/9) · liouville)) + (-2/9))
+    touches=80, support=250
+• ((TRUE ∧ (deficient)) ∧ (even)) ⇒ phi ≤ (((((1/2) · n) + (-2 · tau)) + (3 · v2)) + 4)
+    touches=78, support=126
+
+[EQUALS] total=1
+
+• phi = (1 · phi)
+    touches=500, support=500
+
+────────────────────────────────────────────────────────────────────────────────
+END OF REPORT
+Finished: 2025-11-05 12:00:42
+────────────────────────────────────────────────────────────────────────────────

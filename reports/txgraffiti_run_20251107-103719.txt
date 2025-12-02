@@ -1,0 +1,421 @@
+────────────────────────────────────────────────────────────────────────────────
+TxGraffiti • Full Program Run Report
+────────────────────────────────────────────────────────────────────────────────
+Started: 2025-11-07 10:37:19
+Working dir: /Users/randydavila/Documents/automated-conjecturing/txgraffiti2
+Python: 3.13.2
+────────────────────────────────────────────────────────────────────────────────
+
+--------------------------------------------------------------------------------
+QUALITATIVE RELATIONS (TOP 12)
+--------------------------------------------------------------------------------
+
+=== Qualitative Relations (top 12) ===
+• [((simple_polytope) ∧ (p4_odd))]  p6 ↑ temperature(p6)  (rho=0.960, n=104/104, method=spearman)
+• [(simple_polytope)]  p6 ↑ temperature(p6)  (rho=0.957, n=496/496, method=spearman)
+• [((simple_polytope) ∧ (p4>0))]  p6 ↑ temperature(p6)  (rho=0.956, n=215/215, method=spearman)
+• [(((simple_polytope) ∧ (p5_odd)) ∧ (p6_odd))]  p6 ↑ sl(dual)  (rho=0.919, n=25/25, method=spearman)
+• [((simple_polytope) ∧ (p5>0))]  p6 ↑ temperature(p6)  (rho=0.913, n=359/359, method=spearman)
+• [(((simple_polytope) ∧ (p5_odd)) ∧ (p6>0))]  p6 ↑ sl(dual)  (rho=0.908, n=37/37, method=spearman)
+• [((simple_polytope) ∧ (p5_odd))]  p6 ↑ temperature(p6)  (rho=0.907, n=84/84, method=spearman)
+• [(((simple_polytope) ∧ (p3>0)) ∧ (p5_odd))]  p6 ↑ sl(dual)  (rho=0.895, n=26/26, method=spearman)
+• [(((simple_polytope) ∧ (p3_odd)) ∧ (p5_odd))]  p6 ↑ sl(dual)  (rho=0.893, n=21/21, method=spearman)
+• [(((simple_polytope) ∧ (p3>0)) ∧ (p4>0))]  p6 ↑ sl(dual)  (rho=0.880, n=56/56, method=spearman)
+• [(((simple_polytope) ∧ (p4_odd)) ∧ (p6>0))]  p6 ↑ sl(dual)  (rho=0.865, n=33/33, method=spearman)
+• [(((simple_polytope) ∧ (p3_odd)) ∧ (p4_odd))]  p6 ↑ sl(dual)  (rho=0.859, n=19/19, method=spearman)
+
+--------------------------------------------------------------------------------
+ASYMPTOTIC LIMITS (QUALITATIVE → DEFINITE)
+--------------------------------------------------------------------------------
+
+[ASYMPTOTIC] total=1836
+
+• ((simple_polytope)) ⇒ lim_{sum(pk_for_k>7)→∞} (p6 / Unnamed: 0) = 0
+• ((simple_polytope)) ⇒ lim_{sum(pk_for_k>7)→∞} (p6 / n) = (1/50)
+• ((simple_polytope)) ⇒ lim_{n→∞} (p6 / Unnamed: 0) = 0
+• ((simple_polytope)) ⇒ lim_{independence_number→∞} (p6 / Unnamed: 0) = 0
+• ((simple_polytope)) ⇒ lim_{independence_number→∞} (p6 / n) = (1/50)
+• ((simple_polytope)) ⇒ lim_{second_largest_adjacency_eigenvalue→∞} (p6 / Unnamed: 0) = 0
+• ((simple_polytope)) ⇒ lim_{second_largest_adjacency_eigenvalue→∞} (p6 / n) = (1/50)
+• ((simple_polytope)) ⇒ lim_{matching_number→∞} (p6 / Unnamed: 0) = 0
+• ((simple_polytope)) ⇒ lim_{matching_number→∞} (p6 / n) = (1/50)
+• ((simple_polytope)) ⇒ lim_{max(temperature)→∞} (p6 / Unnamed: 0) = 0
+
+--------------------------------------------------------------------------------
+GRAFFITICLASSRELATIONS SUMMARY
+--------------------------------------------------------------------------------
+
+Boolean columns: ['simple_polytope', 'p3_odd', 'p4_odd', 'p5_odd', 'p6_odd', 'claw_free', 'p3>0', 'p4>0', 'p5>0', 'p6>0']
+Expr columns: ['Unnamed: 0', 'p3', 'temperature(p3)', 'p4', 'temperature(p4)', 'p5', 'temperature(p5)', 'p6', 'temperature(p6)', 'p7', 'temperature(p7)', 'sum(pk_for_k>7)', 'n', 'independence_number', 'second_largest_adjacency_eigenvalue', 'matching_number', 'avg(temperature)', 'max(temperature)', 'rad', 'diam', 'max(pk)', 'R(dual)', 'sl(dual)', 'a(dual)', 'sum(1/pk : pk > 0)', 'sum(|zeros in p_vector|)*1/pk : pk > 0)', 'Caro_Wei(dual)']
+Base hypothesis: simple_polytope
+
+Nonredundant conjunctions:
+  simple_polytope ∧ claw_free
+  simple_polytope ∧ p3>0
+  simple_polytope ∧ p3_odd
+  simple_polytope ∧ p4>0
+  simple_polytope ∧ p4_odd
+  simple_polytope ∧ p5>0
+  simple_polytope ∧ p5_odd
+  simple_polytope ∧ p6>0
+
+Example atomic conjectures:
+
+  ((simple_polytope) ∧ (claw_free)) ⇒ p5 = 0 ∧ temperature(p5) = 0 ∧ p7 = 0 ∧ temperature(p7) = 0
+
+  (((simple_polytope) ∧ (claw_free)) ∧ (p4>0)) ⇒ Unnamed: 0 = 52 ∧ p3 = 2 ∧ temperature(p3) = 0.6666666666666666 ∧ p4 = 3 ∧ temperature(p4) = 1.5 ∧ p5 = 0 ∧ temperature(p5) = 0 ∧ p6 = 0 ∧ temperature(p6) = 0 ∧ p7 = 0 ∧ temperature(p7) = 0 ∧ sum(pk_for_k>7) = 0 ∧ n = 6 ∧ independence_number = 2 ∧ second_largest_adjacency_eigenvalue = 1.0000000000000002 ∧ matching_number = 3 ∧ avg(temperature) = 1.0833333333333333 ∧ max(temperature) = 1.5 ∧ rad = 2 ∧ diam = 2 ∧ max(pk) = 3 ∧ R(dual) = 2 ∧ sl(dual) = 1 ∧ a(dual) = 2 ∧ sum(1/pk : pk > 0) = 0.8333333333333333 ∧ sum(|zeros in p_vector|)*1/pk : pk > 0) = 0 ∧ Caro_Wei(dual) = 1.1
+
+  (((simple_polytope) ∧ (claw_free)) ∧ (p4_odd)) ⇒ Unnamed: 0 = 52 ∧ p3 = 2 ∧ temperature(p3) = 0.6666666666666666 ∧ p4 = 3 ∧ temperature(p4) = 1.5 ∧ p5 = 0 ∧ temperature(p5) = 0 ∧ p6 = 0 ∧ temperature(p6) = 0 ∧ p7 = 0 ∧ temperature(p7) = 0 ∧ sum(pk_for_k>7) = 0 ∧ n = 6 ∧ independence_number = 2 ∧ second_largest_adjacency_eigenvalue = 1.0000000000000002 ∧ matching_number = 3 ∧ avg(temperature) = 1.0833333333333333 ∧ max(temperature) = 1.5 ∧ rad = 2 ∧ diam = 2 ∧ max(pk) = 3 ∧ R(dual) = 2 ∧ sl(dual) = 1 ∧ a(dual) = 2 ∧ sum(1/pk : pk > 0) = 0.8333333333333333 ∧ sum(|zeros in p_vector|)*1/pk : pk > 0) = 0 ∧ Caro_Wei(dual) = 1.1
+
+  (((simple_polytope) ∧ (claw_free)) ∧ (p6>0)) ⇒ p4 = 0 ∧ temperature(p4) = 0 ∧ p5 = 0 ∧ temperature(p5) = 0 ∧ p7 = 0 ∧ temperature(p7) = 0 ∧ sl(dual) = 2
+
+=== Class Equivalences ===
+  (Unnamed: 0 = 52 ∧ p3 = 2 ∧ temperature(p3) = 0.6666666666666666 ∧ p4 = 3 ∧ temperature(p4) = 1.5 ∧ p5 = 0 ∧ temperature(p5) = 0 ∧ p6 = 0 ∧ temperature(p6) = 0 ∧ p7 = 0 ∧ temperature(p7) = 0 ∧ sum(pk_for_k>7) = 0 ∧ n = 6 ∧ independence_number = 2 ∧ second_largest_adjacency_eigenvalue = 1.0000000000000002 ∧ matching_number = 3 ∧ avg(temperature) = 1.0833333333333333 ∧ max(temperature) = 1.5 ∧ rad = 2 ∧ diam = 2 ∧ max(pk) = 3 ∧ R(dual) = 2 ∧ sl(dual) = 1 ∧ a(dual) = 2 ∧ sum(1/pk : pk > 0) = 0.8333333333333333 ∧ sum(|zeros in p_vector|)*1/pk : pk > 0) = 0 ∧ Caro_Wei(dual) = 1.1) ≡ (((simple_polytope) ∧ (claw_free)) ∧ (p4>0))
+  (Unnamed: 0 = 52 ∧ p3 = 2 ∧ temperature(p3) = 0.6666666666666666 ∧ p4 = 3 ∧ temperature(p4) = 1.5 ∧ p5 = 0 ∧ temperature(p5) = 0 ∧ p6 = 0 ∧ temperature(p6) = 0 ∧ p7 = 0 ∧ temperature(p7) = 0 ∧ sum(pk_for_k>7) = 0 ∧ n = 6 ∧ independence_number = 2 ∧ second_largest_adjacency_eigenvalue = 1.0000000000000002 ∧ matching_number = 3 ∧ avg(temperature) = 1.0833333333333333 ∧ max(temperature) = 1.5 ∧ rad = 2 ∧ diam = 2 ∧ max(pk) = 3 ∧ R(dual) = 2 ∧ sl(dual) = 1 ∧ a(dual) = 2 ∧ sum(1/pk : pk > 0) = 0.8333333333333333 ∧ sum(|zeros in p_vector|)*1/pk : pk > 0) = 0 ∧ Caro_Wei(dual) = 1.1) ≡ (((simple_polytope) ∧ (claw_free)) ∧ (p4_odd))
+
+=== Inclusions (equalities ⇒ class) ===
+
+=== Inclusions (class ⇒ equalities) ===
+  ((simple_polytope) ∧ (claw_free)) ⊆ (p5 = 0 ∧ temperature(p5) = 0 ∧ p7 = 0 ∧ temperature(p7) = 0)
+  (((simple_polytope) ∧ (claw_free)) ∧ (p6>0)) ⊆ (p4 = 0 ∧ temperature(p4) = 0 ∧ p5 = 0 ∧ temperature(p5) = 0 ∧ p7 = 0 ∧ temperature(p7) = 0 ∧ sl(dual) = 2)
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS
+--------------------------------------------------------------------------------
+
+[LOWER] total=1
+
+• (simple_polytope) ⇒ p6 ≥ (1 · p6)
+    touches=496, support=496
+
+[UPPER] total=1
+
+• (simple_polytope) ⇒ p6 ≤ (1 · p6)
+    touches=496, support=496
+
+[EQUAL] total=1
+
+• (simple_polytope) ⇒ p6 = (1 · p6)
+    touches=496, support=496
+
+
+--------------------------------------------------------------------------------
+K2 AFFINE BOUNDS GENERATION
+--------------------------------------------------------------------------------
+
+[LOWER] total=132
+
+• (simple_polytope) ⇒ p6 ≥ ((-5 · sum(|zeros in p_vector|)*1/pk : pk > 0)) + (5 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|))
+    touches=240, support=496
+
+• (simple_polytope) ⇒ p6 ≥ 0
+    touches=239, support=496
+
+• ((simple_polytope) ∧ (p4>0)) ⇒ p6 ≥ ((5 · sum(|zeros in p_vector|)*1/pk : pk > 0)) + (-5 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|))
+    touches=142, support=215
+
+• ((simple_polytope) ∧ (p4>0)) ⇒ p6 ≥ (((0 · Unnamed: 0) + (0 · |(rad - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)
+    touches=141, support=215
+
+• ((simple_polytope) ∧ (p4>0)) ⇒ p6 ≥ (((0 · |(Unnamed: 0 - n)|) + (0 · |(rad - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)
+    touches=141, support=215
+
+• ((simple_polytope) ∧ (p4>0)) ⇒ p6 ≥ ((((0 · Unnamed: 0) + (0 · |(Unnamed: 0 - n)|)) + (0 · |(rad - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)
+    touches=141, support=215
+
+[UPPER] total=0
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+INTEGER-AWARE LIFTING
+--------------------------------------------------------------------------------
+
+Before vs After (lowers): 132 → 132
+Before vs After (uppers): 0 → 0
+
+Refined: (simple_polytope) ⇒ p6 ≥ (⌈((-5 · sum(|zeros in p_vector|)*1/pk : pk > 0)) + (5 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|))⌉ + 0) | touches=246
+
+Refined: ((simple_polytope) ∧ (p4>0)) ⇒ p6 ≥ (⌈((5 · sum(|zeros in p_vector|)*1/pk : pk > 0)) + (-5 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|))⌉ + 0) | touches=153
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈((1 · sum(|zeros in p_vector|)*1/pk : pk > 0)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|))⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈(((1 · |(temperature(p4) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=32
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈((((1 · |(temperature(p4) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(sl(dual) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=32
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈((((1 · |(temperature(p4) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(rad - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=32
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈(((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(temperature(p5) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(max(temperature) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(temperature(p4) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(sl(dual) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(rad - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈(((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(temperature(p5) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (0 · |(temperature(p4) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈(((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(max(temperature) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (0 · |(temperature(p4) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈(((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(max(temperature) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (0 · |(sl(dual) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈(((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(max(temperature) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (0 · |(rad - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈(((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(temperature(p4) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (0 · |(rad - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p3_odd)) ⇒ p6 ≥ (⌈(((((1 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|) + (0 · |(sl(dual) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (0 · |(rad - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (-1 · |(p6 - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)⌉ + 0) | touches=42
+
+Refined: ((simple_polytope) ∧ (p6>0)) ⇒ p6 ≥ (⌈(((((2/13) · sum(|zeros in p_vector|)*1/pk : pk > 0)) + ((-4/13) · |(max(temperature) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + ((2/13) · |(sl(dual) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (12/13))⌉ + 0) | touches=16
+
+
+--------------------------------------------------------------------------------
+INTRICATE MIXED INEQUALITIES
+--------------------------------------------------------------------------------
+
+Boolean columns: ['simple_polytope', 'p3_odd', 'p4_odd', 'p5_odd', 'p6_odd', 'claw_free', 'p3>0', 'p4>0', 'p5>0', 'p6>0']
+Numeric columns: ['Unnamed: 0', 'p3', 'temperature(p3)', 'p4', 'temperature(p4)', 'p5', 'temperature(p5)', 'p6'] ...
+Base hypothesis: ((simple_polytope)) 
+
+[LOWER] total=4164
+
+• ((simple_polytope)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(n)))
+    touches=239, support=496
+
+• ((simple_polytope)) ⇒ p6 ≥ ((0 · n) + (0 · (n)²))
+    touches=239, support=496
+
+• ((simple_polytope)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(independence_number)))
+    touches=239, support=496
+
+• ((simple_polytope)) ⇒ p6 ≥ ((0 · n) + (0 · (independence_number)²))
+    touches=239, support=496
+
+• ((simple_polytope)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(matching_number)))
+    touches=239, support=496
+
+• ((simple_polytope)) ⇒ p6 ≥ ((0 · n) + (0 · (matching_number)²))
+    touches=239, support=496
+
+[UPPER] total=480
+
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((26/29) · a(dual)) + (0 · (n)²))⌋
+    touches=46, support=496
+
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((91/29) · sl(dual)) + (0 · (n)²))⌋
+    touches=38, support=496
+
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((81/26) · Caro_Wei(dual)) + (0 · (n)²))⌋
+    touches=37, support=496
+
+• ((simple_polytope) ∧ (p5>0)) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((7/16) · (R(dual))²))⌋
+    touches=34, support=359
+
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((4/9) · (R(dual))²))⌋
+    touches=32, support=496
+
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((3/13) · n) + (0 · (n)²))⌋
+    touches=23, support=496
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+EQUALITY-CLASS HYPOTHESES BOOTSTRAP → REBUILD ENGINES
+--------------------------------------------------------------------------------
+
+Selected equality classes:
+  • n = 2.0·matching_number                  (tightness≈1.000, n=496)  → added as boolean 'n = 2.0·matching_number'
+  • p3 = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0) (tightness≈0.878, n=482)  → added as boolean 'p3 = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0)'
+  • temperature(p3) = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0) (tightness≈0.878, n=482)  → added as boolean 'temperature(p3) = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0)'
+  • temperature(p3) = 0.0·max(pk)            (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·max(pk)'
+  • temperature(p3) = 0.0·diam               (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·diam'
+  • temperature(p3) = 0.0·n                  (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·n'
+  • temperature(p3) = 0.0·independence_number (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·independence_number'
+  • temperature(p3) = 0.0·second_largest_adjacency_eigenvalue (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·second_largest_adjacency_eigenvalue'
+  • temperature(p3) = 0.0·matching_number    (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·matching_number'
+  • temperature(p3) = 0.0·R(dual)            (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·R(dual)'
+  • temperature(p3) = 0.0·sl(dual)           (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·sl(dual)'
+  • temperature(p3) = 0.0·a(dual)            (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·a(dual)'
+  • temperature(p3) = 0.0·sum(1/pk : pk > 0) (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·sum(1/pk : pk > 0)'
+  • temperature(p3) = 0.0·Caro_Wei(dual)     (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·Caro_Wei(dual)'
+  • temperature(p3) = 0.0·rad                (tightness≈0.856, n=494)  → added as boolean 'temperature(p3) = 0.0·rad'
+  • temperature(p3) = 0.0·Unnamed: 0         (tightness≈0.856, n=493)  → added as boolean 'temperature(p3) = 0.0·Unnamed: 0'
+  • p3 = 0.0·avg(temperature)                (tightness≈0.856, n=492)  → added as boolean 'p3 = 0.0·avg(temperature)'
+  • temperature(p3) = 0.0·avg(temperature)   (tightness≈0.856, n=492)  → added as boolean 'temperature(p3) = 0.0·avg(temperature)'
+  • p3 = 0.0·max(temperature)                (tightness≈0.856, n=492)  → added as boolean 'p3 = 0.0·max(temperature)'
+  • temperature(p3) = 0.0·max(temperature)   (tightness≈0.856, n=492)  → added as boolean 'temperature(p3) = 0.0·max(temperature)'
+  • p3 = 0.0·second_largest_adjacency_eigenvalue (tightness≈0.855, n=495)  → added as boolean 'p3 = 0.0·second_largest_adjacency_eigenvalue'
+  • p3 = 0.0·max(pk)                         (tightness≈0.853, n=496)  → added as boolean 'p3 = 0.0·max(pk)'
+
+Boolean columns in rebuilt frame (includes equality-class hypotheses):
+['simple_polytope', 'p3_odd', 'p4_odd', 'p5_odd', 'p6_odd', 'claw_free', 'p3>0', 'p4>0', 'p5>0', 'p6>0', 'n = 2.0·matching_number', 'p3 = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0)', 'temperature(p3) = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0)', 'temperature(p3) = 0.0·max(pk)', 'temperature(p3) = 0.0·diam', 'temperature(p3) = 0.0·n', 'temperature(p3) = 0.0·independence_number', 'temperature(p3) = 0.0·second_largest_adjacency_eigenvalue', 'temperature(p3) = 0.0·matching_number', 'temperature(p3) = 0.0·R(dual)', 'temperature(p3) = 0.0·sl(dual)', 'temperature(p3) = 0.0·a(dual)', 'temperature(p3) = 0.0·sum(1/pk : pk > 0)', 'temperature(p3) = 0.0·Caro_Wei(dual)', 'temperature(p3) = 0.0·rad', 'temperature(p3) = 0.0·Unnamed: 0', 'p3 = 0.0·avg(temperature)', 'temperature(p3) = 0.0·avg(temperature)', 'p3 = 0.0·max(temperature)', 'temperature(p3) = 0.0·max(temperature)', 'p3 = 0.0·second_largest_adjacency_eigenvalue', 'p3 = 0.0·max(pk)']
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=1
+
+• ((n = 2.0·matching_number) ∧ (simple_polytope)) ⇒ p6 ≥ (1 · p6)
+    touches=496, support=496
+
+[UPPER] total=1
+
+• ((n = 2.0·matching_number) ∧ (simple_polytope)) ⇒ p6 ≤ (1 · p6)
+    touches=496, support=496
+
+[EQUAL] total=1
+
+• ((n = 2.0·matching_number) ∧ (simple_polytope)) ⇒ p6 = (1 · p6)
+    touches=496, support=496
+
+
+--------------------------------------------------------------------------------
+K2 AFFINE BOUNDS (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=11
+
+• ((n = 2.0·matching_number) ∧ (simple_polytope)) ⇒ p6 ≥ ((-5 · sum(|zeros in p_vector|)*1/pk : pk > 0)) + (5 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|))
+    touches=240, support=496
+
+• ((n = 2.0·matching_number) ∧ (simple_polytope)) ⇒ p6 ≥ 0
+    touches=239, support=496
+
+• (((n = 2.0·matching_number) ∧ (simple_polytope)) ∧ (p3 = 0.0·max(pk))) ⇒ p6 ≥ (((-25/2) · sum(|zeros in p_vector|)*1/pk : pk > 0)) + ((25/2) · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|))
+    touches=222, support=423
+
+• (((n = 2.0·matching_number) ∧ (simple_polytope)) ∧ (p5>0)) ⇒ p6 ≥ ((((0 · Unnamed: 0) + (0 · sum(|zeros in p_vector|)*1/pk : pk > 0))) + (0 · |(sl(dual) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)
+    touches=111, support=359
+
+• (((n = 2.0·matching_number) ∧ (simple_polytope)) ∧ (p5>0)) ⇒ p6 ≥ ((((0 · Unnamed: 0) + (0 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (0 · |(sl(dual) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)
+    touches=111, support=359
+
+• (((n = 2.0·matching_number) ∧ (simple_polytope)) ∧ (p5>0)) ⇒ p6 ≥ (((((0 · Unnamed: 0) + (0 · |(Unnamed: 0 - n)|)) + (0 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + (0 · |(sl(dual) - sum(|zeros in p_vector|)*1/pk : pk > 0))|)) + 0)
+    touches=111, support=359
+
+[UPPER] total=0
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+INTRICATE MIXED INEQUALITIES (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=4764
+
+• ((simple_polytope) ∧ (n = 2.0·matching_number)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(n)))
+    touches=239, support=496
+
+• ((simple_polytope) ∧ (n = 2.0·matching_number)) ⇒ p6 ≥ ((0 · n) + (0 · (n)²))
+    touches=239, support=496
+
+• ((simple_polytope) ∧ (n = 2.0·matching_number)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(independence_number)))
+    touches=239, support=496
+
+• ((simple_polytope) ∧ (n = 2.0·matching_number)) ⇒ p6 ≥ ((0 · n) + (0 · (independence_number)²))
+    touches=239, support=496
+
+• ((simple_polytope) ∧ (n = 2.0·matching_number)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(matching_number)))
+    touches=239, support=496
+
+• ((simple_polytope) ∧ (n = 2.0·matching_number)) ⇒ p6 ≥ ((0 · n) + (0 · (matching_number)²))
+    touches=239, support=496
+
+[UPPER] total=515
+
+• ((((simple_polytope) ∧ (n = 2.0·matching_number)) ∧ (p5>0)) ∧ (p3 = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0))) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((7/16) · (Caro_Wei(dual))²))⌋
+    touches=93, support=297
+
+• ((((simple_polytope) ∧ (n = 2.0·matching_number)) ∧ (p5>0)) ∧ (p3 = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0))) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((1/25) · (a(dual))²))⌋
+    touches=80, support=297
+
+• ((simple_polytope) ∧ (n = 2.0·matching_number)) ⇒ p6 ≤ ⌊(((26/29) · a(dual)) + (0 · (n)²))⌋
+    touches=46, support=496
+
+• ((simple_polytope) ∧ (n = 2.0·matching_number)) ⇒ p6 ≤ ⌊(((91/29) · sl(dual)) + (0 · (n)²))⌋
+    touches=38, support=496
+
+• ((simple_polytope) ∧ (n = 2.0·matching_number)) ⇒ p6 ≤ ⌊(((81/26) · Caro_Wei(dual)) + (0 · (n)²))⌋
+    touches=37, support=496
+
+• (((simple_polytope) ∧ (n = 2.0·matching_number)) ∧ (p5>0)) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((7/16) · (R(dual))²))⌋
+    touches=34, support=359
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+FULL CONJECTURE LIST (DEDUPED • RANKED • TOP-K)
+--------------------------------------------------------------------------------
+
+[LOWERS] total=100
+
+• (simple_polytope) ⇒ p6 ≥ (1 · p6)
+    touches=496, support=496
+• (simple_polytope) ⇒ p6 ≥ (⌈((-5 · sum(|zeros in p_vector|)*1/pk : pk > 0)) + (5 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|))⌉ + 0)
+    touches=246, support=496
+• (simple_polytope) ⇒ p6 ≥ ((-5 · sum(|zeros in p_vector|)*1/pk : pk > 0)) + (5 · |(temperature(p6) - sum(|zeros in p_vector|)*1/pk : pk > 0))|))
+    touches=240, support=496
+• (simple_polytope) ⇒ p6 ≥ 0
+    touches=239, support=496
+• ((simple_polytope)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(n)))
+    touches=239, support=496
+• ((simple_polytope)) ⇒ p6 ≥ ((0 · n) + (0 · (n)²))
+    touches=239, support=496
+• ((simple_polytope)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(independence_number)))
+    touches=239, support=496
+• ((simple_polytope)) ⇒ p6 ≥ ((0 · n) + (0 · (independence_number)²))
+    touches=239, support=496
+• ((simple_polytope)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(matching_number)))
+    touches=239, support=496
+• ((simple_polytope)) ⇒ p6 ≥ ((0 · n) + (0 · (matching_number)²))
+    touches=239, support=496
+• ((simple_polytope)) ⇒ p6 ≥ ((((1/2) · 0) · n) + (((1/2) · 0) · √(rad)))
+    touches=239, support=496
+• ((simple_polytope)) ⇒ p6 ≥ ((0 · n) + (0 · (rad)²))
+    touches=239, support=496
+
+[UPPERS] total=100
+
+• (simple_polytope) ⇒ p6 ≤ (1 · p6)
+    touches=496, support=496
+• ((((simple_polytope) ∧ (n = 2.0·matching_number)) ∧ (p5>0)) ∧ (p3 = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0))) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((7/16) · (Caro_Wei(dual))²))⌋
+    touches=93, support=297
+• ((((simple_polytope) ∧ (n = 2.0·matching_number)) ∧ (p5>0)) ∧ (p3 = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0))) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((1/25) · (a(dual))²))⌋
+    touches=80, support=297
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((26/29) · a(dual)) + (0 · (n)²))⌋
+    touches=46, support=496
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((91/29) · sl(dual)) + (0 · (n)²))⌋
+    touches=38, support=496
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((81/26) · Caro_Wei(dual)) + (0 · (n)²))⌋
+    touches=37, support=496
+• ((simple_polytope) ∧ (p5>0)) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((7/16) · (R(dual))²))⌋
+    touches=34, support=359
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((4/9) · (R(dual))²))⌋
+    touches=32, support=496
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((3/13) · n) + (0 · (n)²))⌋
+    touches=23, support=496
+• ((simple_polytope)) ⇒ p6 ≤ ⌊(((6/13) · matching_number) + (0 · (n)²))⌋
+    touches=23, support=496
+• ((simple_polytope) ∧ (p6_odd)) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((11/27) · (R(dual))²))⌋
+    touches=20, support=126
+• ((((simple_polytope) ∧ (n = 2.0·matching_number)) ∧ (p5>0)) ∧ (p3 = 0.0·sum(|zeros in p_vector|)*1/pk : pk > 0))) ⇒ p6 ≤ ⌊(((1/2) · max(pk)) + ((1/2) · (sl(dual))²))⌋
+    touches=19, support=297
+
+[EQUALS] total=1
+
+• (simple_polytope) ⇒ p6 = (1 · p6)
+    touches=496, support=496
+
+────────────────────────────────────────────────────────────────────────────────
+END OF REPORT
+Finished: 2025-11-07 10:40:51
+────────────────────────────────────────────────────────────────────────────────

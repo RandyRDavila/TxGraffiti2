@@ -1,0 +1,64 @@
+────────────────────────────────────────────────────────────────────────────────
+TxGraffiti • Full Program Run Report
+────────────────────────────────────────────────────────────────────────────────
+Started: 2025-11-04 21:49:39
+Working dir: /Users/randydavila/Documents/automated-conjecturing/txgraffiti2
+Python: 3.13.2
+────────────────────────────────────────────────────────────────────────────────
+=== Qualitative Relations (top 12) ===
+• [(r2)]  n ↑ q2  (rho=1.000, n=250/250, method=spearman)
+• [TRUE]  n ↑ q2  (rho=1.000, n=500/500, method=spearman)
+• [(r2)]  n ↑ q3  (rho=1.000, n=250/250, method=spearman)
+• [TRUE]  n ↑ q3  (rho=1.000, n=500/500, method=spearman)
+• [(r2)]  n ↑ q4  (rho=1.000, n=250/250, method=spearman)
+• [TRUE]  n ↑ q4  (rho=1.000, n=500/500, method=spearman)
+• [TRUE]  n ↑ q5  (rho=1.000, n=500/500, method=spearman)
+• [(r2)]  n ↑ q5  (rho=1.000, n=250/250, method=spearman)
+• [(r2)]  n ↑ q6  (rho=1.000, n=250/250, method=spearman)
+• [TRUE]  n ↑ q6  (rho=1.000, n=500/500, method=spearman)
+
+--------------------------------------------------------------------------------
+ASYMPTOTIC LIMITS (QUALITATIVE → DEFINITE)
+--------------------------------------------------------------------------------
+
+[ASYMPTOTIC] total=361
+
+• (TRUE) ⇒ lim_{q2→∞} (n / q3) = 3
+• (TRUE) ⇒ lim_{q2→∞} (n / q4) = (201/50)
+• (TRUE) ⇒ lim_{q2→∞} (n / q5) = (216/43)
+• (TRUE) ⇒ lim_{q2→∞} (n / q6) = (175/29)
+• (TRUE) ⇒ lim_{q2→∞} (n / q7) = (289/41)
+• (TRUE) ⇒ lim_{q2→∞} (n / q8) = (379/47)
+• (TRUE) ⇒ lim_{q2→∞} (n / q9) = (109/12)
+• (TRUE) ⇒ lim_{q2→∞} (n / q10) = (475/47)
+• (TRUE) ⇒ lim_{q3→∞} (n / q2) = 2
+• (TRUE) ⇒ lim_{q3→∞} (n / q4) = (201/50)
+
+--------------------------------------------------------------------------------
+GRAFFITICLASSRELATIONS SUMMARY
+--------------------------------------------------------------------------------
+
+Boolean columns: ['r2']
+Expr columns: ['n', 'q2', 'q3', 'r3', 'q4', 'r4', 'q5', 'r5', 'q6', 'r6', 'q7', 'r7', 'q8', 'r8', 'q9', 'r9', 'q10', 'r10', 'sdiv', 'ldiv', 'tau', 'sigma', 'proper_sum', 'r_sq', 'tau_over_n', 'sigma_over_n', 'sdiv_over_n', 'ldiv_over_n']
+Base hypothesis: TRUE
+
+Nonredundant conjunctions:
+  r2
+  TRUE
+
+Example atomic conjectures:
+
+=== Class Equivalences ===
+
+=== Inclusions (equalities ⇒ class) ===
+
+=== Inclusions (class ⇒ equalities) ===
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS
+--------------------------------------------------------------------------------
+
+────────────────────────────────────────────────────────────────────────────────
+END OF REPORT
+Finished: 2025-11-04 21:49:40
+────────────────────────────────────────────────────────────────────────────────

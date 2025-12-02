@@ -1,0 +1,735 @@
+────────────────────────────────────────────────────────────────────────────────
+TxGraffiti • Full Program Run Report
+────────────────────────────────────────────────────────────────────────────────
+Started: 2025-11-04 21:50:30
+Working dir: /Users/randydavila/Documents/automated-conjecturing/txgraffiti2
+Python: 3.13.2
+────────────────────────────────────────────────────────────────────────────────
+=== Qualitative Relations (top 12) ===
+• [(r2)]  n ↑ q2  (rho=1.000, n=250/250, method=spearman)
+• [TRUE]  n ↑ q2  (rho=1.000, n=500/500, method=spearman)
+• [(r2)]  n ↑ q3  (rho=1.000, n=250/250, method=spearman)
+• [TRUE]  n ↑ q3  (rho=1.000, n=500/500, method=spearman)
+• [(r2)]  n ↑ q4  (rho=1.000, n=250/250, method=spearman)
+• [TRUE]  n ↑ q4  (rho=1.000, n=500/500, method=spearman)
+• [TRUE]  n ↑ q5  (rho=1.000, n=500/500, method=spearman)
+• [(r2)]  n ↑ q5  (rho=1.000, n=250/250, method=spearman)
+• [(r2)]  n ↑ q6  (rho=1.000, n=250/250, method=spearman)
+• [TRUE]  n ↑ q6  (rho=1.000, n=500/500, method=spearman)
+
+--------------------------------------------------------------------------------
+ASYMPTOTIC LIMITS (QUALITATIVE → DEFINITE)
+--------------------------------------------------------------------------------
+
+[ASYMPTOTIC] total=361
+
+• (TRUE) ⇒ lim_{q2→∞} (n / q3) = 3
+• (TRUE) ⇒ lim_{q2→∞} (n / q4) = (201/50)
+• (TRUE) ⇒ lim_{q2→∞} (n / q5) = (216/43)
+• (TRUE) ⇒ lim_{q2→∞} (n / q6) = (175/29)
+• (TRUE) ⇒ lim_{q2→∞} (n / q7) = (289/41)
+• (TRUE) ⇒ lim_{q2→∞} (n / q8) = (379/47)
+• (TRUE) ⇒ lim_{q2→∞} (n / q9) = (109/12)
+• (TRUE) ⇒ lim_{q2→∞} (n / q10) = (475/47)
+• (TRUE) ⇒ lim_{q3→∞} (n / q2) = 2
+• (TRUE) ⇒ lim_{q3→∞} (n / q4) = (201/50)
+
+--------------------------------------------------------------------------------
+GRAFFITICLASSRELATIONS SUMMARY
+--------------------------------------------------------------------------------
+
+Boolean columns: ['r2']
+Expr columns: ['n', 'q2', 'q3', 'r3', 'q4', 'r4', 'q5', 'r5', 'q6', 'r6', 'q7', 'r7', 'q8', 'r8', 'q9', 'r9', 'q10', 'r10', 'sdiv', 'ldiv', 'tau', 'sigma', 'proper_sum', 'r_sq', 'tau_over_n', 'sigma_over_n', 'sdiv_over_n', 'ldiv_over_n']
+Base hypothesis: TRUE
+
+Nonredundant conjunctions:
+  r2
+  TRUE
+
+Example atomic conjectures:
+
+=== Class Equivalences ===
+
+=== Inclusions (equalities ⇒ class) ===
+
+=== Inclusions (class ⇒ equalities) ===
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS
+--------------------------------------------------------------------------------
+
+[LOWER] total=1
+
+• n ≥ ((3 · q3) + (1 · r3))
+    touches=500, support=500
+
+[UPPER] total=1
+
+• n ≤ ((3 · q3) + (1 · r3))
+    touches=500, support=500
+
+[EQUAL] total=1
+
+• n = ((3 · q3) + (1 · r3))
+    touches=500, support=500
+
+
+--------------------------------------------------------------------------------
+K2 AFFINE BOUNDS GENERATION
+--------------------------------------------------------------------------------
+
+[LOWER] total=67
+
+• n ≥ (((1 · sdiv) + (2 · ldiv)) + -2)
+    touches=345, support=500
+
+• n ≥ (2 · q2)
+    touches=250, support=500
+
+• n ≥ (((0 · sdiv) + (2 · q2)) + 0)
+    touches=250, support=500
+
+• n ≥ ((0 · ldiv) + (2 · q2))
+    touches=250, support=500
+
+• n ≥ ((((0 · sdiv) + (0 · ldiv)) + (2 · q2)) + 0)
+    touches=250, support=500
+
+• (r2) ⇒ n ≥ (((1 · sdiv) + (3 · ldiv)) + -3)
+    touches=177, support=250
+
+[UPPER] total=18
+
+• n ≤ ((((1 · q2) + (2 · q3)) + (-1 · q6)) + 1)
+    touches=251, support=500
+
+• n ≤ ((2 · q2) + 1)
+    touches=250, support=500
+
+• n ≤ ((((0 · sdiv) + (0 · ldiv)) + (2 · q2)) + 1)
+    touches=250, support=500
+
+• n ≤ ((3 · q3) + 2)
+    touches=167, support=500
+
+• (r2) ⇒ n ≤ (((4 · q3) + (-2 · q6)) + 1)
+    touches=167, support=250
+
+• n ≤ ((4 · q4) + 3)
+    touches=125, support=500
+
+[EQUAL] total=2
+
+• n = ((1 · sigma) + (-1 · proper_sum))
+    touches=500, support=500
+
+• (r2) ⇒ n = ((2 · q2) + 1)
+    touches=250, support=250
+
+
+--------------------------------------------------------------------------------
+INTEGER-AWARE LIFTING
+--------------------------------------------------------------------------------
+
+Before vs After (lowers): 67 → 67
+Before vs After (uppers): 18 → 18
+
+Refined: (r2) ⇒ n ≥ (⌈((((1/2) · sigma) + ((1/2) · sdiv)) + (-1/2))⌉ + 0) | touches=95
+
+
+--------------------------------------------------------------------------------
+INTRICATE MIXED INEQUALITIES
+--------------------------------------------------------------------------------
+
+Boolean columns: ['r2']
+Numeric columns: ['n', 'q2', 'q3', 'r3', 'q4', 'r4', 'q5', 'r5'] ...
+Base hypothesis: TRUE 
+
+[LOWER] total=15
+
+• ((r2)) ⇒ n ≥ ⌈(((1/2) · r8) + ((1/14) · (r8)²))⌉
+    touches=4, support=250
+
+• ((r2)) ⇒ n ≥ ⌈(((1/2) · r10) + ((1/14) · (r8)²))⌉
+    touches=4, support=250
+
+• ((r2)) ⇒ n ≥ ⌈(((1/2) · sdiv) + ((1/14) · (r8)²))⌉
+    touches=4, support=250
+
+• n ≥ ⌈((((1/2) · 1) · sdiv) + (((1/2) · 1) · √(sdiv)))⌉
+    touches=3, support=500
+
+• n ≥ ⌈((((1/2) · 1) · sdiv) + (((1/2) · 1) · √(tau)))⌉
+    touches=3, support=500
+
+• n ≥ ⌈(((1/2) · sdiv) + ((1/6) · (tau)²))⌉
+    touches=3, support=500
+
+[UPPER] total=0
+
+[EQUAL] total=0
+
+
+--------------------------------------------------------------------------------
+EQUALITY-CLASS HYPOTHESES BOOTSTRAP → REBUILD ENGINES
+--------------------------------------------------------------------------------
+
+Selected equality classes:
+  • ldiv = 1.0·q2                            (tightness≈0.503, n=499)  → added as boolean 'ldiv = 1.0·q2'
+  • q3 = 2.0·q6                              (tightness≈0.503, n=495)  → added as boolean 'q3 = 2.0·q6'
+  • q4 = 2.0·q8                              (tightness≈0.503, n=493)  → added as boolean 'q4 = 2.0·q8'
+  • n = 2.0·q2                               (tightness≈0.501, n=499)  → added as boolean 'n = 2.0·q2'
+  • q2 = 2.0·q4                              (tightness≈0.501, n=497)  → added as boolean 'q2 = 2.0·q4'
+  • q5 = 2.0·q10                             (tightness≈0.501, n=491)  → added as boolean 'q5 = 2.0·q10'
+  • r10 = 1.0·r5                             (tightness≈0.500, n=400)  → added as boolean 'r10 = 1.0·r5'
+  • r8 = 1.0·r4                              (tightness≈0.504, n=375)  → added as boolean 'r8 = 1.0·r4'
+  • r6 = 1.0·r3                              (tightness≈0.503, n=334)  → added as boolean 'r6 = 1.0·r3'
+  • sdiv = 1.0·r4                            (tightness≈0.448, n=375)  → added as boolean 'sdiv = 1.0·r4'
+  • q2 = 3.0·q6                              (tightness≈0.335, n=495)  → added as boolean 'q2 = 3.0·q6'
+  • q3 = 3.0·q9                              (tightness≈0.335, n=492)  → added as boolean 'q3 = 3.0·q9'
+
+Boolean columns in rebuilt frame (includes equality-class hypotheses):
+['ldiv = 1.0·q2', 'q3 = 2.0·q6', 'q4 = 2.0·q8', 'n = 2.0·q2', 'q2 = 2.0·q4', 'q5 = 2.0·q10', 'r10 = 1.0·r5', 'r8 = 1.0·r4', 'r6 = 1.0·r3', 'sdiv = 1.0·r4', 'q2 = 3.0·q6', 'q3 = 3.0·q9']
+
+--------------------------------------------------------------------------------
+AFFINE LP FITS (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=1
+
+• n ≥ (1 · n)
+    touches=500, support=500
+
+[UPPER] total=1
+
+• n ≤ (1 · n)
+    touches=500, support=500
+
+[EQUAL] total=1
+
+• n = (1 · n)
+    touches=500, support=500
+
+
+--------------------------------------------------------------------------------
+K2 AFFINE BOUNDS (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=139
+
+• n ≥ (((1 · sdiv) + (2 · ldiv)) + -2)
+    touches=345, support=500
+
+• n ≥ (2 · q2)
+    touches=250, support=500
+
+• n ≥ (((0 · sdiv) + (2 · q2)) + 0)
+    touches=250, support=500
+
+• n ≥ ((0 · ldiv) + (2 · q2))
+    touches=250, support=500
+
+• n ≥ ((((0 · sdiv) + (0 · ldiv)) + (2 · q2)) + 0)
+    touches=250, support=500
+
+• (ldiv = 1.0·q2) ⇒ n ≥ (2 · ldiv)
+    touches=250, support=251
+
+[UPPER] total=169
+
+• n ≤ ((((1 · q2) + (2 · q3)) + (-1 · q6)) + 1)
+    touches=251, support=500
+
+• n ≤ ((2 · q2) + 1)
+    touches=250, support=500
+
+• n ≤ ((((0 · sdiv) + (0 · ldiv)) + (2 · q2)) + 1)
+    touches=250, support=500
+
+• (r6 = 1.0·r3) ⇒ n ≤ (((1 · q2) + ((3/2) · q3)) + 1)
+    touches=168, support=251
+
+• (r6 = 1.0·r3) ⇒ n ≤ (((1 · q2) + (3 · q6)) + 1)
+    touches=168, support=251
+
+• (ldiv = 1.0·q2) ⇒ n ≤ ((((1 · q2) + (1 · q3)) + (1 · q6)) + 1)
+    touches=168, support=251
+
+[EQUAL] total=3
+
+• n = ((1 · sigma) + (-1 · proper_sum))
+    touches=500, support=500
+
+• (n = 2.0·q2) ⇒ n = (2 · q2)
+    touches=250, support=250
+
+• (n = 2.0·q2) ⇒ n = (2 · ldiv)
+    touches=250, support=250
+
+
+--------------------------------------------------------------------------------
+INTRICATE MIXED INEQUALITIES (EQUALITY-CLASS HYPOTHESES)
+--------------------------------------------------------------------------------
+
+[LOWER] total=68
+
+• ((ldiv = 1.0·q2)) ⇒ n ≥ ⌈((1 · q2) + ((1/6) · (tau)²))⌉
+    touches=4, support=251
+
+• ((ldiv = 1.0·q2)) ⇒ n ≥ ⌈((1 · ldiv) + ((1/6) · (tau)²))⌉
+    touches=4, support=251
+
+• ((sdiv = 1.0·r4)) ⇒ n ≥ ⌈(((1/2) · r8) + ((1/12) · (r8)²))⌉
+    touches=4, support=168
+
+• ((sdiv = 1.0·r4)) ⇒ n ≥ ⌈(((1/2) · r8) + ((3/16) · (tau)²))⌉
+    touches=4, support=168
+
+• n ≥ ⌈((((1/2) · 1) · sdiv) + (((1/2) · 1) · √(sdiv)))⌉
+    touches=3, support=500
+
+• n ≥ ⌈((((1/2) · 1) · sdiv) + (((1/2) · 1) · √(tau)))⌉
+    touches=3, support=500
+
+[UPPER] total=0
+
+[EQUAL] total=0
+
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+/Users/randydavila/Documents/automated-conjecturing/txgraffiti2/src/txgraffiti2025/forms/predicates.py:156: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  return s.fillna(False).astype(bool, copy=False)
+
+--------------------------------------------------------------------------------
+FULL CONJECTURE LIST (DEDUPED • RANKED • TOP-K)
+--------------------------------------------------------------------------------
+
+[LOWERS] total=100
+
+• n ≥ ((3 · q3) + (1 · r3))
+    touches=500, support=500
+• n ≥ (1 · n)
+    touches=500, support=500
+• n ≥ (((1 · sdiv) + (2 · ldiv)) + -2)
+    touches=345, support=500
+• n ≥ (2 · q2)
+    touches=250, support=500
+• n ≥ (((0 · sdiv) + (2 · q2)) + 0)
+    touches=250, support=500
+• n ≥ ((0 · ldiv) + (2 · q2))
+    touches=250, support=500
+• n ≥ ((((0 · sdiv) + (0 · ldiv)) + (2 · q2)) + 0)
+    touches=250, support=500
+• (ldiv = 1.0·q2) ⇒ n ≥ (2 · ldiv)
+    touches=250, support=251
+• (r2) ⇒ n ≥ (((1 · sdiv) + (3 · ldiv)) + -3)
+    touches=177, support=250
+• (r2) ⇒ n ≥ (((2 · q3) + (2 · q6)) + 1)
+    touches=167, support=250
+• n ≥ (3 · q3)
+    touches=166, support=500
+• n ≥ (((0 · sdiv) + (3 · q3)) + 0)
+    touches=166, support=500
+
+[UPPERS] total=100
+
+• n ≤ ((3 · q3) + (1 · r3))
+    touches=500, support=500
+• n ≤ (1 · n)
+    touches=500, support=500
+• n ≤ ((((1 · q2) + (2 · q3)) + (-1 · q6)) + 1)
+    touches=251, support=500
+• n ≤ ((2 · q2) + 1)
+    touches=250, support=500
+• n ≤ ((((0 · sdiv) + (0 · ldiv)) + (2 · q2)) + 1)
+    touches=250, support=500
+• (r6 = 1.0·r3) ⇒ n ≤ (((1 · q2) + ((3/2) · q3)) + 1)
+    touches=168, support=251
+• (r6 = 1.0·r3) ⇒ n ≤ (((1 · q2) + (3 · q6)) + 1)
+    touches=168, support=251
+• (ldiv = 1.0·q2) ⇒ n ≤ ((((1 · q2) + (1 · q3)) + (1 · q6)) + 1)
+    touches=168, support=251
+• (ldiv = 1.0·q2) ⇒ n ≤ ((((1 · ldiv) + (1 · q3)) + (1 · q6)) + 1)
+    touches=168, support=251
+• n ≤ ((3 · q3) + 2)
+    touches=167, support=500
+• (ldiv = 1.0·q2) ⇒ n ≤ (((2 · q3) + (2 · q6)) + 2)
+    touches=167, support=251
+• (r2) ⇒ n ≤ (((4 · q3) + (-2 · q6)) + 1)
+    touches=167, support=250
+
+[EQUALS] total=6
+
+• n = ((3 · q3) + (1 · r3))
+    touches=500, support=500
+• n = ((1 · sigma) + (-1 · proper_sum))
+    touches=500, support=500
+• n = (1 · n)
+    touches=500, support=500
+• (r2) ⇒ n = ((2 · q2) + 1)
+    touches=250, support=250
+• (n = 2.0·q2) ⇒ n = (2 · q2)
+    touches=250, support=250
+• (n = 2.0·q2) ⇒ n = (2 · ldiv)
+    touches=250, support=250
+
+
+--------------------------------------------------------------------------------
+END OF SHOWCASE
+--------------------------------------------------------------------------------
+
+📄 Report saved to: reports/txgraffiti_run_20251104-215030.txt
+────────────────────────────────────────────────────────────────────────────────
+END OF REPORT
+Finished: 2025-11-04 21:50:55
+────────────────────────────────────────────────────────────────────────────────
