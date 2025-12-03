@@ -33,6 +33,9 @@ df.drop(
     inplace=True,
 )
 
+# df = pd.read_csv('polytope_data.csv')
+# df.drop(columns=['Unnamed: 0'], inplace=True)
+
 g3 = Graffiti3(
     df,
     max_boolean_arity=2,
@@ -49,10 +52,10 @@ g3 = Graffiti3(
 
 result = g3.conjecture(
     target="independence_number",
-    complexity=2,
+    complexity=1,
     include_invariant_products=True,
-    include_abs=False,
-    include_min_max=False,
+    include_abs=True,
+    include_min_max=True,
 )
 
 print_g3_result(result)
