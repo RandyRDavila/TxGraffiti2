@@ -204,17 +204,6 @@ class GraffitiClassRelations:
     Conjecture, Eq, Ge, Le, AllOf, Relation, TRUE
         Conjecture and relations machinery.
 
-    Examples
-    --------
-    >>> gcr = GraffitiClassRelations(df)
-    >>> gcr.get_expr_columns()[:5]
-    ['order', 'size', 'diameter', 'radius', 'independence_number']
-    >>> nonred, red, eqv = gcr.find_redundant_conjunctions()
-    >>> consts = gcr.find_constant_exprs(tol=0.0)
-    >>> grouped = gcr.build_constant_conjectures(group_per_hypothesis=True)
-    >>> char = gcr.characterize_constant_classes(tol=0.0)
-    >>> summary, bounds = gcr.analyze_ratio_bounds_on_base(touch_atol=0, touch_rtol=0)
-    >>> gcr.print_class_characterization_summary()
     """
     # ------------------------------ Lifecycle ---------------------------------
 
