@@ -139,3 +139,93 @@ def _annotate_and_sort_conjectures(
         reverse=True,
     )
     return unique
+
+# def _annotate_and_sort_conjectures(
+#     df: pd.DataFrame,
+#     conjs: Sequence[Conjecture],
+# ) -> List[Conjecture]:
+#     """
+#     Compute touch_count and support_n for each conjecture, deduplicate by
+#     signature, and sort by a "purity-like" score rather than raw touch.
+
+#     New annotations per conjecture:
+#       - touch_count : int      (number of equality touches)
+#       - touch       : int      (alias for backward compatibility)
+#       - support_n   : int      (size of hypothesis class)
+#       - support     : int      (alias)
+#       - touch_density : float  (touch_count / support_n, in [0,1] when support_n>0)
+#       - support_frac  : float  (support_n / len(df), coverage of the dataset)
+
+#     Sorting order (descending):
+#       1. touch_density   (fraction of the class where equality holds)
+#       2. touch_count     (absolute number of equality instances)
+#       3. support_n       (size of the hypothesis class)
+
+#     This favors conjectures that are both "pure" (high density) and
+#     non-trivial (decent touch/support), instead of just those with large
+#     raw touch on huge classes.
+#     """
+#     unique: List[Conjecture] = []
+#     seen: set[str] = set()
+#     n_total = int(len(df))
+
+#     for c in conjs:
+#         sig = c.signature()
+#         if sig in seen:
+#             continue
+#         seen.add(sig)
+
+#         # --- touch_count (and touch) ---
+#         touch_attr = getattr(c, "touch_count", None)
+#         if callable(touch_attr):
+#             try:
+#                 touch_val = c.touch_count(df, auto_base=False)
+#             except TypeError:
+#                 # Fallback if signature differs
+#                 touch_val = c.touch_count(df)
+#         else:
+#             # Already materialized as an int
+#             touch_val = touch_attr if isinstance(touch_attr, int) else 0
+
+#         touch = int(touch_val)
+#         setattr(c, "touch_count", touch)
+#         setattr(c, "touch", touch)  # backward compatibility
+
+#         # --- support_n (and support) ---
+#         try:
+#             applicable, _, _ = c.check(df, auto_base=False)
+#             support = int(applicable.sum())
+#         except Exception:
+#             support = 0
+
+#         setattr(c, "support_n", support)
+#         setattr(c, "support", support)
+
+#         # --- densities / fractions ---
+#         if support > 0:
+#             density = float(touch) / float(support)
+#             density = density*n_total
+#         else:
+#             density = 0.0
+
+#         if n_total > 0:
+#             support_frac = float(support) / float(n_total)
+#             density = density*n_total
+#         else:
+#             support_frac = 0.0
+
+#         setattr(c, "touch_density", density)
+#         setattr(c, "support_frac", support_frac)
+
+#         unique.append(c)
+
+#     # Sort by (touch_density, touch_count, support_n) descending
+#     unique.sort(
+#         key=lambda cc: (
+#             float(getattr(cc, "touch_density", 0.0)),
+#             int(getattr(cc, "touch_count", 0)),
+#             int(getattr(cc, "support_n", 0)),
+#         ),
+#         reverse=True,
+#     )
+#     return unique

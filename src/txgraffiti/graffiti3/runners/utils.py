@@ -135,6 +135,8 @@ def _build_affine_expr(
     for _key, feat, c in cleaned_terms:
         # Rationalize coefficient FIRST
         c_rat = Fraction(c).limit_denominator(max_denom)
+        if c_rat.denominator == max_denom:
+            return None
 
         # Decide ±1 based on the rational value (this fixes 1·x vs x issues)
         if c_rat == 1:
