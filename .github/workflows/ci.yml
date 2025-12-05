@@ -27,7 +27,7 @@ jobs:
         run: sudo apt install -y coinor-cbc
 
       - name: Run unit tests
-        run: pytest tests/unit
+        run: pytest tests/txgraffiti/unit
 
   integration-tests:
     name: Integration Tests
