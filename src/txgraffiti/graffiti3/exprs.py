@@ -419,6 +419,98 @@ def _expr_outer_symbol(s: str) -> str:
             return op.strip()
     return "unary"
 
+# class BinOp(Expr):
+#     def __init__(self, fn: Callable[[SeriesLike, SeriesLike], SeriesLike], left: Expr, right: Expr):
+#         self.fn, self.left, self.right = fn, left, right
+
+#     def eval(self, df: pd.DataFrame) -> pd.Series:
+#         l = _as_series(self.left.eval(df), df.index)
+#         r = _as_series(self.right.eval(df), df.index)
+#         out = self.fn(l, r)  # may be Series or ndarray
+#         return _as_series(out, df.index)
+
+#     def pretty(self) -> str:
+#         # Map numpy ufunc to symbol
+#         sym = {
+#             np.add: "+", np.subtract: "-", np.multiply: "·",
+#             np.divide: "/", np.mod: "%", np.power: "**",
+#         }.get(self.fn, "op")
+
+#         # ---------- Special pretty for power with small integer exponents ----------
+#         if sym == "**":
+#             if isinstance(self.right, Const):
+#                 try:
+#                     f = float(self.right.value)
+#                     if f.is_integer():
+#                         n = int(f)
+#                         if n == 2:
+#                             base = self.left.pretty()
+#                             if _need_parens(
+#                                 _PRECEDENCE.get(_expr_outer_symbol(base), 3),
+#                                 _PRECEDENCE["**"],
+#                             ):
+#                                 base = f"({base})"
+#                             return f"{base}{_SUP2}"
+#                         if n == 3:
+#                             base = self.left.pretty()
+#                             if _need_parens(
+#                                 _PRECEDENCE.get(_expr_outer_symbol(base), 3),
+#                                 _PRECEDENCE["**"],
+#                             ):
+#                                 base = f"({base})"
+#                             return f"{base}{_SUP3}"
+#                 except Exception:
+#                     pass
+#             # generic power
+#             left_s = self.left.pretty()
+#             right_s = self.right.pretty()
+#             lp = _PRECEDENCE.get(_expr_outer_symbol(left_s), 3)
+#             rp = _PRECEDENCE.get(_expr_outer_symbol(right_s), 3)
+#             if _need_parens(lp, _PRECEDENCE["**"]):
+#                 left_s = f"({left_s})"
+#             if _need_parens(rp, _PRECEDENCE["**"], is_right_assoc=True, is_right_child=True):
+#                 right_s = f"({right_s})"
+#             return f"{left_s}^{right_s}"
+
+#         # ---------- Tiny algebraic simplifications with 0 ----------
+#         def _is_zero_expr(e: Expr) -> bool:
+#             from fractions import Fraction
+#             if isinstance(e, Const):
+#                 try:
+#                     v = e.value
+#                     if isinstance(v, Fraction):
+#                         return v == 0
+#                     f = float(v)
+#                     return abs(f) < 1e-12
+#                 except Exception:
+#                     return False
+#             return False
+
+#         # x + 0  →  x ;  0 + x → x
+#         if sym == "+":
+#             if _is_zero_expr(self.left):
+#                 return self.right.pretty()
+#             if _is_zero_expr(self.right):
+#                 return self.left.pretty()
+
+#         # x - 0 → x  (but keep 0 - x as-is: that's handled downstream)
+#         if sym == "-":
+#             if _is_zero_expr(self.right):
+#                 return self.left.pretty()
+
+#         # ---------- Normal binary ops with precedence-aware parentheses ----------
+#         parent_prec = 2 if sym in ("·", "/", "%") else 1
+#         left_s = self.left.pretty()
+#         right_s = self.right.pretty()
+#         lp = _PRECEDENCE.get(_expr_outer_symbol(left_s), 3)
+#         rp = _PRECEDENCE.get(_expr_outer_symbol(right_s), 3)
+#         if _need_parens(lp, parent_prec, is_right_assoc=False, is_right_child=False):
+#             left_s = f"({left_s})"
+#         if _need_parens(rp, parent_prec, is_right_assoc=False, is_right_child=True):
+#             right_s = f"({right_s})"
+#         return f"({left_s} {sym} {right_s})"
+
+
 class BinOp(Expr):
     def __init__(self, fn: Callable[[SeriesLike, SeriesLike], SeriesLike], left: Expr, right: Expr):
         self.fn, self.left, self.right = fn, left, right
@@ -432,15 +524,77 @@ class BinOp(Expr):
     def pretty(self) -> str:
         # Map numpy ufunc to symbol
         sym = {
-            np.add: "+", np.subtract: "-", np.multiply: "·",
-            np.divide: "/", np.mod: "%", np.power: "**",
+            np.add: "+",
+            np.subtract: "-",
+            np.multiply: "·",
+            np.divide: "/",
+            np.mod: "%",
+            np.power: "**",
         }.get(self.fn, "op")
+
+        # ---------- Tiny helpers for constants ----------
+        from fractions import Fraction
+
+        def _is_zero_expr(e: Expr) -> bool:
+            if isinstance(e, Const):
+                try:
+                    v = e.value
+                    if isinstance(v, Fraction):
+                        return v == 0
+                    f = float(v)
+                    return abs(f) < 1e-12
+                except Exception:
+                    return False
+            return False
+
+        def _is_one_expr(e: Expr) -> bool:
+            if isinstance(e, Const):
+                try:
+                    v = e.value
+                    if isinstance(v, Fraction):
+                        return v == 1
+                    f = float(v)
+                    return abs(f - 1.0) < 1e-12
+                except Exception:
+                    return False
+            return False
+
+        def _is_minus_one_expr(e: Expr) -> bool:
+            if isinstance(e, Const):
+                try:
+                    v = e.value
+                    if isinstance(v, Fraction):
+                        return v == -1
+                    f = float(v)
+                    return abs(f + 1.0) < 1e-12
+                except Exception:
+                    return False
+            return False
 
         # ---------- Special pretty for power with small integer exponents ----------
         if sym == "**":
             if isinstance(self.right, Const):
                 try:
                     f = float(self.right.value)
+                except Exception:
+                    f = None
+
+                if f is not None:
+                    # x^0 → 1
+                    if abs(f) < 1e-12:
+                        return "1"
+
+                    # x^1 → x
+                    if abs(f - 1.0) < 1e-12:
+                        base = self.left.pretty()
+                        if _need_parens(
+                            _PRECEDENCE.get(_expr_outer_symbol(base), 3),
+                            _PRECEDENCE["**"],
+                        ):
+                            base = f"({base})"
+                        return base
+
+                    # x², x³ with nice Unicode
                     if f.is_integer():
                         n = int(f)
                         if n == 2:
@@ -459,8 +613,7 @@ class BinOp(Expr):
                             ):
                                 base = f"({base})"
                             return f"{base}{_SUP3}"
-                except Exception:
-                    pass
+
             # generic power
             left_s = self.left.pretty()
             right_s = self.right.pretty()
@@ -468,24 +621,16 @@ class BinOp(Expr):
             rp = _PRECEDENCE.get(_expr_outer_symbol(right_s), 3)
             if _need_parens(lp, _PRECEDENCE["**"]):
                 left_s = f"({left_s})"
-            if _need_parens(rp, _PRECEDENCE["**"], is_right_assoc=True, is_right_child=True):
+            if _need_parens(
+                rp,
+                _PRECEDENCE["**"],
+                is_right_assoc=True,
+                is_right_child=True,
+            ):
                 right_s = f"({right_s})"
             return f"{left_s}^{right_s}"
 
         # ---------- Tiny algebraic simplifications with 0 ----------
-        def _is_zero_expr(e: Expr) -> bool:
-            from fractions import Fraction
-            if isinstance(e, Const):
-                try:
-                    v = e.value
-                    if isinstance(v, Fraction):
-                        return v == 0
-                    f = float(v)
-                    return abs(f) < 1e-12
-                except Exception:
-                    return False
-            return False
-
         # x + 0  →  x ;  0 + x → x
         if sym == "+":
             if _is_zero_expr(self.left):
@@ -498,16 +643,36 @@ class BinOp(Expr):
             if _is_zero_expr(self.right):
                 return self.left.pretty()
 
+        # ---------- Simplifications for multiplication by 1 / -1 ----------
+        if sym == "·":
+            # 1·x → x,  x·1 → x
+            if _is_one_expr(self.left):
+                return self.right.pretty()
+            if _is_one_expr(self.right):
+                return self.left.pretty()
+
+            # (-1)·x → -x,  x·(-1) → -x
+            if _is_minus_one_expr(self.left):
+                inner = self.right.pretty()
+                ip = _PRECEDENCE.get(_expr_outer_symbol(inner), 3)
+                return f"-({inner})" if ip < _PRECEDENCE["unary"] else f"-{inner}"
+            if _is_minus_one_expr(self.right):
+                inner = self.left.pretty()
+                ip = _PRECEDENCE.get(_expr_outer_symbol(inner), 3)
+                return f"-({inner})" if ip < _PRECEDENCE["unary"] else f"-{inner}"
+
         # ---------- Normal binary ops with precedence-aware parentheses ----------
         parent_prec = 2 if sym in ("·", "/", "%") else 1
         left_s = self.left.pretty()
         right_s = self.right.pretty()
         lp = _PRECEDENCE.get(_expr_outer_symbol(left_s), 3)
         rp = _PRECEDENCE.get(_expr_outer_symbol(right_s), 3)
+
         if _need_parens(lp, parent_prec, is_right_assoc=False, is_right_child=False):
             left_s = f"({left_s})"
         if _need_parens(rp, parent_prec, is_right_assoc=False, is_right_child=True):
             right_s = f"({right_s})"
+
         return f"({left_s} {sym} {right_s})"
 
 

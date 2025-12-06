@@ -61,6 +61,36 @@ def mixed_runner(
         """Return Const for w*c with bounded denominator."""
         return _to_const_fraction(w * c, max_denom)
 
+    # NEW: helper to build linear combos while dropping zero-coefficient terms
+    def _lincomb_expr(
+        w: float,
+        terms: List[tuple[float, Expr]],
+    ) -> Expr:
+        """
+        Given [(coef, expr), ...], return sum (scaled_const(w, coef) * expr),
+        skipping any term whose *rationalized* coefficient is exactly zero.
+
+        This avoids outputs like 0 · (n)² when _to_const_fraction rounds a
+        small float to the zero fraction.
+        """
+        acc: Expr | None = None
+        for coef, term_expr in terms:
+            const = _scaled_const(w, coef)  # Const(Fraction(...))
+
+            # IMPORTANT: drop if the rational coefficient really is 0.
+            # (Adjust attribute name if Const stores the Fraction differently.)
+            if const.value == 0:  # type: ignore[attr-defined]
+                continue
+
+            piece = const * term_expr
+            acc = piece if acc is None else acc + piece
+
+        if acc is None:
+            # Degenerate case: all terms rounded to zero
+            return Const(Fraction(0, 1))
+        return acc
+
+
     conjs: List[Conjecture] = []
     t_all = df[target_col].to_numpy(dtype=float)
     w = float(weight)
@@ -121,7 +151,9 @@ def mixed_runner(
                 sqrt_y_arr, sqrt_valid = _safe_sqrt_array(y_arr)
                 if sqrt_valid.any():
                     r_sqrt = np.full_like(t_arr, np.nan, dtype=float)
-                    r_sqrt[sqrt_valid] = t_arr[sqrt_valid] / sqrt_y_arr[sqrt_valid]
+                    r_sqrt[sqrt_valid] = (
+                        t_arr[sqrt_valid] / sqrt_y_arr[sqrt_valid]
+                    )
                     f_sq = np.isfinite(r_sqrt)
 
                     if f_sq.sum() >= min_support:
@@ -151,38 +183,72 @@ def mixed_runner(
                             )
 
                             # Symbolic mirrors, now with combined constants
+                            # and dropping zero-coefficient terms.
+
                             def _lo_base():
-                                cx = _scaled_const(w, cmin_f)
-                                cy = _scaled_const(w, s_cmin_f)
-                                return cx * x_expr + cy * sqrt(y_expr)
+                                return _lincomb_expr(
+                                    w,
+                                    [
+                                        (cmin_f, x_expr),
+                                        (s_cmin_f, sqrt(y_expr)),
+                                    ],
+                                )
 
                             def _lo_ceil_whole():
                                 return ceil(_lo_base())
 
                             def _lo_ceil_split():
+                                parts: List[Expr] = []
+
+                                # old: if abs(cmin_f) >= 1e-12:
                                 cx = _scaled_const(w, cmin_f)
+                                if cx.value != 0:  # type: ignore[attr-defined]
+                                    parts.append(ceil(cx * x_expr))
+
                                 cy = _scaled_const(w, s_cmin_f)
-                                return (
-                                    ceil(cx * x_expr)
-                                    + ceil(cy * sqrt(y_expr))
-                                    - Const(1)
-                                )
+                                if cy.value != 0:  # type: ignore[attr-defined]
+                                    parts.append(ceil(cy * sqrt(y_expr)))
+
+                                if not parts:
+                                    # both coefficients zero ⇒ numeric is -1
+                                    return Const(Fraction(-1, 1))
+
+                                acc_expr = parts[0]
+                                for p in parts[1:]:
+                                    acc_expr = acc_expr + p
+                                return acc_expr - Const(Fraction(1, 1))
 
                             def _up_base():
-                                cx = _scaled_const(w, cmax_f)
-                                cy = _scaled_const(w, s_cmax_f)
-                                return cx * x_expr + cy * sqrt(y_expr)
+                                return _lincomb_expr(
+                                    w,
+                                    [
+                                        (cmax_f, x_expr),
+                                        (s_cmax_f, sqrt(y_expr)),
+                                    ],
+                                )
 
                             def _up_floor_whole():
                                 return floor(_up_base())
 
                             def _up_floor_split():
+                                parts: List[Expr] = []
+
                                 cx = _scaled_const(w, cmax_f)
+                                if cx.value != 0:  # type: ignore[attr-defined]
+                                    parts.append(floor(cx * x_expr))
+
                                 cy = _scaled_const(w, s_cmax_f)
-                                return (
-                                    floor(cx * x_expr)
-                                    + floor(cy * sqrt(y_expr))
-                                )
+                                if cy.value != 0:  # type: ignore[attr-defined]
+                                    parts.append(floor(cy * sqrt(y_expr)))
+
+                                if not parts:
+                                    # both coefficients zero ⇒ numeric is 0
+                                    return Const(Fraction(0, 1))
+
+                                acc_expr = parts[0]
+                                for p in parts[1:]:
+                                    acc_expr = acc_expr + p
+                                return acc_expr
 
                             lo_choice = _pick_best_ge(
                                 t_arr,
@@ -246,17 +312,31 @@ def mixed_runner(
                         floor_whole_sq = np.floor(base_up_sq)
 
                         def _lo_sq_base():
-                            cx = _scaled_const(w, cmin_f)
-                            cy = _scaled_const(w, q_cmin_f)
-                            return cx * x_expr + cy * (y_expr ** Const(Fraction(2, 1)))
+                            return _lincomb_expr(
+                                w,
+                                [
+                                    (cmin_f, x_expr),
+                                    (
+                                        q_cmin_f,
+                                        y_expr ** Const(Fraction(2, 1)),
+                                    ),
+                                ],
+                            )
 
                         def _lo_sq_ceil_whole():
                             return ceil(_lo_sq_base())
 
                         def _up_sq_base():
-                            cx = _scaled_const(w, cmax_f)
-                            cy = _scaled_const(w, q_cmax_f)
-                            return cx * x_expr + cy * (y_expr ** Const(Fraction(2, 1)))
+                            return _lincomb_expr(
+                                w,
+                                [
+                                    (cmax_f, x_expr),
+                                    (
+                                        q_cmax_f,
+                                        y_expr ** Const(Fraction(2, 1)),
+                                    ),
+                                ],
+                            )
 
                         def _up_sq_floor_whole():
                             return floor(_up_sq_base())

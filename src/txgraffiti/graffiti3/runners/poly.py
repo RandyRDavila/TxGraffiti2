@@ -10,14 +10,18 @@ import pandas as pd
 
 from txgraffiti.graffiti3.exprs import Expr, Const
 from txgraffiti.graffiti3.relations import Conjecture, Ge, Le
-from txgraffiti.graffiti3.runners.utils import _build_affine_expr
+from txgraffiti.graffiti3.runners.utils import (
+    _build_affine_expr,
+    _rationalize_coeffs,
+    _rationalize_scalar,
+)
 
 if TYPE_CHECKING:
     # Only for type hints; avoids circular imports at runtime.
     from txgraffiti.graffiti3.types import HypothesisInfo
 
 # Try to get an LP solver
-try:
+try:  # pragma: no cover
     from scipy.optimize import linprog
 except Exception:  # pragma: no cover
     linprog = None
@@ -163,6 +167,58 @@ def _solve_lp_lower(
     return beta, c0
 
 
+def _canonical_poly_rhs(
+    beta: np.ndarray,
+    c0: float,
+    feat_exprs: List[Expr],
+    *,
+    zero_tol: float,
+    max_coef_abs: float,
+    max_intercept_abs: float,
+    max_denom: int,
+) -> Expr | None:
+    """
+    Build a canonical polynomial RHS using `_build_affine_expr`, dropping any
+    feature whose *rationalized* coefficient is numerically zero.
+
+    This ensures that forms like a x + 0 x^2 + c normalize to the same
+    expression as a x + c from other runners, and we never print `0 · (x)²`.
+    """
+    # Rationalize first, so tiny floats like 1e-12 become exact 0 if appropriate.
+    beta = np.asarray(beta, dtype=float)
+    beta_rat = _rationalize_coeffs(beta, max_denom=max_denom)
+    c0_rat = _rationalize_scalar(float(c0), max_denom=max_denom)
+
+    coefs: List[float] = []
+    feats: List[Expr] = []
+
+    for coef_rat, feat in zip(beta_rat, feat_exprs):
+        coef_f = float(coef_rat)
+        # Drop genuinely small / zero coefficients after rationalization
+        if abs(coef_f) >= zero_tol:
+            coefs.append(coef_f)
+            feats.append(feat)
+
+    # Clean tiny intercept as well
+    c0_val = float(c0_rat)
+    if abs(c0_val) < zero_tol:
+        c0_val = 0.0
+
+    # If everything is tiny and intercept is tiny, drop the form.
+    if not coefs and abs(c0_val) < zero_tol:
+        return None
+
+    return _build_affine_expr(
+        const_val=c0_val,
+        coefs=coefs,
+        feats=feats,
+        zero_tol=zero_tol,
+        max_coef_abs=max_coef_abs,
+        max_intercept_abs=max_intercept_abs,
+        max_denom=max_denom,
+    )
+
+
 # ───────────────────────── main runner ───────────────────────── #
 
 
@@ -196,7 +252,7 @@ def poly_single_runner(
         a = 1, b = 0, c = 0
 
     normalize to the same representation as `t ≥ x` or `t ≤ x` coming from
-    the ratio / LP runners (no spurious “1 · x” terms).
+    the ratio / LP runners (no spurious “1 · x” or “0 · x²” terms).
 
     Parameters
     ----------
@@ -285,10 +341,10 @@ def poly_single_runner(
             if lo_res is not None:
                 beta_lo, c0_lo = lo_res
 
-                rhs_lo = _build_affine_expr(
-                    const_val=float(c0_lo),
-                    coefs=list(beta_lo),
-                    feats=feat_exprs,
+                rhs_lo = _canonical_poly_rhs(
+                    beta=beta_lo,
+                    c0=c0_lo,
+                    feat_exprs=feat_exprs,
                     zero_tol=zero_tol,
                     max_coef_abs=max_coef_abs,
                     max_intercept_abs=max_intercept_abs,
@@ -300,7 +356,8 @@ def poly_single_runner(
                             relation=Ge(target_expr, rhs_lo),
                             condition=hyp.pred,
                             name=(
-                                f"[poly-single-lower] {target_col} vs {name}, x^2 under {hyp.name}"
+                                f"[poly-single-lower] {target_col} "
+                                f"vs {name}, x^2 under {hyp.name}"
                             ),
                         )
                     )
@@ -314,10 +371,10 @@ def poly_single_runner(
             if up_res is not None:
                 beta_up, c0_up = up_res
 
-                rhs_up = _build_affine_expr(
-                    const_val=float(c0_up),
-                    coefs=list(beta_up),
-                    feats=feat_exprs,
+                rhs_up = _canonical_poly_rhs(
+                    beta=beta_up,
+                    c0=c0_up,
+                    feat_exprs=feat_exprs,
                     zero_tol=zero_tol,
                     max_coef_abs=max_coef_abs,
                     max_intercept_abs=max_intercept_abs,
@@ -329,7 +386,8 @@ def poly_single_runner(
                             relation=Le(target_expr, rhs_up),
                             condition=hyp.pred,
                             name=(
-                                f"[poly-single-upper] {target_col} vs {name}, x^2 under {hyp.name}"
+                                f"[poly-single-upper] {target_col} "
+                                f"vs {name}, x^2 under {hyp.name}"
                             ),
                         )
                     )

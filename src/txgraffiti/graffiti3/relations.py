@@ -49,6 +49,8 @@ __all__ = [
     "TRUE",
 ]
 
+
+
 # =========================================================
 # TRUE predicate (universal class)
 # =========================================================
@@ -71,6 +73,44 @@ def _strip_outer_parens(s: str) -> str:
     if len(s) >= 2 and s[0] == "(" and s[-1] == ")":
         return s[1:-1].strip()
     return s
+
+def _strip_redundant_parens(s: str) -> str:
+    """
+    Remove a single pair of outer parentheses when they are syntactically
+    redundant, e.g.
+
+        "(radius)"         -> "radius"
+        "((order))"        -> "(order)"   (only one layer at a time)
+        "(a + b)"          -> "(a + b)"   (kept, has top-level operator)
+
+    We only strip if the entire string is wrapped and there is no
+    top-level operator outside inner parentheses.
+    """
+    s = s.strip()
+    if not (s.startswith("(") and s.endswith(")")):
+        return s
+
+    inner = s[1:-1].strip()
+    # quick exit: empty or trivial
+    if not inner:
+        return s
+
+    depth = 0
+    for ch in inner:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth < 0:
+                # unbalanced; be conservative
+                return s
+        elif ch in "+-·/%^" and depth == 0:
+            # there is a top-level operator; need the parens
+            return s
+
+    # No top-level operator found: outer parens are redundant
+    return inner
+
 
 def _pretty_predicate(cond: Predicate, *, unicode_ops: bool = True) -> str:
     """
@@ -185,32 +225,32 @@ class Lt(Relation):
             mask = mask & C
         return mask
 
-@dataclass
-class Le(Relation):
-    """Inequality: left <= right ; slack = (right - left)."""
-    left: Union[Expr, float, int, str]
-    right: Union[Expr, float, int, str]
-    name: str = "Inequality(<=)"
+# @dataclass
+# class Le(Relation):
+#     """Inequality: left <= right ; slack = (right - left)."""
+#     left: Union[Expr, float, int, str]
+#     right: Union[Expr, float, int, str]
+#     name: str = "Inequality(<=)"
 
-    def __post_init__(self):
-        self.left = to_expr(self.left)
-        self.right = to_expr(self.right)
+#     def __post_init__(self):
+#         self.left = to_expr(self.left)
+#         self.right = to_expr(self.right)
 
-    def evaluate(self, df: pd.DataFrame) -> pd.Series:
-        l = self.left.eval(df); r = self.right.eval(df)
-        return pd.Series((l <= r).values, index=df.index, dtype=bool)
+#     def evaluate(self, df: pd.DataFrame) -> pd.Series:
+#         l = self.left.eval(df); r = self.right.eval(df)
+#         return pd.Series((l <= r).values, index=df.index, dtype=bool)
 
-    def slack(self, df: pd.DataFrame) -> pd.Series:
-        l = self.left.eval(df); r = self.right.eval(df)
-        return pd.Series((r - l).values, index=df.index, dtype=float)
+#     def slack(self, df: pd.DataFrame) -> pd.Series:
+#         l = self.left.eval(df); r = self.right.eval(df)
+#         return pd.Series((r - l).values, index=df.index, dtype=float)
 
-    def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
-        sym = "≤" if unicode_ops else "<="
-        return f"{repr(self.left)} {sym} {repr(self.right)}"
+#     def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+#         sym = "≤" if unicode_ops else "<="
+#         return f"{repr(self.left)} {sym} {repr(self.right)}"
 
-    def __repr__(self) -> str:
-        # Pretty by default (unicode)
-        return f"{repr(self.left)} ≤ {repr(self.right)}"
+#     def __repr__(self) -> str:
+#         # Pretty by default (unicode)
+#         return f"{repr(self.left)} ≤ {repr(self.right)}"
 
 class Gt(Relation):
     """
@@ -242,6 +282,79 @@ class Gt(Relation):
             mask = mask & C
         return mask
 
+# @dataclass
+# class Ge(Relation):
+#     """Inequality: left >= right ; slack = (left - right)."""
+#     left: Union[Expr, float, int, str]
+#     right: Union[Expr, float, int, str]
+#     name: str = "Inequality(>=)"
+
+#     def __post_init__(self):
+#         self.left = to_expr(self.left)
+#         self.right = to_expr(self.right)
+
+#     def evaluate(self, df: pd.DataFrame) -> pd.Series:
+#         l = self.left.eval(df); r = self.right.eval(df)
+#         return pd.Series((l >= r).values, index=df.index, dtype=bool)
+
+#     def slack(self, df: pd.DataFrame) -> pd.Series:
+#         l = self.left.eval(df); r = self.right.eval(df)
+#         return pd.Series((l - r).values, index=df.index, dtype=float)
+
+#     def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+#         sym = "≥" if unicode_ops else ">="
+#         return f"{repr(self.left)} {sym} {repr(self.right)}"
+
+#     def __repr__(self) -> str:
+#         # Pretty by default (unicode)
+#         return f"{repr(self.left)} ≥ {repr(self.right)}"
+
+
+@dataclass
+class Le(Relation):
+    """Inequality: left <= right ; slack = (right - left)."""
+    left: Union[Expr, float, int, str]
+    right: Union[Expr, float, int, str]
+    name: str = "Inequality(<=)"
+
+    def __post_init__(self):
+        self.left = to_expr(self.left)
+        self.right = to_expr(self.right)
+
+    def evaluate(self, df: pd.DataFrame) -> pd.Series:
+        l = self.left.eval(df); r = self.right.eval(df)
+        return pd.Series((l <= r).values, index=df.index, dtype=bool)
+
+    def slack(self, df: pd.DataFrame) -> pd.Series:
+        l = self.left.eval(df); r = self.right.eval(df)
+        return pd.Series((r - l).values, index=df.index, dtype=float)
+
+    def _lhs_rhs_str(self, unicode_ops: bool = True) -> tuple[str, str]:
+        # Use Expr.pretty() when available, then strip redundant outer parens
+        if hasattr(self.left, "pretty"):
+            lhs = self.left.pretty()
+        else:
+            lhs = repr(self.left)
+
+        if hasattr(self.right, "pretty"):
+            rhs = self.right.pretty()
+        else:
+            rhs = repr(self.right)
+
+        lhs = _strip_redundant_parens(lhs)
+        rhs = _strip_redundant_parens(rhs)
+        return lhs, rhs
+
+    def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
+        sym = "≤" if unicode_ops else "<="
+        lhs, rhs = self._lhs_rhs_str(unicode_ops=unicode_ops)
+        return f"{lhs} {sym} {rhs}"
+
+    def __repr__(self) -> str:
+        lhs, rhs = self._lhs_rhs_str(unicode_ops=True)
+        return f"{lhs} ≤ {rhs}"
+
+
 @dataclass
 class Ge(Relation):
     """Inequality: left >= right ; slack = (left - right)."""
@@ -261,13 +374,29 @@ class Ge(Relation):
         l = self.left.eval(df); r = self.right.eval(df)
         return pd.Series((l - r).values, index=df.index, dtype=float)
 
+    def _lhs_rhs_str(self, unicode_ops: bool = True) -> tuple[str, str]:
+        if hasattr(self.left, "pretty"):
+            lhs = self.left.pretty()
+        else:
+            lhs = repr(self.left)
+
+        if hasattr(self.right, "pretty"):
+            rhs = self.right.pretty()
+        else:
+            rhs = repr(self.right)
+
+        lhs = _strip_redundant_parens(lhs)
+        rhs = _strip_redundant_parens(rhs)
+        return lhs, rhs
+
     def pretty(self, *, unicode_ops: bool = True, show_tol: bool = False) -> str:
         sym = "≥" if unicode_ops else ">="
-        return f"{repr(self.left)} {sym} {repr(self.right)}"
+        lhs, rhs = self._lhs_rhs_str(unicode_ops=unicode_ops)
+        return f"{lhs} {sym} {rhs}"
 
     def __repr__(self) -> str:
-        # Pretty by default (unicode)
-        return f"{repr(self.left)} ≥ {repr(self.right)}"
+        lhs, rhs = self._lhs_rhs_str(unicode_ops=True)
+        return f"{lhs} ≥ {rhs}"
 
 
 @dataclass
