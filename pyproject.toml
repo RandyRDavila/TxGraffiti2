@@ -45,3 +45,4 @@ txgraffiti = ["example_data/*.csv", "example_data/graph-edgelists/*.txt"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 addopts = "--doctest-modules"
+markers = ["optional: mark tests that are optional based on Expr capabilities"]

@@ -11,6 +11,9 @@ graph_data = _load_csv("graph_data.csv")
 integer_data = _load_csv("integer_data.csv")
 nba_game_data = _load_csv("nba_game_data.csv")
 calabi_yau_data = _load_csv("calabi_yau_data.csv")
+polytope_data = _load_csv("polytope_data.csv")
+polytope_data.drop(columns=['Unnamed: 0'], inplace=True)
+# qubits_data = _load_csv("qbits-2.csv")
 
 
 # ---- Example graphs loader (zip-safe) ----
