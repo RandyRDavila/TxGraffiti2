@@ -34,7 +34,7 @@ STAGES = [
     Stage.CONSTANT,
     Stage.RATIO,
     Stage.LP1,
-    Stage.LP,
+    Stage.LP2,
     Stage.LP3,
     Stage.LP4,
     Stage.POLY_SINGLE,
@@ -50,15 +50,14 @@ STAGES = [
 
 ]
 
-
+# Target invariants to conjecture on: p5 and p6.
 TARGETS = [
-        # "p5",
-        # "p4",
+        "p5",
         "p6",
-        # "independence_number",
     ]
 
-result = g3.list_conjecture(
+# Conjecture on the target invariants using the stages defined above.
+result = g3.conjecture(
     targets=TARGETS,
     stages=STAGES,
     include_invariant_products=False,
@@ -68,10 +67,5 @@ result = g3.list_conjecture(
     enable_sophie=True,
     sophie_stages=STAGES,
     quick=True,
-)
-
-print_g3_result(
-    result,
-    k_conjectures=20,
-    k_sophie=20,
+    show=True,
 )

@@ -54,7 +54,7 @@ class Stage(str, Enum):
     CONSTANT = "constant"
     RATIO = "ratio"
     LP1 = "lp1"              # 1-feature LP (t ≶ m x + b)
-    LP = "lp"                # 2-feature LP
+    LP2 = "lp2"                # 2-feature LP
     LP3 = "lp3"              # 3-feature LP
     LP4 = "lp4"
     POLY_SINGLE = "poly_single"
@@ -441,7 +441,7 @@ class Graffiti3:
         if complexity >= 1:
             stages += [Stage.RATIO, Stage.LP1]
         if complexity >= 2:
-            stages += [Stage.LP, Stage.POLY_SINGLE, Stage.SQRT, Stage.LOG]
+            stages += [Stage.LP2, Stage.POLY_SINGLE, Stage.SQRT, Stage.LOG]
         if complexity >= 3:
             stages += [Stage.LP3, Stage.SQRT_LOG]
         if complexity >= 4:
@@ -584,7 +584,7 @@ class Graffiti3:
 
     # ──────────────────────── public API ────────────────────────
 
-    def conjecture(
+    def _conjecture(
         self,
         target: str,
         complexity: Optional[int] = None,
@@ -1087,7 +1087,7 @@ class Graffiti3:
         # LOG_SUM = "log_sum"
 
         # ── Stage: LP (2 features) ────────────────────────────────────
-        if Stage.LP in stages_to_run_set:
+        if Stage.LP2 in stages_to_run_set:
             lp_conjs = lp_runner(
                 target_col=target,
                 target_expr=target_expr,
@@ -1106,13 +1106,13 @@ class Graffiti3:
                 morgan_filter=self.morgan_filter,
                 dalmatian_filter=self.dalmatian_filter,
             )
-            lp_sophie = _maybe_sophie(Stage.LP, lp_conjs)
+            lp_sophie = _maybe_sophie(Stage.LP2, lp_conjs)
 
             all_conjectures.extend(lp_conjs)
             all_conjectures = _dedup_conjectures(all_conjectures)
             all_sophie.extend(lp_sophie)
 
-            stage_info[Stage.LP.value] = dict(
+            stage_info[Stage.LP2.value] = dict(
                 conjectures=len(lp_conjs),
                 sophie=len(lp_sophie),
             )
@@ -1254,7 +1254,7 @@ class Graffiti3:
             stage_breakdown=stage_info,
         )
 
-    def list_conjecture(
+    def conjecture(
         self,
         targets: Sequence[str],
         *,
@@ -1268,6 +1268,8 @@ class Graffiti3:
         enable_sophie: bool = True,
         sophie_stages: Optional[Sequence[StageLike]] = None,
         quick: Optional[bool] = None,
+        show: Optional[bool] = None,
+        show_k_conjectures: Optional[int] = 20,
     ) -> Graffiti3Result:
         """
         Batch version of `conjecture` over multiple targets.
@@ -1280,7 +1282,7 @@ class Graffiti3:
         breakdown: Dict[str, Any] = {}
 
         for t in targets:
-            res = self.conjecture(
+            res = self._conjecture(
                 t,
                 complexity=complexity,
                 mode=mode,
@@ -1308,12 +1310,20 @@ class Graffiti3:
             all_sophie_ranked = []
 
         # This "target" is just a label in the combined result
-        return Graffiti3Result(
+        result = Graffiti3Result(
             target=",".join(targets),
             conjectures=all_conjs,
             sophie_conditions=all_sophie_ranked,
             stage_breakdown=breakdown,
         )
+
+        if show:
+            print_g3_result(
+                result,
+                k_conjectures=show_k_conjectures,
+                k_sophie=show_k_conjectures,
+            )
+        return result
 
 
 # ───────────────── Sophie helpers / pretty printer ───────────────── #
