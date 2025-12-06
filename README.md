@@ -172,11 +172,7 @@ from txgraffiti.graffiti3.heuristics.dalmatian import dalmatian_filter
 from txgraffiti.graffiti3.graffiti3 import Graffiti3, print_g3_result, Stage
 from txgraffiti.example_data import polytope_data as df
 
-
-
-
 df.drop(columns=['temperature(p6)', 'p4_odd', 'p5_odd', 'p3_odd', ], inplace=True)
-
 
 g3 = Graffiti3(
     df,
@@ -191,7 +187,6 @@ g3 = Graffiti3(
         min_new_coverage=1,
     ),
 )
-
 
 STAGES = [
     Stage.CONSTANT,
