@@ -161,12 +161,9 @@ Conjecture 6. ∀ n.PositiveInteger: (is_fibonacci) → (collatz_steps >= prime_
 TxGraffiti now supports native non-linear conjecturing and conjecturing of sufficient conditions. This is all done via the new `Graffiti3` class. See the example below.
 
 ```python
-# In the terminal run the command: PYTHONPATH=src python demo/polytope_demo.py
-from __future__ import annotations
 
 import pandas as pd
 
-# at the top of graffiti4.py
 from txgraffiti.graffiti3.heuristics.morgan import morgan_filter#, dalmatian_filter
 from txgraffiti.graffiti3.heuristics.dalmatian import dalmatian_filter
 from txgraffiti.graffiti3.graffiti3 import Graffiti3, print_g3_result, Stage
