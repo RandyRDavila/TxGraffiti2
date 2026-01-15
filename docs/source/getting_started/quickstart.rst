@@ -37,10 +37,10 @@ You can build logical predicates using symbolic expressions:
 
 .. code-block:: python
 
-   regular = ai.max_degree == ai.min_degree
-   cubic   = regular & (ai.max_degree == 3)
-   small   = ai.max_degree <= 3
-   not_complete = ~ai.Kn
+   regular = ai.maximum_degree == ai.minimum_degree
+   cubic   = regular & (ai.maximum_degree == 3)
+   small   = ai.maximum_degree <= 3
+   not_tree = ~ai.is_tree
 
 Step 4: Generate conjectures
 ----------------------------
@@ -57,7 +57,7 @@ Choose your generator methods, features, target invariant, and heuristics:
        methods         = [ratios, convex_hull, linear_programming],
        features        = [ai.independence_number],
        target          = ai.zero_forcing_number,
-       hypothesis      = [cubic, small & not_complete],
+       hypothesis      = [cubic, small & not_tree],
        heuristics      = [dalmatian_accept, morgan_accept],
        post_processors = [remove_duplicates, sort_by_touch_count],
    )
@@ -75,20 +75,20 @@ Example output:
 
 .. code-block:: text
 
-   Conjecture 1. ∀ G: ((connected) ∧ (regular) ∧ (max_degree == 3)) → (zero_forcing_number ≥ 3)
-       Accuracy: 100%
+    Conjecture 1. ∀ G: ((connected) ∧ (maximum_degree <= 3) ∧ (¬(tree))) → (zero_forcing_number >= 2)
+        Accuracy: 100%
 
-   Conjecture 2. ∀ G: ((connected) ∧ (max_degree ≤ 3) ∧ (¬(Kn))) → (zero_forcing_number ≤ (1 + independence_number))
-       Accuracy: 100%
+    Conjecture 2. ∀ G: ((connected) ∧ (maximum_degree == minimum_degree)) → (zero_forcing_number >= ((2 * independence_number) + -8))
+        Accuracy: 100%
 
-   Conjecture 3. ∀ G: ((connected) ∧ (regular) ∧ (max_degree == 3)) → (zero_forcing_number ≥ ((2 · independence_number) − 8))
-       Accuracy: 100%
+    Conjecture 3. ∀ G: ((connected) ∧ (maximum_degree <= 3) ∧ (¬(tree))) → (zero_forcing_number >= ((1/3 * independence_number) + 1/3))
+        Accuracy: 100%
 
-   Conjecture 4. ∀ G: ((connected) ∧ (max_degree ≤ 3) ∧ (¬(Kn))) → (zero_forcing_number ≥ ((6/5 · independence_number) − 37/5))
-       Accuracy: 100%
+    Conjecture 4. ∀ G: ((connected) ∧ (maximum_degree == minimum_degree)) → (zero_forcing_number >= (2/5 * independence_number))
+        Accuracy: 100%
 
-   Conjecture 5. ∀ G: ((connected) ∧ (max_degree ≤ 3) ∧ (¬(Kn))) → (zero_forcing_number ≤ ((−1/5 · independence_number) + 47/5))
-       Accuracy: 100%
+    Conjecture 5. ∀ G: ((connected) ∧ (maximum_degree == minimum_degree)) → (zero_forcing_number >= ((1/4 * independence_number) + 3/4))
+        Accuracy: 100%
 
 ----
 
